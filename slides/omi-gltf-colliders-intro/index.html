@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OMI glTF Colliders</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="OMI glTF Colliders">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      text { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        //font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, omibg
+
+# OMI glTF Colliders
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small>Press <b>C</b> for a popout window</small>
+
+???
+
+Hi folks, here's a brief overview of the work we're doing at the OMI glTF subgroup on standardizing collision boxes and physics bodies.
+
+---
+
+class: center, middle, agbg
+
+## [Mauve](https://blog.mauve.moe/) / [@RangerMauve](https://twitter.com/RangerMauve)
+
+### [Mauve Software Inc.](https://software.mauve.moe/)
+
+???
+
+My name is Mauve, and I'm currently championing this spec by researching how colliders and physics work in different environments and building up the spec for implementors to follow.
+
+---
+
+class: center, middle, datbg
+
+## Colliders
+
+```json=
+{
+    "nodes": [{
+        "name": "Ball",
+        "extensions": {
+            "OMI_collider": {
+                "type": "sphere",
+                "radius": 0.5
+            }
+        }
+    }]
+}
+```
+
+???
+
+The first spec is the `OMI_collider` extension which attaches to nodes in a `glTF` scene under the `OMI_collider` key within the `extensions` object.
+
+---
+
+class: center, middle
+
+## Types
+
+- `box`
+- `sphere`
+- `capsule`
+- `hull`
+- `mesh`
+
+???
+
+From there you can specify the `type` (`box`, `sphere`, `capsule`, `hull`, `mesh`), as well as some parameters that are specific to the type of collider it is.
+Note that in our documentation, we strongly discourage the use of `mesh` since it's performance characteristics are the weakest of all the types despite it's high level of flexibility.
+
+---
+
+class: middle, beakerbg
+
+## Engine Mapping
+
+| Shape   | Unity        | Godot               | Unreal  | Ammo       |
+| ------- | ------------ | ------------------- | ------- | ---------- |
+| Box     | Box          | BoxShape            | Box     | Box        |
+| Sphere  | Sphere       | SphereShape         | Sphere  | Sphere     |
+| Capsule | Capsule      | CapsuleShape        | Capsule | Capsule  |
+| Hull    | Mesh(convex) | ConvexPolygonShape  | Mesh?   | ConvexHull |
+| Mesh    | Mesh         | ConcavePolygonShape | Mesh    | Mesh       |
+
+???
+
+We chose this list by looking at available primitives between engines and have figured out mappings ahead of time.
+
+On their own, colliders can be useful for importing scenes into a game engine where a programmer or designer can tweak the scene to actually make use to them.
+However to make these glTF scenes useful on their own, we have also drafted up the `OMI_physics_body` spec.
+
+---
+
+class: center, middle, datbg
+
+## Physics Bodies
+
+
+```json=
+{
+    "nodes": [{
+        "name": "Ball",
+        "extensions": {
+            "OMI_physics_body": {
+                "type": "dynamic"
+            }
+        }
+    }]
+}
+```
+
+???
+
+The OMI_physics_body spec can be used to mark certain nodes in the scene as being able to interact with physics.
+You can attach the `OMI_physics_body` extension to a node's `extensions` object and specify a `type` (`static`, `kinematic`, `dynamic`, `trigger`).
+These types were also based by looking at the physics bodies commonly used within major game engines.
+
+---
+
+class: center, middle
+
+## Physics Body Types
+
+- `static`
+- `kinematic`
+- `dynamic`
+- `trigger`
+
+???
+
+The `static` body type is used to define nodes which act as immovable "walls" within a scene, and can be used for level geometry which other objects might get blocked by.
+The `kinematic` type behaves similarly to `static`, but it is optimized to be moved by scripts. We're hoping to use this type as an engine hint for now, and more specifically when we figure out WASM scripting with glTF objects.
+The `dynamic` body type acts as a movable object within a scene, such as items on a table that a user might interact with.
+Finally, the `trigger` type is used to define a collision area which doesn't interact with physics bodies, but might be used by scripts in order to trigger some form of interaction.
+
+The implementors of this spec will look at the node's `extensions` to look for a `OMI_collider` object to attach a collision box
+
+---
+
+class: center, middle, datbg
+
+## Example
+
+```json=
+{
+    "nodes": [{
+        "name": "Ball",
+        "extensions": {
+            "OMI_physics_body": {
+                "type": "dynamic"
+            },
+            "OMI_collider": {
+                "type": "sphere",
+                "radius": 0.5
+            }
+        }
+    }]
+}
+```
+
+???
+
+This spec acts in tandem with the collider spec to define physical objects in a scene.
+For example, one can specify a node that has a `sphere` collider type, that also has a `dynamic` physics body type to define a `ball` within a glTF scene that a player might be able to bump into.
+
+---
+
+class: center, middle, omibg
+
+# Thank you! 🎉
+
+???
+
+This is our current progress for the specs, some details will likely change, but we're feeling confident about the direction we're going so far.
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>

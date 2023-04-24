@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HyperGodot - DWeb</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="HyperGodot - Dweb meetup">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      text { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        //font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .gdbg {
+        background: #478cbf;
+        color: #FFF;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 30vmin;
+        height: 30vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# Hypergodot
+
+### Games + DWeb
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hello. I'm mauve, I'm a decentralized sofrware consultant, and today we'll looking at using dweb technology in videogames.
+
+---
+
+class: center, middle, gdbg
+
+# 🎮 Multiplayer Games 🎮
+
+???
+
+Particularly we'll be talking about multiplayer games.
+
+A lot of games connect folks together either through realtime presensce or sharing levels and scores.
+
+This is usually accomplished by the game developers setting up a server in the cloud
+
+---
+
+class: center, middle, beakerbg
+
+## 😡 Cloud Bad! 😡
+
+- Costs 💰
+- Connectivity 🔌
+- End-Of-Life ☠️
+
+???
+
+Although the social features we get from servers are nice, the come with some downsides.
+
+Developers now need to maintain backend infrastructure.
+And if any of the servers go down,or if a person's internet connection is spotty, their game stops being functional.
+Similarly, if a company stops wanting to maintain these servers, the game becomes unplayable and whatever community has been built up around it can't do much about it.
+
+---
+
+class: center, middle, purplebg
+
+##  🎉 P2P Good! 🎉
+
+???
+
+However, we can have all the fun of online multiplayer without the downsides of the cloud by using peer to peer software.
+
+Instead of connecting to a server to send stuff like avatars or movement data, players can connect directly to each other.
+
+This means that developers don't need to put as much effort into setting up infrastructure, and even when development stops the playerbase will be able to connect to each other like usual.
+
+---
+
+class: center, middle, agbg
+
+## 🤯 HyperGodot 🤯
+
+### `hyper://` + Godot
+
+???
+
+So with that in mind, I've been working on a set of tools called Hypergodot.
+
+This combines the hypercore-protocol handlers used in the Agregore browser with the open source Godot game engine.
+
+Hypercore provides a peer to peer data transfer API along with a way to send ephemeral messages over connections.
+
+Godot is an easy to use game engine with an active community which lets people make user interfaces, 2d and 3d games without needing to buy into properietary licenes like Unity or Unreal.
+
+---
+
+class: center, middle, purple
+
+## ✨ Features ✨
+
+- File upload/download
+- Gossip
+- Movement Demo
+- Player data Demo
+- Level loading Demo
+- Matchmaking Lobby Demo
+
+???
+
+Instead of developers figuring out how to do everything from scratch, they can use some of the primitives in Hypergodot or extend one of the high level demo scenes that do common stuff like exchanging player profiles, movement data, and lobbys for finding online games.
+
+---
+
+class: center, middle, purplebg
+
+# Thank you! 🎉
+
+[![Stripe Studios Logo](stripe-logo.png)](https://stripe.tv)
+[![Godot Logo](godot-logo.svg)](https://godotengine.org/)
+
+[![Agregore Logo](agregore-logo.svg)](https://agregore.mauve.moe/)
+
+[Github Repo](https://github.com/RangerMauve/hypergodot/)
+
+???
+
+So that's Hypergodot.
+I wanted to give a big thanks to Stripe Studios for funding this work.
+A thanks to Godot and their awesome documentation and community.
+And thanks to the folks in the Agregore discord that helped test some of this stuff out and brainstorm ideas.
+
+If you want to learn more, check out the github repo or join us in the Agregore discord server.
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:8'
+      });
+    };
+    </script>
+  </body>
+</html>

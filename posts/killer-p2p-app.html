@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - A Killer P2P App</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="P2P tech is great and I could see a lot of uses for it and a lot of opportunity for innovation.
+But after talking to people about my passion for P2P tech, it was pointed out that I was looking for existing places to shove it into rather than solving an actual problem people are facing.
+In order to convince people to adopt something, you need it to be 10 times better than what they have already." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="a-killer-app-for-p2p">A <em>Killer App</em> For P2P</h1>
+<p>P2P tech is great and I could see a lot of uses for it and a lot of opportunity for innovation.
+But after talking to people about my passion for P2P tech, it was pointed out that I was looking for existing places to shove it into rather than solving an actual problem people are facing.
+In order to convince people to adopt something, you need it to be 10 times better than what they have already.</p>
+<p>With this in mind, I want to look at the biggest advantages that I think P2P tech brings to the web, why it&#39;s not enough, and some ideas about applications that could actually solve pain points.</p>
+<h2 id="content-distribution-costs">Content Distribution Costs</h2>
+<p>When companies distribute static content like images or videos, they must pay for all the bandwidth and infrastructure that&#39;s required to serve it to clients.
+This adds up quickly and leads to high costs for companies that can afford it, and downtime for companies (or personal blogs) that can&#39;t.
+P2P networks help this problem by sharing the load amongst everyone that&#39;s accessed it.
+While people download your content, they also send it to anyone else that&#39;s downloading it.
+As a result, the more people are loading your content, the less you need to host your own servers to distribute it.
+Plus, clients can take advantage of downloading chunks of the content from multiple sources at once in order to speed things up.</p>
+<p>As cool as all this stuff is, it&#39;s not actually a problem for most places.
+Content Delivery Networks are commonplace now, and services like <a href="https://www.cloudflare.com/">Cloudflare</a> have made it easy, and relatively cheap to set them up in front of your websites.
+One would need to show real numbers in just how much cost would be saved, and it would need to be just as easy, if not easier, to set up as an existing CDN.</p>
+<p>Of course, not everybody knows about CDNs or wants to pay for additional third parties in front of their content.
+When a user wants to share data, they want it to be up regardless of how many people are looking at it.
+With existing centralized services, you need to either use a hosting provider that handles this stuff for you or be tech savvy enough to set it up.
+With P2P tech, you&#39;re able to scale your content up just by way of the protocol.</p>
+<h2 id="ease-of-sharing">Ease of Sharing</h2>
+<p>One of the cool things of using P2P networks like <a href="https://protocol.ai/projects/#IPFS">IPFS</a> is that all I need to publish content is to run a command.
+From there I get a link to the content without having to sign up for any extra services or worry about domains.
+I just make my content and share it with someone.
+This is enabled by the fact that you don&#39;t need to send your content to a known third party in order for somebody else to access it.
+The link you get back is used to find devices in the P2P network that have a copy of your data so that you can start downloading from them.
+If somebody wants to access your content, they download it directly from your device, or from any other device that has a copy of it.</p>
+<p>If you explain this to people, however, they don&#39;t get what the point is.
+Sharing stuff is already as easy as running a command and getting a link.
+You can shove it on something like <a href="https://www.dropbox.com">Dropbox</a> and create a link from there.
+Similarly, if you&#39;re a techy type, you can put your website on Github and get a free <a href="https://github.io">Github.io</a> subdomain.
+Publishing content on the web is already easy because there&#39;s lots of companies to choose from, plus most of them are already handling the bandwidth issue from before.</p>
+<p>Not all of these providers might be happy to host your content, and in the end, they get to be the ones that decide how and what you can share.
+This leads to situations where companies like Tumblr can <a href="https://www.latimes.com/business/technology/la-fi-tn-tumblr-adult-content-ban-20181203-story.html">purge content from their servers and leave people without a platform</a>.
+When you use a third party for sharing content and building your community, you&#39;re leaving all control of it to them.
+Right now, it might be easy, but they can impose any restrictions or additional costs that they want and make it as hard as possible to switch to a different provider.
+P2P tech on the other hand doesn&#39;t have that problem.
+There&#39;s no worries about your community being ripped out from under your feet because there&#39;s no single entity controlling it.
+In the end, the people that are interacting with each other decide what they want to be exposed to and opt into and out of content based on what they&#39;re comfortable with.</p>
+<h2 id="privacy">Privacy</h2>
+<p>Our current model for privacy on the web is that we can trust the services we use to not screw us over.
+We send them all our private messages, our personal photos, and our browsing habits.
+The unspoken promise is that they&#39;re going to keep that stuff private and not spread it on the internet.
+Sadly, that promise is <a href="https://www.huffingtonpost.ca/entry/facebook-lawsuit-private-messages_n_4536154?ec_carp=5949834185700470415">A</a> <a href="https://www.theguardian.com/technology/2017/nov/22/google-track-android-users-location-services-turned-off-sim">Big</a> <a href="https://www.zdnet.com/pictures/biggest-hacks-leaks-and-data-breaches-2018/">Lie</a>.</p>
+<p>Peer to peer tech doesn&#39;t inherently provide higher privacy guarantees out of the box.
+In fact, it can be worse because people can look up <a href="https://torrentfreak.com/video-how-people-are-tracked-using-bittorrent-080114/">every IP address</a> downloading content, and see how much of it they have downloaded.
+What it does, however, is bring all of this stuff in the open.
+With centralized systems, people must assume that they can trust the service to protect their data, but with P2P, you need to use encryption to prove that something is private.
+This means that if somebody wants to share private content, it&#39;ll have to be truly private rather than having it fully visible to a corporation.</p>
+<p>The main thing I hear when I mention privacy is that &quot;Users don&#39;t care about privacy&quot; or &quot;I don&#39;t care if Facebook sees my private messages&quot;.
+This is great when your private data isn&#39;t being used maliciously.
+Keeping information private is important for everyone to avoid <a href="https://www.nytimes.com/2018/03/19/technology/facebook-cambridge-analytica-explained.html">having people manipulate you</a>, your life being messed up because of <a href="https://www.fightingidentitycrimes.com/tax-fraud-scammers-ramp-up-their-tactics-in-2019/">identity theft</a>, and to prevent <a href="https://www.npr.org/sections/alltechconsidered/2014/09/15/346149979/smartphones-are-used-to-stalk-control-domestic-abuse-victims">abusive partners and stalkers</a> from having more power over their victims.
+Another thing to consider is that users don&#39;t really have a choice on the matter. All major platforms are doing sketchy stuff with our data and there&#39;s no real alternatives to all of Google&#39;s products or Facebook&#39;s ecosystem.
+P2P tech is in a great opportunity to offer people a new default for how they interact with each other.</p>
+<h2 id="users-own-their-data">Users Own Their Data</h2>
+<p>When you upload something to a hosting provider on the web, you don&#39;t really have control over who they decide can and can&#39;t see it, and whether they&#39;ll keep it up at all.
+You&#39;re basically giving them your data, and they get to decide what to do with it.
+When you create a <a href="https://datproject.org/">Dat Archive</a>, even though anybody can download a copy once you give them the link, you&#39;re the only one that can change anything.
+This means that you have full control over the data that&#39;s in there and you get to decide who can see it.</p>
+<p>An interesting side effect of centralization is that you no longer own the data that you put into an app.
+Think of Twitter.
+You make posts, you follow people, like their tweets, but in the end all of that data you&#39;ve created is stored on Twitter&#39;s servers and it&#39;s a pain in the butt to get access to it.
+In fact, Twitter recently decided to make it <a href="https://www.macrumors.com/2018/04/06/twitter-api-changes-disabling-third-party-features/">even harder</a> for people to use the data they create within third party apps.
+This is all thanks to centralization.
+Data that you post on Twitter is now owned and controlled by Twitter, and it&#39;s in their best interests to hoard it for themselves.
+This leaves users with less control over the communities they engage with.
+If you don&#39;t like Twitter&#39;s app layout, tough luck.</p>
+<p>In the P2P space, even if an app is generating some sort of content based on your posts, it&#39;s not able to keep that data from users.
+In the end, that data is going to be shoved in a folder of some sort to share with the network, and there&#39;s nothing stopping you from sharing that folder with another one of your apps.
+This gives us a great building block for innovation.
+You can now separate the data from the application interacting with it.
+A great example of this is the <a href="https://www.scuttlebutt.nz/applications">Secure Scuttlebutt</a> ecosystem.
+They defined a standard for data that could be shared in their P2P network, and from there anybody could create applications that built on top of it.
+The result is that there&#39;s different social media applications like <a href="https://www.scuttlebutt.nz/applications#patchwork">Patchwork</a> or <a href="https://www.manyver.se/">Manyverse</a> which are totally separate projects which can interact with each other.
+If you don&#39;t like a given application or want to make your own that does things differently, all you need to do is generate data in the right format and not worry about API keys or rate limits.
+Having users own their data by default gives them more choice and makes it easier to try new things.</p>
+<h2 id="offline-first-local-first">Offline First / Local First</h2>
+<p>P2P networks work by getting data from any source they can find and having changes propagate throughout the network once peers connect to each other.
+This results in two useful properties that you can&#39;t get with centralized services: Being able to download from your local WiFi or via crazy things like Bluetooth and being able to produce content that eventually syncs out when you connect to the internet.</p>
+<p>To explain the first one, let me briefly go into how peers are discovered over the internet. When you start up your BitTorrent client, it connects to what&#39;s called a Distributed Hash Table which is a mesh of computers that allows them to advertise their IP address for a given torrent ID.
+This is how other major protocols do it (other than SSB).
+A downside to this is that it only works for computers that you can connect to over the internet.
+You can&#39;t really use it to connect to a friend that&#39;s sitting beside you unless both your devices can be accessed via public IP addresses.
+Finding devices on your local network is something that we need to do all the time.
+Protocols for this have been created in order to find network printers and to connect to each others’ computers based on their name.
+These protocols can be used by P2P browsers in order to connect devices directly on your WiFi rather than going over the internet.
+If I have a file I want to send my friend, I can send them the link to it like I would normally, but instead of having to wait for it to travel to some server in Amazon, it&#39;ll be shared directly between our devices.
+This gives you a speed improvement, but also helps if you don&#39;t have internet.
+P2P applications can work when you&#39;re out camping but have a WiFi hotspot connected to a battery, or festivals where cell reception is too slow to do anything with.
+This property is also useful for developing countries where they might not have a good internet connection but could feasibly have a WiFi network set up by the community.</p>
+<p>Since you create your p2p content locally, and have it propagate out, you don&#39;t need to have an internet connection in order to author it.
+If I want to make a post on a social media app, either the app developer needs to figure out a way to defer posting it to the server once I&#39;m online, or it&#39;ll fail and make me try again later.</p>
+<h2 id="how-can-this-be-leveraged-">How can this be leveraged?</h2>
+<p>To summarize, we need to make something that:</p>
+<ul>
+<li>Makes it easy to share data between users</li>
+<li>Emphasizes users owning their own data</li>
+<li>Works offline and shares data on the local network</li>
+<li>Makes it easy to form ad-hoc communities</li>
+</ul>
+<p>With that in mind, I think it&#39;d be cool to make something like Tumblr or Instagram where you have a timeline with posts that can contain text or videos and stuff.
+Users should be able to &quot;create an account&quot; on their local device, set up tags for their profile, and find other people by their tags.
+Then, they should be able to create posts on their profile and follow other&#39;s people&#39;s profiles to see their posts on a &quot;timeline&quot;.</p>
+<p>This should use existing technology as much as possible to make it easy for people to implement their own clients.
+It should also be possible to post from multiple devices and have something or other for letting them sync with each other.
+Since most people are using smartphones as their means of accessing the internet, it should be available on Android and iOS.</p>
+<p>Once the app is established, there should be some sort of service for backing people&#39;s feeds up when they&#39;re offline.
+This is to show how businesses can still offer services for P2P applications without having to have control over everything.
+Other opportunities would be search indexes or spotlights which are accounts that could be followed.</p>
+<p>This app isn&#39;t the end goal of P2P, of course.
+Most apps we use either store all data locally, or share data as &quot;lists of posts from a person&quot;.
+Once developers have access to a high level API for &quot;lists of posts&quot;, it should be easier for them to create more specialized apps like offline-first conference info, or a P2P marketplace.</p>
+<p>The goal of this application is to demonstrate that you can have offline and local-first applications, with faster downloads, which isn&#39;t complicated for developers to set up.
+Hopefully that&#39;ll wake some people up to the downsides of centralization, and turn more people towards the distributed web.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Making a P2P Blog</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: #ae40ca;
+        color: #fff;
+      }
+      
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        font-size: 3em !important;
+      }
+      a:link, a:visited { color: inherit; }
+      
+      ul li {
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Making a Blog
+
+## (With JS and the P2P web)
+
+---
+
+class: center, middle, purplebg
+
+# @RangerMauve
+
+"Georgiy"
+
+[@Aetonix](https://aetonix.com/)
+
+[Github](https://github.com/RangerMauve/)
+
+[Twitter](https://mobile.twitter.com/RangerMauve)
+
+[Fritter](dat://fritter.hashbase.io/user/dat://3df8868d5c3420d7acdf72d17129e4569cf83723092314ea6b260d112797d8c8)
+
+---
+
+class: center, middle
+
+![Geocities Logo](/Geocities-Logo-Geocities.jpg)
+
+???
+
+Remember this? Or have you heard of it before?
+
+---
+
+class: center, middle
+
+# 😂👌🔥💯
+
+???
+
+That's the good stuff. It was pretty crude, but it had something that we're missing today.
+
+---
+
+class: center, middle, purplebg
+
+# ✨🌟 CREATIVITY 🌟✨
+
+???
+
+The early web was crude, and people didn't know what they were doing. But it encouraged people to be creative and publish their own content online.
+
+---
+
+class: center, middle
+
+![Facebook Logo](/flogo_rgb_hex-brc-site-250.png)
+
+???
+
+Have you ever seen this thing? You can make text posts and maybe add images and links.
+
+---
+
+class: center, middle
+
+![Twitter Logo](/Twitter_Logo_Blue.png)
+
+???
+
+What about this? You can make short text posts and maybe add images.
+
+---
+
+class: center, middle
+
+![Medium Logo](/1_emiGsBgJu2KHWyjluhKXQw.png)
+
+???
+
+What about this cool blogging thing? You can have long text posts and maybe add images.
+
+---
+
+class: center, middle
+
+# 💤 😪 💤
+
+???
+
+Yawn!
+
+You have very little customization over these platforms. You make some posts, but then it's aggregated by some big faceless company, analized by advertisers, and the shown to some subset of users according to some opaque algorythms.
+
+---
+
+class: center, middle, purplebg
+
+# 📝😎👍
+
+???
+
+How about we bring it back and make our own blog,
+use whatever we want for displaying it,
+and ignore any of these third parties and publish our content directly.
+
+---
+
+class: center, middle
+
+# 🤔 ❔
+
+???
+
+Ok, so that's the blog part, but before we get into that, let's talk about the Peer to peer part.
+
+---
+
+class: center, middle
+
+# 🤓(📄) -> 🖥
+
+???
+
+If you're a content creator of some sort, whether you make art, videos, or a funny may-mays.
+
+You make your content, but then you have to send it to someone else, a server.
+
+---
+
+class: center, middle
+
+## 🖥(📄) <- 🌐 <- 🤩 💻
+
+???
+
+The server will then hold your content somehow.
+If somebody wants to view it on their computer, they connect to the internet, find your server, and download the content from it.
+
+These servers are essential for loading anything on the web.
+
+---
+
+class: center, middle
+
+# 🌐 🧙 ️😐❔🐉 🖥
+
+???
+
+They're also kinda complicated.
+Setting up your own server means running some software somewhere,
+which means getting it in the first place,
+making sure it's connected to the internet with a stable IP address,
+and setting up a URL which people can access it at.
+
+All this stuff might not seem too complicated to technical people, but for regular people, it might as well be gibberish.
+
+---
+
+class: center, middle
+
+# ☁ 🖥 ☁
+
+???
+
+That's why people pay (or indirectly pay) someone else to do it all for them.
+That can be anything from having someone else manage the hardware,
+Someone else set up the software for your server,
+Or totally managed solutions like Social Media where the process is totally abstracted away.
+
+The advantage is that you don't have to bother setting all this stuff up.
+The disadvantage is you have an army of middle-men between you and other people, and they might not have your best interests in mind.
+
+---
+
+class: center, middle
+
+### 🤓(📄) -> 🌐 -> 🖥 <- 🌐 <- 🤩(📄)
+
+???
+
+This is great when everything is working.
+
+The content creators make some content,
+it flies over the internet to some server,
+and eventually it's downloaded from the server by people hungry for content.
+
+The thing is, each of those arrows is actually a breaking point.
+
+
+---
+
+class: center, middle
+
+## 🖥💥 -❌-> 🌐 <-❌- 😭
+
+???
+
+That nice flow breaks down if the server isn't accessible by both parties.
+
+
+This can happen when:
+- The server software or hardware goes down
+- The server decides it doesn’t want to share your content with specific people for whatever reason
+- It’s unable to access the internet (either because of physical outage or governments / targeted attacks)
+- If there’s a natural disaster that blocks your city’s network from the server’s network
+- If your home loses internet connectivity for whatever reason
+
+And of course, in addition to the loss of service and bottlenecks, someone has to pay for all of this stuff in the middle to be up. These days you pay by having all your entire existence analyzed and sent to advertisers.
+
+---
+
+class: center, middle
+
+![Slack Logo](/Slack-icon.png)
+
+???
+
+Who uses Slack?
+
+---
+
+class: center, middle
+
+![Slack outages - It's not good](/SlackOutages.PNG)
+
+???
+
+This is the recent downtime reports people have made for it.
+
+---
+
+class: center, middle
+
+![Github Logo](/GitHub-Mark.png)
+
+???
+
+Anyone use GitHub?
+
+---
+
+class: center, middle
+
+![Github Outages - Not much better](/GithubOutages.PNG)
+
+???
+
+This is theirs
+
+---
+
+class: center, middle
+
+## 🤓💻(📄) 🏠 🤩💻
+
+???
+
+Isn't it weird that our productivity goes right out the window when some company's computer isn't running?
+Isn't it kinda weird that I can't easily send you a file on slack if I'm in the same location as you unless it goes to some cloud server first?
+
+---
+
+class: center, middle, beakerbg
+
+### 🤓 💻(📄) -> ✨P2P✨ -> 🤩 💻
+
+???
+
+So this is what Peer to Peer technology brings us.
+
+You can create some contetn on your computer, and with the magic of p2p,
+One of your friends can view it on their machine directly.
+No extra middle men required*
+
+'
+
+---
+
+class: center, middle, datbg
+
+![Dat Logo](/dat-data-logo.svg)
+
+???
+
+My favorite ecosystem for this is Dat.
+Dat is a protocol that lets you share folders over a peer to peer network with the ability to send updates across the network, and being able to view older versions.
+
+---
+
+class: center, middle, beakerbg
+
+# [Beaker](https://beakerbrowser.com)
+
+![Beaker Browser Logo](/beaker-logo.png)
+
+---
+
+class: center, middle, datbg
+
+# Demo
+
+???
+
+- Create a blank Dat Archive
+- It’s like a folder which you can share over the internet
+- Create index.html
+- Navigate to URL
+- Mention how the URL can be loaded by anybody else (demo the gateway?)
+- If I go offline, this content can be fetched from anyone else that’s online
+
+---
+
+class: center, middle
+
+# 😤
+
+???
+
+Ok, so now lets get to the blog
+
+---
+
+class: center, middle
+
+- Make Posts 📝
+- Use Markdown 🤓
+- Text editor 💬
+- JS Templates 👌
+- CSS ✨
+
+---
+
+class: center, middle
+
+# 👨‍🎨 The Layout 👨‍🎨
+
+???
+
+So let's start with the post
+
+'
+
+```html
+<title>My Post Title!</title>
+<style>
+  body {
+    margin-top: 3rem;
+    color: white;
+    background: black;
+  }
+  header {
+    font-size: larger;
+    position: fixed;
+    text-align: center;
+    background: rgba(0,0,0,0.8);
+    color: purple;
+    position: fixed;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 0.5em;
+  }
+  main {
+    margin: 0 auto;
+    max-width: 666;
+  }
+  footer {
+    margin-top: 3rem;
+    font-size: smaller;
+    text-align: right;
+    color: yellow;
+  }
+  
+  h2::before, h3::before {
+    content: "💥"
+  }
+</style>
+<header>✨ Mauve's Blog ✨</header>
+<main>
+ <h1>My Post title!</h1>
+ <p>Lorem ipsum, etc, etc etc,</p>
+</main>
+<footer>
+<marquee>
+  Copyright RangerMauve 2018
+</marquee>
+</footer>
+```
+
+---
+
+class: center, middle
+
+# 🍕 Templates 🍕
+
+???
+
+Now that we have the layout, let's make it reusable by shoving it into a template.
+
+```javascript
+export default (title, content) => `
+<title>${title}</title>
+<style>
+  @import url("/style.css");
+</style>
+<header>✨ Mauve's Blog ✨</header>
+<main>${content}</main>
+<footer>
+<marquee>
+  Copyright RangerMauve 2018
+</marquee>
+</footer>
+```
+
+---
+
+class: center, middle
+
+# ✍ The editor 📝
+
+???
+
+Next we should sketch out an editor
+
+```html
+<title>Post Editor</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #editor {
+    flex: 1;
+    padding: 0.5em;
+  }
+  
+  #savebutton {
+    border: none;
+  }
+</style>
+<header>✨ Mauve's Blog - Editor ✨</header>
+<pre id="editor" contenteditable>
+ # Post Title
+ 
+ Post Body **Here**
+</pre>
+<button id="savebutton">Save 💾</button>
+<footer>
+<marquee>
+  Copyright RangerMauve 2018
+</marquee>
+</footer>
+<script>
+  import template from "/template.js";
+  
+  const url =  new URL(window.location.href);
+  
+  document.getElementById("savebutton").onclick = async function() {
+    
+    const text = document.getElementById("editor").innerText
+
+    const tokens = marked.lexer(text)
+    
+    const title = tokens.find(({type}) => type === "heading");
+    
+    if(!title) title = {text: "New Post " + Date.now()}
+    
+    const fileName = title.text.toLowerCase().replace(/\s+/g, "-");
+    
+    const archive = DatArchive.load(url.origin);
+    
+    await archive.writeFile(`/posts/${fileName}.md`, text);
+    
+    await archive.writeFile(`/posts/${fileName}.html`, marked(text))
+    
+    window.location = `/posts/${fileName}`
+  }
+</script>
+```
+
+---
+
+class: center, middle
+
+# 😲 🦄 🌈
+
+???
+
+And there we go!
+
+A p2p Blog. Yeet.
+
+---
+
+class: center, middle
+
+# 😵❔❔
+
+???
+
+Ok, so what's with this peer to peer thing really.
+
+I know that when I download torrents for totally legal things like "Big Buck Bunny", I can't download the content if there's nobody out there to seed it.
+
+Plus, that Dat URL looks groady as heck.
+
+Also, Dat is great and all, but I don't know of anyone else that uses this beaker thing.
+
+---
+
+class: center, middle
+
+![Hashbase logo](/hashbase-logo.png)
+
+???
+
+This is what hashbase does.
+
+- You can create an account,
+- It will create a peer for your archive,
+- It'll keep your ,
+And you can register a subdomain on hashbase
+which will allow you to use the dmain as your dat URL,
+and will also set up an HTTP server to share your content on the regular web.
+
+Demo
+
+---
+
+class: center, middle
+
+- Make some posts!
+- Add a homepage
+- Add new posts to homepage
+- RSS feed
+- Magic ✨?
+
+---
+
+class: center, middle, purplebg
+
+💯 🔥Thank you! 😂👌
+
+
+    </textarea>
+    <script src="remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

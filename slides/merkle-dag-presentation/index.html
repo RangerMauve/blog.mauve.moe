@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<title>Merkle DAGs</title>
+<meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {font-size: 2em;}
+      img {
+        width: 80vmin;
+        height: 80vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+      	text-align: left;
+      	font-size: 3em !important;
+      }
+      a:link, a:visited { color: inherit; }
+
+
+      .purplebg {
+		background: #ae40ca;
+		color: #fff;
+      }
+
+      .bigtext {
+      	font-size: 2em;
+      }
+
+      .hugetext {
+        font-size: 4em;
+      }
+
+      .circlebg {
+        background: url(diagrams/background.svg);
+        background-position: -25% -25%;
+        background-size: 25%;
+      }
+      .eye img {
+        width: 0.8em;
+        height: 0.8em;
+      }
+    </style>
+<textarea id="source">
+
+class: center, middle, circlebg
+
+# Merkle DAGs
+
+???
+
+The p2p space has been really popula lately and even though technologies offer different fancy features, at the core they pretty much all use this common data structure.
+
+Today I'll be talking about what a Merkle DAG is, and how it's used in some popular p2p / decentralized applications
+
+---
+
+class: purplebg, bigtext, eye
+
+# RangerMauve ![RangerMauve eye logo](logos/RangerMauve.svg)
+
+[Works at Aetonix](https://aetonix.com)
+
+[Twitter](https://twitter.com/RangerMauve)
+
+[Github](https://github.com/RangerMauve)
+
+[Fritter](dat://fritter.hashbase.io/user/dat://3df8868d5c3420d7acdf72d17129e4569cf83723092314ea6b260d112797d8c8)
+
+A.K.A Georigy S.
+
+---
+
+class: center, middle
+
+# 🤔 "What's a DAG?" 🤔
+
+???
+
+So what is a DAG? (We'll get to the Merkle part later)
+
+Since this is a graph meetup, this is the part that lets me get away with shoving P2P stuff in your face. :P
+
+"DAG" stands for Directed Acyclic Graph, let's look into what those words mean.
+
+---
+
+class: center, middle
+
+## 👉 "Directed" 👉
+
+???
+
+Before I tell you what a directed graph is, let's look at what a "not directed" graph looks like.
+
+---
+
+class: center, middle
+
+![Emoji connected to each other](diagrams/graph-undirected.svg)
+
+???
+
+Here's a regular un-directed graph
+
+We've got some nodes. Got some edges, but an edges just say that two nodes are connected, they don't have additional information on who connected to who
+
+This could be used to model data where there's no inherant "direction" to the relationship.
+
+An example is a graph of "friends". If I'm you're friend, you're my friend. There's nothing more to really say about it.
+
+---
+
+class: center, middle
+
+![Emoji connected with arrows](diagrams/graph-directed.svg)
+
+???
+
+This is a directed graph.
+
+It's the same thing, but now the edges point at a specific node.
+
+This is useful for modeling relathionships where there data is realling pointing to something that might not be pointing back in the same way
+
+An example is your family tree. Your parents relate to you as their child, but from your perspective, they're not your children.
+
+Neither graph is really "better" than the other, per-se. They just happen to have properties that are useful for modeling different types of data.
+
+---
+
+class: center, middle
+
+## 🔃 "Acyclic" 🔃
+
+???
+
+Now that we have directions for our graph relationships, we can start to "follow" them to wherever they point.
+
+---
+
+class: center, middle
+
+![Emoji connected with arrows in a cycle](diagrams/graph-directed.svg)
+
+???
+
+As you can see here, you can start following the edges in the graph and eventually come back to where you started
+
+This is what's refered to as a "cycle"
+
+An example of data that's cyclical would be maps of streets. You could start at a given intersection, and potentially follow roads until you got back to where you started.
+
+---
+
+class: center, middle
+
+![Emoji connected together with no cycle](diagrams/graph-acyclic.svg)
+
+???
+
+Here's another graph, but no matter where we start, it's impossible for us to get back to the same spot following the pointers. This is called an "acyclic" graph
+
+---
+
+class: center, middle
+
+## 📉 "Graph" 📈
+
+---
+
+class: center, middle, hugetext
+
+💯👌😎👍🔥
+
+???
+
+That's the good stuff
+
+---
+
+class: center, middle, bigtext
+
+`Tree ⇒ DAG`
+
+???
+
+The most common kinda of DAG you'll see in the wild is a Tree
+
+This isn't to say that all DAGs are trees, it's more that all trees are DAGs.
+
+A DAG doesn't need a "root" node, and there's no concept of a "child". Multiple nodes can point to the same "child" node.
+
+---
+
+class: center, middle 
+
+# 😵 "What's a Merkle?" 😵
+
+???
+
+The name Merkle comes from Raplph Merkle who patented the concept of a Merkle DAG in 1979
+
+All right. That's the talk, I'm open for questions.
+
+---
+
+class: center, middle, hugetext
+
+## 🙄🙄🙄🙄
+
+???
+
+Just kidding, let's learn some more concepts to understand what Mr Merkle's DAG is made of
+
+---
+
+class: center, middle
+
+## "Content Addressability / Hashing"
+
+???
+
+The thing that Merkle introduced is "Content adressability" via a technique called "hashing"
+
+So what is Hashing?
+
+---
+
+class: center, middle
+
+![Document intercepted by devil with crying face](diagrams/mitm.svg)
+
+???
+
+Imagine you're trying to download a document from a potentially sketchy source
+
+How can you know that the contents of the document haven't been messed with?
+
+---
+
+class: center, middle
+
+## 😁 Hashing! 😁
+
+---
+
+class: center, middle
+
+`sha256("Hello World")`
+
+`=`
+
+`"b94d27b9934d3e08...etc"`
+
+
+???
+
+This is called a "hash function". It takes some sort of data, and then spits out a long string of text commonly refered to as "the hash of the data"
+
+For any piece of data, the hash function will always output the same length
+
+If even a single charactr is different in the input, it'll result in a totally different output.
+
+Note: Maybe replace this with an emoji diagram
+
+---
+
+class: center, middle
+
+`sha256("Hello World!")`
+
+`=`
+
+`"7509e5bda0c762d2...etc"`
+
+---
+
+class: center, middle
+
+![Diagram with devil intercepting document, but now the user is happy](diagrams/mitm-hashed.svg)
+
+???
+
+If you know what the hash of a document is ahead of time, you can easily verify that it hasn't been tamperd with when downloading
+
+What this gives you is the chance to not have to "trust" the sources you're downloading from, since you can easily tell if they're trying to pull a fast one
+
+---
+
+class: center, middle
+
+![Emoji forming a tree diagram](diagrams/tree.svg)
+
+???
+
+So how does this relate to our DAG
+
+Here we have a regular tree. There's nodes, a "parent-child" relationship. The works.
+
+But how would those nodes be referenced by their parents inside our computers?
+
+---
+
+class: center, middle
+
+![Same tree, with IDs beside emoji](diagrams/tree-ids.svg)
+
+???
+
+For example, you could reference nodes by some sort of "ID" that'd be stored in memory somewhere on the computer or file.
+
+---
+
+class: center, middle
+
+![Same tree, but each node is a "hash" of it's contents](diagrams/tree-hash.svg)
+
+???
+
+What if we referenced nodes by the hash of their contents (including the IDs of their child nodes)
+
+This is what a Merkle DAG is.
+
+Let's talk about some of the properties this data structure has
+
+The first one is that changing the value of any node will change it's hash, and the hash of all it's parents.
+
+You can imagine splitting the "content" part of the tree from the "relationsips"
+
+Doing so will give you "de-duplication" That is, if two nodes have the same contents, they'll point to the same content ID in memory.
+
+Thus, if you have a large amount of data where a lot of it might be duplicated, you can save on space
+
+This content de-duplication applies to the full tree structure.
+
+Say you're in an application where you're tying to sync two filesystems. 
+
+It's easy to see which folders are the same because they'll have the same hash.
+
+Another cool property is that if we have the hash of the root node, we can download subsets of the tree from peers without having to trust them, and without having to download the entire tree.
+
+---
+
+class: center, middle, purplebg
+
+# 🍦 Cool 🍧
+
+???
+
+These properties are really cool and are really useful for p2p applications where you want to replicate data with other peers, minimize bandwidth, and can account for malicious peers trying to give you false data
+
+So how is this data structure used in some popular decentralized tools?
+
+---
+
+class: center, middle
+
+![BitTorrent logo](logos/bittorent.jpg)
+
+???
+
+BitTorrent is probably the most well-known and most-used p2p software.
+
+It's a protocol for downloading files from a p2p swarm.
+
+Once a peer has downloaded a file from the network, they share the file with other peers that want it.
+
+---
+
+class: center, middle
+
+![Graph representing file contents](diagrams/bittorrent.svg)
+
+???
+
+BitTorrent does this by creating a Merkle DAG out of chunks of its files and each peer that has a chunk advertises that they have it on the p2p network
+
+In order to download all of the contents, you just need the hash of the root of the merkle DAG and you can download the rest of it from peers that have already downloaded it.
+
+---
+
+class: center, middle
+
+![Git Logo](logos/git-logo.jpg)
+
+???
+
+If you're a developer, you've probably used some sort of "version control software", and you've probably used "Git"
+
+---
+
+class: center, middle
+
+![File tree](diagrams/git.svg)
+
+???
+
+Git makes use of Merkle DAGs to represent changes to be synced with remotes.
+
+When you get it to track your files, it will create hashes of all the files, and create a merkle DAG representing the file system.
+
+When you "commit" your changes, it will add to another Merkle DAG containing your change history.
+
+Synchronizing between remote peers (like Github) involves exchanging the nodes in your Merkle DAGs that the other sides don't have.
+
+Seeing what differences exist in two codebases can be done by comparing the two Merkle DAGs to just the subset of files that are different.
+
+There's a little bit more to it with verifying authors and the actual protocol, but that's the gist of it.
+
+---
+
+class: center, middle
+
+![Bitcoin logo](logos/Bitcoin-logo-logotype.png)
+
+???
+
+A blockchain is a long Merkle DAG where each node points to one previous node.
+
+---
+
+class: center, middle
+
+```
+hash(
+  [+666, -420, +13]
+  hash(previous data)
+  nonce
+)
+```
+
+???
+
+When a new "block" is created, everyone in the blockchain's network will take note of it and uses it for the "next" block
+
+Transactions are added to each "block" as part of it's data.
+
+Obviously, creating loads of blocks would swamp the network and create conflicts on which node is supposed to be "next" in the history.
+
+---
+
+class: center, middle
+
+`hash(data + nonce)`
+
+`=`
+
+`000XXXXX...etc`
+
+???
+
+The Bitcoin network adds an algorythm on top of the Merkle DAG called "hash cash" in which blocks will have an addition field called a "nonce"
+
+This field is randomly changed until the "hash" of the block starts with some number of zeros.
+
+This makes it hard to find valid blocks to add to the network and the computer that finds a value that works will be awarded a bitcoin.
+
+The high amount of computation requried to add to the network prevents malicious peers from trying to oversaturate the network.
+
+It's also a great way to boil the oceans to make some venture capitalists rich!
+
+---
+
+class: center, middle, purplebg
+
+## 🤷‍ So what? 🤷‍
+
+???
+
+Graphs are awesome, and Merkle DAGs are a great data structure for building applications that have innate decentralization.
+
+A lot of these applications might seem like "magic", but hopefully this talk has showed you that they're all pretty much the same thing with a bit of sugar for what data is stored and how it's shared.
+
+My hope is that this knowledge can empower you to make more applications and to better understand how stuff around you works under the hood.
+
+---
+
+class: center, middle
+
+## 👏 Thank you 👏
+
+</textarea>
+<script src="remark-latest.min.js"></script>
+<script>var slideshow = remark.create();</script>

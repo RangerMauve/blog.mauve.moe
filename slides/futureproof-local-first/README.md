@@ -1,0 +1,54 @@
+# Future Proof Workshop
+
+Total 2:00
+
+- Intro
+- Cloud First Thinking (10)
+    - Outline
+    - Advantages
+        - Easy to moderate
+        - No need to be online
+        - One point can serve many
+        - Aggreggation is easy
+    - Disadvanteges
+        - Single point of failure
+        - Expensive at scale
+        - Not always available
+        - Can't work offline
+    - Power Dynamics
+    - Censorship
+- Local First Thinking (10)
+    - Outline
+    - Advantages
+    - Disasvantages
+        - Content less reliable if provider offline
+        - Can be slower for initial load
+        - Aggreggating lots of data is harder
+        - No central place to moderate content
+        - Harder to monetize (no rent-seeking, no data harvesting by default!)
+    - Social Impacts
+- Building blocks (10)
+    - Peer to Peer protocols
+    - Content addressability
+    - Encryption
+    - Gossip protocols
+    - Subjective Moderation
+    - Mesh Networks
+- Use cases (20)
+    - Marginalized people getting censored on platforms (e.g. queer people, activists)
+    - Low (or no) connectivity environments
+    - Disaster-prone communities with needs for resilience
+- Existing Applications (10)
+    - Berty Chat (uses libp2p/IPFS, local networks, bluetooth)
+    - Manyverse (SecureScuttlebutt, local networks, bluetooth)
+    - Mapeo (Hypercore, local networks)
+    - Pushpin (Hypercore, local networks)
+    - Agregore Browser (hypercore,ipfs,ssb,bittorrent, local networks ad-hoc wifi)
+- Breakout (Folks will split into groups and write ideas into hackmd) (15)
+    - What have you experienced that would benefit from local first
+    - List some ways this mindset works outside just the technical realm
+- Reading some of the results (10)
+- What can you do next (5)
+    - Think about what communities aren't served by the cloud and by centralized thinking
+    - Work with them to take back control and to make things more resilient and community centric by default
+- Wrapup / Q&A (30)

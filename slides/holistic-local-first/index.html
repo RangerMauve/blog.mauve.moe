@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Holistic Local-First Software</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="This talk looks at Mauve's vision for a holistic local-first software stack and the bits that can be put together to make it happen.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: 'Fira Code', system-ui; }
+      text { font-family: 'Fira Code', 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+      .ipldbg {
+        background: #1D74F2;
+        color: white;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 100%;
+        height: 70vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      pre {
+        display: inline-block;
+      }
+
+      .agbg code {
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+      }
+
+      .ipldbg code {
+        border: 1px solid white;
+      }
+
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.75em;
+        font-size: 1.25em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# Holistic Local-First Software
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+<small><a href="https://ranger.mauve.moe">By Mauve Signweaver</a></small>
+
+???
+
+Thanks for coming out!
+My name is Mauve,
+my pronouns are they/it,
+and today I'm going to be talking about my vision for Holistic Local-First Software.
+
+This is going to be high level and we won't be getting too much into the technical details.
+If you see something you don't understand, try searching it up, or messaging me about it after the talk.
+
+---
+
+class: center, middle, agbg
+
+## What is it?
+
+`Local-First Software` + `Infrastructure` + `Community`
+
+???
+
+So, what does "Holistic Local-First Software" even mean?
+
+To start, Local-First software prioritises user agency, works offline, and scales up as your connectivity grows from local networks the the entire Internet.
+
+I think that we can take it a few steps further and imagine what it would look like to have this be the baseline for information technology as a whole
+
+where we have the software itself
+
+paired with infrastructure that follows similar principles
+
+all led by communities that collaborate together in the same way that the software does.
+
+---
+
+class: center, middle, agbg
+
+## What are the parts?
+
+![The described components connecting together as nodes in a graph](./holistic.svg)
+
+???
+
+So, there's a few bits that fit together for this vision to work.
+There's the Agregore Browser,
+Peer to Peer Protocols,
+Peer to Peer Databases,
+Community Mesh Networks,
+Web Archviing,
+and Cooperative Governance.
+
+Before we get too overwhelmed lets break it down piece by piece.
+
+---
+
+class: center, middle, agbg
+
+## Peer To Peer Protocols
+
+![P2P Protocols relating to databases, agregpore, mesh networks and web archives](./protocols.svg)
+
+???
+
+At the core of all this are peer to peer data transfer protocols.
+
+Think of these as alternatives to the HTTP based web that we see in our browsers and cloud services now.
+
+Instead of needing to send all your data to a third party (or to run a server yourself in the cloud), you can keep it on your device and connect directly to others to give them a copy.
+
+One of the ways that you can get started on messing with these protocols is the new Distributed Press API which makes it easy to publish static assets accross several protocols at once.
+You can read up on how these protocols work and what the tradeoffs are between them on the Hypha Coop Dripline blog.
+
+---
+
+class: center, middle, agbg
+
+## Agregore
+
+![Agregore relating to p2p protocols, web archiving, mesh networks, and local-first web apps](./agregore-diagram.svg)
+
+???
+
+The next important bit for me is how to expose these protocols to people in a way where they can build local-first apps without too much extra setup.
+
+This is were Agregore comes in.
+It combines p2p protocols natively the way other browsers support HTTP,
+and enables people to use basic HTML, CSS, and JavaScript to load and publish p2p content without needing to install extra build tools or worry about cross platform app distribution.
+
+This is how you can load any content on p2p networks and load local-first web apps to dynamically interact with and create data.
+
+I think of this as the "user facing" portion of the stack which average people are likely to tinker with.
+
+---
+
+class: center, middle, agbg
+
+## Local-First Web Apps
+
+![Local-first apps relate to p2p databases, HTML, CSS, JS, Mac, Linux, Android, Windows](./apps.svg)
+
+???
+
+So, there's a bunch of ways to do "local-first" apps, but I'd like to focus on the web apps you can make with Agregore.
+
+What's interesting from other approaches is that the app becomes just another bit of data that you can load and create within Agregore.
+
+You can author your app with just the bits of the UI you need, and know that you can load it on Mac, Windows, Linux, and Android without needing to rewrite your code from scratch.
+
+We're currently working on some educational materials that build off of existing web development concepts and add this new bit of p2p magic which lets people skip having to learn "the back end" entirely.
+
+---
+
+class: center, middle, agbg
+
+## Peer To Peer Databases
+
+![Peer to Peer Databases relate to Prolly Trees, RDF, and HAMTs](./dbs.svg)
+
+???
+
+P2P and Agregore on their own aren't enough to make these apps viable.
+
+An important portion which I feel hasn't been getting enough attention is how to get data to load as fast as possible.
+
+Right now a lot of apps rely on fully synchronizing all your data before it can be usable,
+but with some new data structures we can have our p2p data contain database indexes so that you can load just the bits necessary for your current view and skip loading all the rest.
+
+This is what the new IPLD Prolly Tree spec is used for and we're actively working to make these APIs easier to use for different data use cases.
+
+This is also where we should be looking more at standards for linked data so that more information can be interoperable without everybody having incompatible datasets in siloed apps.
+
+---
+
+class: center, middle, agbg
+
+## Community Mesh Networks
+
+![Agregore connects to ad-hoc and community networks, they connect to peer to peer protocols and cooperative governance](./mesh.svg)
+
+???
+
+One of the things that gets in the way of fully local-first setups is that a lot of folks are stuck relying on centralized infrastructure set up by for-profit Internet Service Providers.
+
+An alternative can be seen in communities which set up their own network infrastructure by gluing routers together or setting up sophisticated wireless connections over long distances.
+
+Outside of community organized networks, Agregore on Android has been experimenting with making ad-hoc mesh networks
+by creating and connecting to wifi hotsposts directly on your devices and running peer to peer connections over them.
+
+What's interesting is that with p2p protocols we can start taking more advantage of the physical topology of our networks
+so that we can prioritize loading data from devices nearby and caching data within the network itself.
+
+For example, if you and I are beside each other, we should be able to share videos right between our devices instead of needing to reach out to a cloud server somewhere in the USA.
+
+I'm working towards partnering with existing communities that are already deploying these mesh networks
+and making them even more useful by reducing the barrier to creating software and content by the communities themselves.
+
+---
+
+class: center, middle, agbg
+
+## Web Archives
+
+![Web Archives are connected to peer to peerprotocols and databases, as well as cooperative governance](./archives.svg)
+
+???
+
+However, it's important not to be too utopian and to figure out how to transition to using these tools from what we have right now.
+
+Web Archiving could be a path to bridging existing web content with the peer to peer content local to a mesh.
+
+Tools like WebRecorder's Browsertrix Cloud could be run locally by the community so that web pages could be pulled down into an archive once, and then shared over the local network with users.
+
+This would enable us to carry around archives between communities and save on the overall bandwidth needed to load data from the internet.
+
+WebRecorder is currently working on new optimizations for their WACZ archive format
+so that resources within archives can be agressively deduplicated at the p2p protocol layer as they're being loaded.
+
+This is also were cooperatively run search indexes could come in handy so that groups could pool information together
+and search through it without needing to rely on Google's cloud infrastructure and with the search results being available for offline use.
+
+---
+
+class: center, middle, agbg
+
+## Community Governance
+
+![Cooperative governance links to cooperatives, Distributed Autonomous Organizations, and Inter-Group Transactions](./gov.svg)
+
+???
+
+Getting all of this stuff to work requires us to be mindful of how we cooperate with other groups and with individuals.
+
+This is where cooperative governance is important either via traditional Worker or Consumer cooperatives,
+Decentralized Autonomous Organizations, or with folks working togehter as equals while figruing out their formal structures.
+
+We should also be working towards inter-group solidarity and collaboration.
+
+This might mean joining in to build tools together, enabling inter-chain tokenomics between localized economies, or prefering to transact with other cooperatively owned businesses.
+
+At the end of the day this is actually the hardest bit to figure out since the realtionships we build will influence how infrastructure can be used and vise versa.
+
+---
+
+class: center, middle, agbg
+
+## Let's Build Together
+
+- A new foundation for people-first technology
+- Looking for Funding and Collaborators
+- [contact@mauve.moe](mailto:contact@mauve.moe)
+- https://agregore.mauve.moe
+
+???
+
+So that's the gist of it.
+Next steps are to make it a reality, and for that we need to start working together.
+Specicifically we need to figure out how to fund all this work, who's interested in building and deploying this stuff, and how we can make it accessible to people to build on top of.
+
+I believe that these pieces together can give us a new foundation for building technology which centers people and their needs while being more resilient in changes in the physical and social environment.
+
+If this is up your alley, send me an email or come hop into one of the chats linked at the bottom of the Agregore website.
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>

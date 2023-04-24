@@ -1,0 +1,84 @@
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" width="512" height="512">
+	<style>
+		.outline {
+			stroke: black;
+			stroke-width: 8px;
+			fill: none;
+		}
+		.outline-shadow {
+			stroke-width: 8px;
+			filter: url(#blur);
+		}
+		.eye {
+			clip-path: url(#eye-boundry);
+		}
+		.sclera {
+			fill: white;
+		}
+		.pupil {
+			fill: black;
+		}
+		.iris {
+			fill: #84C;
+			stroke: #a55fa6;
+			stroke-width: 2px;
+			filter: url(#blur);
+		}
+		.glare-spot {
+			fill: white;
+			filter: url(#blur-small);
+		}
+		.vein {
+			stroke: #F00;
+			stroke-width: 4px;
+			fill: none;
+			filter: url(#blur-small);
+		}
+		.haze {
+			fill:none;
+			stroke: red;
+			stroke-width: 16px;
+			filter: url(#blur);
+		}
+	</style>
+	<defs>
+		<clipPath id="eye-boundry">
+			<circle cx="256" cy="256" r="240" />
+		</clipPath>
+		<filter id="blur">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+		</filter>
+		<filter id="blur-small">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+		</filter>
+		<path id="vein-line" class="vein" d="M 256 16 l 0 32" />
+		<path id="vein-zigzag" class="vein" d="M 256 16 l 0 4 l 4 8 l -16 8 l 16 8 l -16 4" />
+		<path id="vein-curve" class="vein" d="M 256 16 m -8 0 l 8 16 l 4 4 l -4 4 l -8 4" />
+		<path id="vein-split" class="vein" d="M 256 16 l 0 16 l -16 16 M 256 32 l 16 8" />
+
+		<g id="vein-group">
+			<use transform="rotate(0 256 256)" xlink:href="#vein-line" />
+			<use transform="rotate(60 256 256)" xlink:href="#vein-zigzag" />
+			<use transform="rotate(30 256 256)" xlink:href="#vein-curve" />
+			<use transform="rotate(90 256 256)" xlink:href="#vein-split" />
+		</g>
+	</defs>
+	<g class="eye">
+		<g>
+			<animateTransform attributeName="transform" attributeType="XML" type="translate" dur="5s" repeatCount="indefinite" values="-32 0; 32 0; -32" />
+			<circle class="sclera" cx="256" cy="256" r="512" />
+			<use transform="rotate(0 256 256)" xlink:href="#vein-group" />
+			<use transform="rotate(120 256 256)" xlink:href="#vein-group" />
+			<use transform="rotate(240 256 256)" xlink:href="#vein-group" />
+			<circle class="iris" cx="256" cy="256" r="126" />
+			<circle class="pupil" cx="256" cy="256" r="80" />
+			<g transform="rotate(-45 256 256)">
+				<circle class="glare-spot" cx="176" cy="256" r="24" />
+				<circle class="glare-spot" cx="336" cy="256" r="24" />
+			</g>
+		</g>
+		<circle class="haze" cx="256" cy="256" r="240"/>
+	</g>
+	<circle class="outline" cx="256" cy="256" r="240" />
+	<circle class="outline outline-shadow" cx="256" cy="256" r="240" />
+</svg>

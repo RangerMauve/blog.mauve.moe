@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Peer to Peer Collage Workshop</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Lets make a Peer to Peer Web Collage">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      texttt { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 80vmin;
+        height: 80vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+<img src="./icon.svg"/>
+
+# Lets Make a Peer to Peer Web Collage
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hello everybody, thank you so much for taking the time to attend this workshop.
+
+I hope you're all having a great mozfest and a good week in general.
+
+Today we're going to be making a peer to peer collage together using 90's internet gifs.
+
+To do this we're going to be learn a bit about how peer to peer web stuff works, some basic HTML and CSS skills, and some Chrome Devtools skills for modifying stuff on our page.
+
+Then we're going to show off our p2p collages to each other by sharing our links and if we have time, by embedding each others collages within each other.
+
+If you have any questions or get lost, feel free to post in the chat so we can make sure we're all in sync.
+
+Most of the stuff I'm going to say is going to be in the speaker notes of the slideshow which you can see by pressing "O"
+
+Regardless of whether you're using the notes, I encourage you to follow along with the slides so you can copy and paste code snippets where appropriate and backtrack to previous slides if you need them.
+
+---
+
+class: center, middle, purplebg
+
+# @RangerMauve
+
+## `Mauve`
+
+### Mauve Software Inc.
+
+???
+
+I'm Mauve, or @RangerMauve.
+
+I do consulting through my company Mauve Software Inc.
+
+And I'm high key obsessed with peer to peer and local first software
+
+---
+
+class: middle
+
+### How The Web Works
+
+- Servers
+- Needs Connection
+- Needs Setup
+
+???
+
+So before we talk about the peer to peer web, we should quickly talk about how the conventional web works.
+
+In order to load a web page, you browser first needs to talk to a "server" somewhere on the internet.
+
+This browser will find the servers IP address, send it a request for the URL you're trying to load, and the server will respond with the data for the URL over the connection.
+
+This means that if you want to publish or access any sort of data, you need to have a server somewhere that can be connected to and serving this data.
+
+Servers and the Cloud work for a lot of cases where you have money for for a decent internet connection, money for hosting services or trust that the company hosting your data wont' go down and won't do sketchy things with it.
+
+All of that falls apart if you're living somewhere without stable power and internet, or can't afford to be always online.
+
+As well, if you just want to have something of your own online that's actuall under your control, in addition to authoring your content, you need to learn about server maintenance and setup.
+
+---
+
+class: middle
+
+### How The P2P Web Works
+
+- Person To Person
+- Works Offline + Local Network
+- No Extra Setup
+
+???
+
+Peer to peer protocols flip this situation on it's head.
+
+Instead of having a server somewhere on the cloud, you every person has a server running on their computer, and they download data from each other and re-share it.
+
+To publish files, you create a new "peer to peer website" on your computer, and put some files in it.
+
+The easiest way to interact with this stuff is to use a web browser that has supporrt for these protocols such as Agregore, Beaker, Brave, or Gateway.
+
+---
+
+class: center, middle, agbg
+
+### Setting up Agregore
+
+## [Download](https://github.com/AgregoreWeb/agregore-browser/releases)
+
+???
+
+In our case we'll be using the Agregore browser since that's what I'm most familiar with. :P
+
+For those that have done web development stuff in the past and have talked to HTTP servers, the transition to P2P should be pretty smooth.
+
+Agregore lets you talk to different P2P protocols using custom protocol schemes and `GET/POST` methods using the browser's `fetch()` API (or XHR, but fetch is easier to use).
+
+It's available for the major Desktop operating systems like Windows, MacOS, and Linux.
+
+First, we'll want to go to the [Releases](https://github.com/AgregoreWeb/agregore-browser/releases) page and download the installer that makes sense for your platform.
+
+You can see all the files in the "Assets" section of the latest release.
+
+The exe works on Windows, the DMG file works on Mac OS, and for Linux you can choose betewen Deb or AppImage.
+
+I encourage you to install these now while I keep going over some of the other groundwork.
+
+If you have questions about installing feel free to post the in the chat, if anybody in the chat knows thhe answer I welcome you to answer, else I'll try to keep track and answer them as well.
+
+---
+
+class: center, middle, datbg
+
+### HTML and CSS Basics
+
+???
+
+All websites are made out of three basic parts. HTML for the general strucutre and the text content, CSS for styling that structure, and JavaScript for making websites interactive.
+
+However, JavaScript is mostly optional if you just want to put something static on the web, so we'll mostly gloss over it.
+
+HTML is actually all you need for basic documents where you just want to shove some text on a page.
+
+I'm going to go over some examples of HTML snippets and explain the different parts.
+
+Don't worry about running these anywhere yet, it's mostly to give you a feel for them.
+
+---
+
+class: center, middle, agbg
+
+```html
+<!DOCTYPE html>
+<title>Hello MozFest!</title>
+<h1>Weeeeeeeeeeeeeee</h1>
+```
+
+???
+
+So here's an example HTML page.
+
+All web pages are actually text files which people can read and write normally but which the web browser can interpret to build up what you see on the screen.
+
+Let's go over it line by line.
+
+The first line is what's called the "Doctype" this used to a super complex string of text to identify what web features the browser wants to enable.
+
+Luckily, to use the latest and greatest web features, all we need to do is type `<!DOCTYPE html>` and stop worrying about it.
+
+Next we have, what in my opinion is the most important part of a document: The title.
+
+Lets also talk about the greater than and less than signs here.
+
+These are what's called "HTML tags". It's a less than sign, a tag name (and some optional "attributes" which we'll get into later), and a greater than sign.
+
+This tells the browser to create the "element" on the screen that coresponds to that tag name.
+
+The browser comes with a bunch of built in tag names that do different things. A large chunk of them actually do the same thing visually, but have different meanings to screen readers and the such.
+
+In this case, the `title` element is telling the browser that the title of this page is `"Hello MozFest"`.
+
+Note that this tag is more of an instruction to the browser to change some metadata rather than to display something on the screen.
+
+I think that titles are super imortant because that's what you can use to go through the history of web pages you've visted before as well as differentiate between the pages you have open on your computer more easily.
+
+Next we have an HTML tag telling the browser to create a "Level one header".
+
+This is usually used to mark the main heading on a web page and is useful for screen readers to get info about what your page is about.
+
+Unlike the title tag, this will actually put something on the page itself.
+
+---
+
+class: center, middle, agbg
+
+```html
+<!DOCTYPE html>
+<title>Red Square</title>
+<div style="
+  position: fixed;
+  top: 10vmin;
+  left: 10vmin;
+  height: 80vmin;
+  width: 80vmin;
+  background: red;
+">
+  This is a red square
+</div>
+```
+
+???
+
+So now lets learn a bit about CSS and how to style stuff.
+
+First, lets' check out line 3 where we're defining a `div` tag.
+
+These are general containers that don't really display anything special.
+
+In addition to the tag name, we added an `attribute` called `style` which contains the CSS to style this element.
+
+CSS styles contain pairs of style names and style values separated by a colon and followed by a semicolon.
+
+The colon and semicolon are important for the browser to understand what you want so check for them if your styles don't work.
+
+The `position: fixed;` tells the browser that this element should be placed relative to the window regardless of what other stuff is on the screen.
+
+The `top` and `left` styles tell you how far from the top and from the left the div should be placed.
+
+`vmin` in a size which means `a percentage of either the widht or height of the screen depending on which is smaller`
+
+You could also use `vw` for `percentage of the width`, `vh` for percentage of the `height` and `vmax` for the `maximum between width and height`.
+
+Next we set the `height` and `width` to be 80% of vmin.
+
+And finally we say that the background of this div should be red.
+
+There's more to CSS, but this is the basics of what we'll actually be using.
+
+---
+
+class: middle, purplebg
+
+### Q&A so far
+
+- Questions about HTML tags?
+- Questions about style?
+- Stuff I didn't think of?
+
+???
+
+Check that everyone has Agregore installed
+
+---
+
+class: center, middle, agbg
+
+### Making our website
+
+## [hyper://collage/](hyper://collage/)
+
+???
+
+Making a new p2p website is super simple in Agregore.
+
+Open up a new window in Agregore and navigate to `hyper://collage`
+
+Whenever you want to make a new p2p website, use the `hyper://` protocol, and make up a name for it that uses lowercase letters with no spaces.
+
+This will use a secret key on your computer to derive a new URL.
+
+Even if two people use the same name, they'll be generating a website that's unique to them.
+
+Next, let's look at Chrome DevTools and see how we can resolve our website name to a link that people can actually load.
+
+---
+
+class: middle, purplebg
+
+### DevTools
+
+- `ctrl+shift+I`
+- `Right Click > Insepect Element`
+- `Alt > File > Open Dev Tools`
+
+???
+
+Press `Ctrl+Shift+I` on your keyboard to open up the devtools and resize your window until it's feeling fomfortable.
+
+Alternately you can right click the page and press `Inspect Element`, or hit `alt` to open up the application menu, and navigate to `File > Open Dev Tools`.
+
+Just gonna give it a second for everybody to get theirs open, feel free to comment if you're having any trouble.
+
+These tools come bundled with every web browser and they let you inspect and modify anything on a page, live.
+
+We're going to be using this to execute some JavaScript and to mess with the styles directly.
+
+---
+
+class: middle, agbg
+
+### Importing Scripts
+
+```JavaScript
+const {save, addImage} = await import('hyper://blog.mauve.moe/slides/p2p-collage/helpers.js')
+```
+
+???
+
+I've created some scripts that'll make stuff easier for the workshop.
+
+Go to the `console` tab in the devtools and copy paste the following code into the box at the bottom and hit enter.
+
+This just added a couple of commands to the page which will let you update your collage without messing too much with JavaScript.
+
+---
+
+class: middle, agbg
+
+### Making the web page
+
+```JavaScript
+await save(`
+<!DOCTYPE html>
+<title>Your Title here</title>
+<h1>My Collage</h1>
+`, '/index.html')
+```
+
+???
+
+Our website is currently empty, but we can populate it with a basic web page
+
+Copy paste this command into your console, this will create an `index` page which will be loaded by default when you go to the root of your website.
+
+Before running it, I encourage you to change the page title and header to either have your name or something that will evoke the theme you're going for.
+
+Now run it, and open up the following URL.
+
+---
+
+class: center, middle, agbg
+
+## [hyper://collage/index.html](hyper://collage/index.html)
+
+???
+
+There we go! You just made your first peer to peer webpage, give yourselves a pat on the back.
+
+---
+
+class: center, middle, datbg
+
+### Adding images
+
+## [GifCities](https://gifcities.org/)
+
+???
+
+Now that we have a basic page, lets spice it up with some gifs!
+
+We're going to be using the Internet Archive's [GifCities](https://gifcities.org/) website to find some fancy gifs to express ourselves.
+
+I'm going to quickly show you how to add an image and position it, and then we'll take a few minutes to work on our collages and then share with each other.
+
+So first I'm going to find an image, right click it, and click `Copy source address`.
+
+This will put the image into my clipboard
+
+Next I'm going to open up my website, and import that script from before, then use the saveImage function to save my image.
+
+---
+
+class: center, middle, agbg
+
+```JavaScript
+const {save, addImage} = await import('hyper://blog.mauve.moe/slides/p2p-collage/helpers.js')
+
+await addImage("PASTE YOUR URL HERE")
+```
+
+???
+
+Now we'll refresh, and, BAM! We've uploaded an image to our website, and injected it into the page.
+
+If I run this multiple times, the script will detect that we already have the image and just add a second reference to it.
+
+---
+
+class: center, middle, agbg
+
+### Positioning images
+
+```css
+element.style {
+  width: 50vw;
+}
+```
+
+???
+
+So after we've added some images that we like on the page, lets use the devtools to position them around the screen.
+
+Lets learn some tricks for styling them.
+
+First we're going to make this image fill half the screen.
+
+Right click the image, and click `Inspect Element` which will open up the devtools and let us modify it's style.
+
+I'm going to change the width to be `50vw` and we can see that it scales up, and in the Elements view we can see that it has a new attribute called "style" with the style we just set added onto it.
+
+However, if I refresh the page, it'll load original page content and we'll lose our styling.
+
+In order to persist the changes to the style, we'll want to invoke the `save` function.
+
+---
+
+class: center, middle, agbg
+
+```JavaScript
+const {save, addImage} = await import('hyper://blog.mauve.moe/slides/p2p-collage/helpers.js')
+
+await save()
+```
+
+???
+
+This will take the HTML currently on the page, and update your `index.html` file to have it's contents.
+
+Since the Devtools Inspect Element feature lets us modify the HTML directly, we can do most of our work there, and save it without needing to think too much about 
+
+At this point I encourage you to start adding images and using the CSS we saw earlier for the red box example to position your elements while I go over some more tricks.
+
+Don't forget to save your progress so you don't lose your work!
+
+Now let's try playing with positioning.
+
+---
+
+class: center, middle, agbg
+
+```css
+element.style {
+  position: fixed;
+  top: 1vmin;
+  bottom: 1vmin;
+  left: 1vmin;
+}
+```
+
+???
+
+This will position the image to stretch the page on the left side from the top to bottom.
+
+You can mess around with this by getting rid of either top or bottom to move it to one of the corners of the page.
+
+You can also increase or decrease the values in order to move it across the page
+
+---
+
+class: center, middle, agbg
+
+```css
+element.style {
+  position: fixed;
+  width: 50vw;
+  height: 50vh;
+  top: 25vh;
+  bottom: 25vh;
+  left: 25vw;
+  right: 25vw;
+  object-fit: contain;
+}
+```
+
+???
+
+Here we say we want the image to take 50% of the width and height, and for it's sides to be 25% from the outside of the page, effectively centering it.
+
+The `object-fit` property here tells the browser to preserve the aspect ratio of our gif so that it doesn't get stretched.
+
+---
+
+class: center, middle, datbg
+
+### Q&A - Positioning
+
+???
+
+Alright, with that in mind, lets see if we can help folks in the chat.
+
+---
+
+class: middle, purplebg
+
+### Getting Our Public URL
+
+- `ctrl+shift+i`
+- `Network`
+- Reload the page
+- Find the `document` request
+- Check the `link` response header
+
+???
+
+Now that we've had some time to work on our websites, lets look at how we can get the public URL for our website.
+
+Open up `Chrome Devtools` with `ctrl+shift+i`
+
+Next go to the `network` tab and reload the page
+
+This shows you all the data that's been loaded or uploaded by the page
+
+Click on the `type` column to sort by type.
+
+Now find the type that says `document` and click on it
+
+Next find the `Response Headers` section and find the one that says `link`
+
+In there you should see the public URL for your website, and in fact you can load that up now and keep working on it.
+
+---
+
+class: center, middle, datbg
+
+### Showcase
+
+???
+
+Sweet, would anybody like to share theirs in the chat? You could either share it and talk about it, or I could just load it on the screen for everyone to see.
+
+Wow cool, neto, ha ha, snap!
+
+---
+
+class: center, middle, datbg
+
+### Collage Collage
+
+(If we have time)
+
+???
+
+So since we have a bit of time left, lets learn how to collage the collages together by embedding each others pages within each other.
+
+---
+
+class: center, middle, agbg
+
+```html
+<iframe
+  src="hyper://example.com"
+  style="
+    width: 10vw;
+    height: 10vh;
+    border: none;
+  "
+></iframe>
+```
+
+???
+
+This is an "inline frame" tag, which lets you embed another webpage within your webpage. The `src` attribute points to the URL of a webpage you wish to embed.
+
+Would anybody like to post a link to their collage so that I could share it with everyone?
+
+---
+
+class: center, middle, agbg
+
+```JavaScript
+const {append} = await import('hyper://blog.mauve.moe/slides/p2p-collage/helpers.js')
+
+await append(`
+<iframe
+  src="PASTE THE URL HERE"
+  style="
+    width: 10vw;
+    height: 10vh;
+    border: none;
+  "
+></iframe>
+`)
+```
+???
+
+There's actually a secret command I didn't mention before in the helper scripts which makes it easy to append some HTML to your page
+
+---
+
+class: center, middle, datbg
+
+### Take-aways
+
+???
+
+I hope this was a fun introduction to the peer to peer web and making your own things.
+
+I'd love it if people could tweet their URLs which I can add to my "super peer" which can keep them online for you.
+
+I hope that this will inspire some folks to try to make stuff and to think about alternative ways we can interact with the web that's more local, more resiliant, and more accessible.
+
+Thank you.
+
+
+---
+
+class: center, middle, purplebg
+
+# 🔥 🙇‍ Thank you! 🙇‍ 🔥
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script src="./mermaid.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create();
+
+      slideshow.on("afterShowSlide", s => {
+        const [slide] = document.getElementsByClassName("remark-visible");
+        mermaid.init(Array.from(slide.getElementsByClassName("mermaid")));
+      });
+    };
+    </script>
+  </body>
+</html>

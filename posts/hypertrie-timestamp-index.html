@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Hypertrie Timestamp Index</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="**Side note:* The ideas written here have been implemented in the [hyperbeedeebee](https://github.com/RangerMauve/hyperbeedeebee) module." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="hypertrie-timestamp-index">Hypertrie Timestamp Index</h1>
+<p><em>*Side note:</em> The ideas written here have been implemented in the <a href="https://github.com/RangerMauve/hyperbeedeebee">hyperbeedeebee</a> module.</p>
+<p>One common case I see in append-only-log based p2p application is the need to index data.
+Essentially, the application will use the p2p network to connect to peers, then load all their data, process it, and save it to a local database that can then be queried.
+The UX of this pattern ends up feeling a bit clunky to me in that users have to wait for all this loading and indexing to happen.</p>
+<p>Specifically I&#39;m thinking of projects like <a href="https://scuttlebutt.nz/">Secure Scuttlebutt</a>, <a href="https://cabal.chat/">Cabal</a>, and <a href="https://github.com/beakerbrowser/fritter">Fritter</a>.</p>
+<p>Two things that they have in common is that they have a series of posts ordered by timestamp and each post has a &quot;type&quot; which is used for filtering / searching.</p>
+<h2 id="leveldb-indexing">LevelDB indexing</h2>
+<p>Most of these use some sort of library that wraps over <a href="https://github.com/Level/awesome">LevelDB</a>.</p>
+<p>The interface for LevelUP is a key-value store with range queries. So you can put a value into the store at a given key, get the value for a given key, and scan through the keys alphaneumerically starting at a certain value and going to a certain value.</p>
+<p>Indexes are built on top of this by using prefixes in keys and relying on the sort order of scanning.</p>
+<p>E.g. if you have the following data:</p>
+<pre><code>user:alice
+user:bob
+user:eve</code></pre><p>You can scan through the list and get all things that start with <code>user:</code> and are less than <code>user:c</code> and get back the values <code>user:alice</code> and <code>user:bob</code>.</p>
+<p>Similarly you could have an index based on timestamps for:</p>
+<pre><code>post:123903271238907123
+post:133903271238907123
+post:143903271238907123</code></pre><p>And search for posts greater than <code>133903271238907123</code> (say it&#39;s the last time you loaded posts).</p>
+<p>This is handy for local databases, but sadly we don&#39;t have anything like leveldb that can be loaded sparsely over the p2p network.</p>
+<p>That&#39;s why these modules need to download all the data, and then process it into the index for it to actually be useful (the alternative, scanning through all the raw data is very inefficient).</p>
+<h2 id="rolling-hash-array-mapped-trie-hypertrie">&quot;Rolling Hash Array Mapped Trie&quot; - Hypertrie</h2>
+<p>A cool new module we have in the Dat ecosystem is <a href="https://github.com/mafintosh/hypertrie">Hypertrie</a>.</p>
+<p>I&#39;m not a computer scientist or a mathematician, so I&#39;m not going to try to explain what a HAMT is, but feel free to search it up on Duck Duck Go.</p>
+<p>Much like LevelDB, it&#39;s also a key-value store.
+You can put values for a key, and get the value for a key, but instead of doing range queries on the entire key space, it uses a sort of directory structure.</p>
+<p>For example, if your keys look something like:</p>
+<pre><code>/users/alice
+/users/bob
+/posts/helloworld.md</code></pre><p>You can query for the contents of <code>/users/</code> and get back the list <code>[alice, bob]</code>. What&#39;s cool is that this lookup is performed by sparsely loading chunks of the append-only-log that the hypertrie uses for storage.</p>
+<p>One caveat is that the efficiency goes down if you have a lot of items within a directory.
+You can&#39;t scan for these keys alphabetically because they are <a href="https://en.wikipedia.org/wiki/Hash_function">hashed</a> before they&#39;re stored.</p>
+<p>Thus, if you want to build up an index where you sort through things, you&#39;ll want to set up intermediate folders to refine the search rather than scanning through the list of keys like you would with LevelDB.</p>
+<h2 id="timestamp-indexing">Timestamp Indexing</h2>
+<p>With that in mind, I&#39;ve been thinking of how we could leverage the sparse replication properties of hypertrie to load data while working within the constraints of the HAMT.</p>
+<p>I propose using a structure that looks something like this:</p>
+<pre><code>/TYPE/YEAR/MONTH/DAY/HOUR/MINUTE/SECOND/TIMESTAMP</code></pre><p>The <code>TYPE</code> would be up to the application to decide on (or be optional if you don&#39;t need it), then your application can decide on how fine-grained the timestamp boxing should be based on how frequently it expects data to be added.</p>
+<p>If your data is something like the <a href="https://github.com/datproject/newsletter">Dat Newsletter</a>, you probably only need to track the <code>YEAR</code>s since you won&#39;t have too many entries per year.
+Applications like SSB might want to box things down to per <code>DAY</code> since users are less likely to post thousands of messages per day (might be wrong though!).
+A real-time chat like Cabal might want to go down to the <code>HOUR</code> or <code>MINUTE</code> so that you can quickly load the latest content that people are chatting about and quickly jump back through history.
+Something like server logs might want to go down to the <code>SECOND</code> if you have loads of logs you want to efficiently sift through.</p>
+<h2 id="in-practice">In Practice</h2>
+<p>With this as your building block your application can add stuff to it&#39;s local store with an API like <code>add(type, timestamp, data)</code>, and can search through the DB with Async Iterators like <code>for await(let data of search({type, start, end}) process(data)</code>.</p>
+<p>One could imagine loading a client for a social media app, and then trying to load feeds for their friends and loading their latest posts first before scanning further back in history.
+If you share the raw DB between applications, they can load the subsets of it that they need locally without needing to index it themsevles or do anything fancy to the datastructure.</p>
+<p>Combining data from multiple sources could also be feasible. One could walk the tree from multiple stores at once and emit data from them in sequence.</p>
+<p>The data stored in the store could either have the raw data that the application expects, or the application might be using a separate append only log for the full data, and would just store the start and end indexes in the hypertrie.
+You might also have a secondary index stored in the tree which would contain the key to the main data.
+Check out other datastructures like <a href="https://github.com/mafintosh/hyperdrive">hyperdrive</a> to see how they use hypertrie for inspiration.</p>
+<p>Overall, this approach could improve load times, and reduce the amount of indexing that needs to be done overall. Hopefully resulting in nicer UX for both develoeprs and users of P2P applications.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

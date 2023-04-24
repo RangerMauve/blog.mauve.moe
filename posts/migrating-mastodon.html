@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Migrating Mastodon to a new VM</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Here's a quick writeup of the steps I took to move my Mastodon [One Click Digital Ocean](https://marketplace.digitalocean.com/apps/mastodon) deployment to use a separate volume for storing data in order to avoid maxing out my disk usage." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="migrating-mastodon">Migrating Mastodon</h1>
+<p>Here&#39;s a quick writeup of the steps I took to move my Mastodon <a href="https://marketplace.digitalocean.com/apps/mastodon">One Click Digital Ocean</a> deployment to use a separate volume for storing data in order to avoid maxing out my disk usage.</p>
+<h2 id="intiial-setup">Intiial Setup</h2>
+<p>I followed the handy wizard that the one click deploy gives you and set up my DNS settings to point at the server and configured the email account needed for it to send invites and notifications.</p>
+<h2 id="folders-to-track-">Folders to track:</h2>
+<ul>
+<li><code>/var/lib/redis</code>: Where the redis database is stored</li>
+<li><code>/etc/redis/redis.conf</code>: Where the redis config is stored</li>
+<li><code>/etc/postgresql/</code>: Where the Postgres config is stored, not gonna touch it directly</li>
+<li><code>/etc/postgresql-common/</code>: Not sure but more configuration stuff?</li>
+<li><code>/var/lib/postgresql/</code>: The data for postgres</li>
+<li><code>/home/mastodon/live</code>: The bulk of the configuration and source code for mastodon</li>
+<li><code>/home/mastodon/live/.env.production</code>: The actual config file with the bulk of info</li>
+</ul>
+<h2 id="approach">Approach</h2>
+<p>Scaling up my DO droplet&#39;s SSD whenever I ran out of disk isn&#39;t very cost effective and is annoying to reverse.
+As such the goal here is to migrate the bulk of the data to a <a href="https://docs.digitalocean.com/products/volumes/">Digital Ocean Volume</a> which I can scale independenty and save a bunch of money.
+Having all the data on an external volume also makes it a bit easier to run backups on the data that I actually care about so in the future I can make restoring or migrating to a different VM that much easier.</p>
+<p>The first step I took was to back up all the most important data to the external volume.</p>
+<p>Before copying the data, I made sure to stop all the mastodon related services and databases.</p>
+<pre><code>systemctl stop mastodon-*
+systemctl stop redis*
+systemctl stop postgresql*</code></pre><p>I used <code>cp -r</code> to copy over folders.</p>
+<pre><code># Create folder structure
+mkdir /mnt/mastodon_data/var/lib -p
+mkdir /mnt/mastodon_data/etc
+
+# Copy over important data and configs
+cp -pr /var/lib/redis /mnt/mastodon_data/var/lib/
+cp -pr /var/lib/postgresql /mnt/mastodon_data/var/lib/
+cp -pr /etc/postgresql /mnt/mastodon_data/etc/
+cp -pr /etc/postgresql-common/ /mnt/mastodon_data/etc/
+cp -pr /home/mastodon/live /mnt/mastodon_data/live</code></pre><p>One thing I found was that even though I mounted the new volume, it wasn&#39;t taking up it&#39;s full size.
+To account for that I had to run <code>resize2fs /dev/sda</code> to make the volume fit.
+I found that from <a href="https://www.digitalocean.com/community/questions/disk-size-not-enlarged-after-upgrade">this help doc</a>.</p>
+<p>After checking that the copy wasn&#39;t missing data (with ls), I renamed the old folders, and created symlinks to the volume folders.</p>
+<pre><code>mv /var/lib/redis /var/lib/redis-old
+ln -s /mnt/mastodon_data/var/lib/redis /var/lib/redis
+chmod -R --reference=/var/lib/redis-old/ /mnt/mastodon_data/var/lib/redis
+chown -R --reference=/var/lib/redis-old/ /mnt/mastodon_data/var/lib/redis
+
+mv /var/lib/postgresql/ /var/lib/postgresql-old
+ln -s /mnt/mastodon_data/var/lib/postgresql /var/lib/postgresql
+chown -R --reference=/var/lib/postgresql-old/ /mnt/mastodon_data/var/lib/postgresql/
+chmod -R --reference=/var/lib/postgresql-old/ /mnt/mastodon_data/var/lib/postgresql/
+chmod -R 0700 /var/lib/postgresql/10/main/</code></pre><p>Make sure that the folders have the same ownership as before so that the system services may still access them.
+(This is the purpose of the chmod and chown commands)
+I skipped over the etc bits and focused on the actual data.</p>
+<p>Then, I tried to run all the usual Mastodon services as a sanity check that it could actually run.
+I had to fiddle a bit with making sure the permissions worked, but eventually I got my Mastodon server booting up again.</p>
+<p>Once I confirmed that it worked, I went ahead and created a new droplet based on the one click deploy.</p>
+<p>I then went through all of the setup again, just to get it out of the way.
+The only thing I really need from this new droplet is for all the system services to be set up and linked up.
+For my use case I&#39;d be replacing all the &quot;important&quot; folders in the new droplet with symlinks anyway, so it doesn&#39;t even need to be fully configured.</p>
+<p>Sadly, when I did this I realized I created the volume and new droplet on different regions.
+So instead I decided to use rsync to clone the data between the VMs.
+First I set up a duplicate volume on my new VM, then I create an SSH key on it and added it to the authorized_keys on the old VM.</p>
+<p>Then I ran:</p>
+<pre><code>rsync -a root@oldvm:/mnt/mastodon_data/** /mnt/mastodon_data/</code></pre><p>With this in place I could now set up the new symlinks.</p>
+<pre><code>ln -s /mnt/mastodon_data/var/lib/redis/ /var/lib/redis
+ln -s /mnt/mastodon_data/var/lib/postgresql/ /var/lib/postgresql</code></pre><p>One thing I found was that since I had initially set up Mastodon, the default image had upgraded to Postgress 15 whereas my old instance was using Postgres 10.</p>
+<p>In order to work around it, I tried renaming the <code>10</code> folder to <code>15</code></p>
+<pre><code>mv /mnt/mastodon_data/var/lib/postgresql/10 /mnt/mastodon_data/var/lib/postgresql/15</code></pre><p>Doing this didn&#39;t work however so I had to do a regular dump of the database.</p>
+<p>I followed <a href="https://www.netguru.com/blog/how-to-dump-and-restore-postgresql-database">this guide</a> for creating a dump.</p>
+<p>Once I re-enabled the old postgres DB, I use <code>su - postgres</code> to log into the DB user, and ran a dump:</p>
+<pre><code>pg_dump mastodon_production &gt; /mnt/mastodon_data/var/lib/postgresql/dump.sql</code></pre><p>I then use <code>rsync</code> to load it into the same location on the new machine.</p>
+<p>Then used <code>su - postgres</code> on the new machine to log into <em>its</em> postgres instance.
+Before loading the dump I needed to drop all the existing data.
+I followed <a href="https://stackoverflow.com/a/13823560">this stackoverflow comment</a> and ran the followign commands to clear all the data and start from fresh:</p>
+<p>(first I launched <code>psql</code> to get an SQL shell)</p>
+<pre><code class="language-sql">DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;</code></pre>
+<p>Once I had this I exited the shell and imported the dump.</p>
+<pre><code>psql mastodon_production &lt; dump.sql</code></pre><p>With this in place my databases were restored and it came time to link the mastodon source into the home directory.</p>
+<pre><code>ln -s /mnt/mastodon_data/live /home/mastodon/live</code></pre><p>After getting that done I had to wrestle with a mismatch between the ruby and node versions installed by default and what I had on my old VM.</p>
+<p>I floundered around for a few hours on this tryint go get node ugpraded, then I spend some more hours trying to get bundle install working.</p>
+<p>In the end I decided to go to bed and try again the next day.</p>
+<hr>
+<p>In the morning I noticed that <code>bundle install</code> was timing out due to some dependencies using the <code>git://</code> protocol for submodules which is insecure and I think is getting dropped by Github now.</p>
+<p>To fix this I decided to upgrade mastodon to 3.5.</p>
+<p>First I checked out the latest <a href="https://github.com/mastodon/mastodon/releases/tag/v3.5.2">stable 3.5</a> version.
+Then I ran through it&#39;s migration docs.
+Luckily I just needed to change the ruby version to the one specified in their configs using <code>rbenv install</code>.</p>
+<p>From there I ran the pre-deployment migration:</p>
+<pre><code>SKIP_POST_DEPLOYMENT_MIGRATIONS=true RAILS_ENV=production bundle exec rails db:migrate</code></pre><p>Then I ran the asset precompile:</p>
+<pre><code>RAILS_ENV=production bundle exec rails assets:precompile</code></pre><p>Then I started up all my systemd service for mastodon-web, mastodon-sidequik (sp?) and mastodon-streaming.</p>
+<p>Afterwards I ran the migration:</p>
+<pre><code>RAILS_ENV=production bundle exec rails db:migrate</code></pre><p>Once the migration ran, my mastodon instance was back, but now I had the bulk of my data on an external volume that I can scale up more cheaply, and can keep my lower end VM for running the data. (with a now mostly empty SSD).</p>
+<h2 id="lessons-learned-">Lessons learned:</h2>
+<ul>
+<li>Dependencies are hell</li>
+<li>Symlinks are pretty easy</li>
+<li>Always use the <code>-p</code> flag when copying data to retain permissions</li>
+<li>When dependencies are causing trouble, sometimes upgrading helps</li>
+<li>Sleep is good for you</li>
+</ul>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

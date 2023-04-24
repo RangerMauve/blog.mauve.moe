@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Self Contained Seeding Service</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Currently, Hashbase is the ideal place to go if you want a reliable host to seed your data." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="self-contained-seeding-pinning-services">Self Contained Seeding (Pinning) Services</h1>
+<p>Currently, Hashbase is the ideal place to go if you want a reliable host to seed your data.</p>
+<p>This is great for getting people started with seeding, but it introduces a point of centralization that relies on connectivity to the hashbase servers, and it makes it harder to migrate lists of seeded archvies away to other providers or your own hosts.</p>
+<p>Adding a Dat URL to be seeded by some service should be as easy as creating the Dat in the first place.</p>
+<p>I think that a person&#39;s seed list should be contained in a dat archive, and you should share that archive URL with a seeding service in order for it to start seeding your stuff.</p>
+<p>This will make it even easier to switch between seeding services since you won&#39;t have to try to manually copy all of your URLs to the new provider.</p>
+<p>This also opens up the possability for the list to be self hosting.</p>
+<p>The idea is that within the seed list archive, you have a JS file which uses <code>import.meta.url</code> to get its archive URL and creates <code>DatArchive</code>s for each URL being seeded, and listens for changes in the list using <code>archive.watch()</code>.</p>
+<p>This can then be opened in <a href="https://beakerbrowser.com">Beaker</a>, or <a href="https://github.com/RangerMauve/webrun">webrun</a>.</p>
+<p>If somebody wants to start using a seed list, then can open up the template seeder archive, fork it, and send the new URL somewhere (webrun, or a seeder service).</p>
+<p>If a person wants to set up a personal seeding service, they would no longer need to figure out how to set up <a href="https://github.com/beakerbrowser/homebase">homebase</a> and get something going with a forked Dat and a single command line command.</p>
+<p>After you have the URL shared somewhere, you can use a web page within the archive itself to start adding and removing archives from the list.</p>
+<p>You can do this while offline and it will eventually get synced with whatever is seeding the content thanks to Dat&#39;s built-in replication.</p>
+<p>With all this in place you now have a standard way of managing your seeded archives, and it&#39;s all offline / p2p first.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

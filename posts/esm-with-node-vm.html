@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - ESM Loader with Node VM Module</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="In version 9.6.0, Node.js got released with a new experimental API in it's [vm](https://nodejs.org/api/vm.html#vm_module_link_linker) builtin module which allowed for plugging into the EcmaScript module system with an elegant promise-based API." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="ecmascript-modules-with-node-s-vm-api-">EcmaScript Modules with Node&#39;s VM API.</h1>
+<p>In version 9.6.0, Node.js got released with a new experimental API in it&#39;s <a href="https://nodejs.org/api/vm.html#vm_module_link_linker">vm</a> builtin module which allowed for plugging into the EcmaScript module system with an elegant promise-based API.</p>
+<p>With this, it&#39;s now easier than ever to build custom JavaScript environments outside of the browser and to easily experiment with custom module architectures.</p>
+<p>I&#39;ve been wanting a browser-first / ESM-first environment for a while, and was excited when <a href="https://github.com/ry/deno_dev">deno</a> came out, but was disappointed that it was still creating an environment that wasn&#39;t going to enable modules to be used with the web without build tools.</p>
+<p>When I read up on the new <a href="https://nodejs.org/api/esm.html">esm</a> support in node, I was excited again because I thought it would bring us closer. But again, node decided to break web compatability (to preserve compatability with existing modules), and to require all ESM modules to use the <code>.mjs</code> file extension, which would make it harder for people to publish them on the web (in the short term?). Another problem is that the experimental support only allows for importing from the local filesystem, which meant that you couldn&#39;t load modules over HTTPS like you could on the web, and had to download all your modules locally to use them, which would make it hard to reuse things that were published for the web.</p>
+<p>Another cool tool that has seen a lot of popularty is the <a href="https://github.com/standard-things/esm">esm module</a> which allows you to load fancy ESM-based code by parsing your files and compiling them to something that works with regular node. Though again, it was using the <code>.mjs</code> syntax, and was very heavy because it&#39;s approach relied on parsing and transpiling your entire codebase.</p>
+<p>Then, I saw that the ESM support in node allowed for an experimental &quot;loader&quot; which could customize how <code>import</code> resolved file URLs. However, this only allowed rewriting the imports to other locations on the current filesystem, and didn&#39;t support loading things asynchronously. With some clever hacks using <a href="https://nodejs.org/api/child_process.html#child_process_child_process_execsync_command_options">child_process.spawnSync</a>, some global variables, and a bunch of ugly code, I managed to create the first version of my &quot;node-web-loader&quot; which would allow loading files from the web and provided important APIs like <code>fetch</code> and <code>websocket</code> for doing interesting things with them. You can read about it more in my <a href="https://rangermauve.hashbase.io/posts/node-loader-for-web-and-p2p">original blog post</a>.</p>
+<p>This approach was slow and seemed kinda hacky. Plus, it leaked a lot of node-isms which I wanted to avoid in order to encourage web-first modules (the opposite of what the JS ecosystem looks like today).</p>
+<p>After doing a bit more digging, I realized that the VM module gave more powerful abstractions over how <code>import</code> should behave and would isolate scripts from the rest of node by default. With this knowledge I did a total rewrite and renamed the module to <code>webrun</code>.</p>
+<p>The APIs provided by node for this were <em>amazing</em>. They were structured to make it as easy as possible to implement custom, asynchronous, loading logic and the code almost wrote itself. Paired with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL">URL</a> API, all I had to do was add a bit of glue for loading the contents from the FS, HTTPS, and Dat. As a result, it&#39;s now even easier to add more protocols for loading contents. <a href="https://ipfs.io/">IPFS</a> is high on my list for loading contents.</p>
+<p>I&#39;ve been slowly growing a small collection of <a href="dat://da03b54ff070571e65e41766544e0924ca1212b212d881542fd1abcebb9593bb/">libraries</a> for the Dat ecosystem which I want to be able to reuse server-side for making stuff like bots and seeding services, and I think that webrun is going to be great for facilitating as much code reuse as possible between client-side and server-side applications.</p>
+<p>The web platform has come a long way, and I think that more people should start looking at how they can use the tools it provides and move away from crazy frameworks and heavy build toolchains. I hope we can start seeing a healthy cross platform ESM module ecosystem flurish in the next few years.</p>
+<p>If you have any comments, feel free to message me on <a href="https://mobile.twitter.com/RangerMauve/status/1035904272037294080">Twitter</a>, or open an issue on the <a href="https://github.com/RangerMauve/webrun/issues">webrun</a> GitHub repo.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

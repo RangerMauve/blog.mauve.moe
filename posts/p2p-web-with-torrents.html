@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - P2P Web With Torrents</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="As most people reading this would know, I'm high key obsessed with the idea of a decentralized, peer to peer, web." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="a-p2p-web-using-bittorrent">A P2P Web Using BitTorrent</h1>
+<p>As most people reading this would know, I&#39;m high key obsessed with the idea of a decentralized, peer to peer, web.</p>
+<p>What this means, for the uninitiated, is a web where content is loaded, not from servers, but from a peer to peer network.</p>
+<p>Instead of connecting to a specific server and trusting it to give you valid data for a given URL, you take a URL which identifies some data, and download it from a swarm of peers without having to trust them.</p>
+<p>This is achieved with cool cryptography stuff, and if you&#39;re interested in P2P, consider reading some of my other blog posts or looking into the projects I&#39;ve linked to.</p>
+<h2 id="isn-t-this-a-thing-already-">Isn&#39;t this a thing already?</h2>
+<p><a href="https://ipfs.io/">IPFS</a>, <a href="https://beakerbrowser.com/">Beaker (Dat)</a>, <a href="https://www.scuttlebutt.nz/">SSB</a>.</p>
+<p>These are, IMO, the big players in pushing the p2p web forward outside of the cryptocurrency scene.</p>
+<p><code>Dat</code> is leading the way with Beaker for having a way to author p2p web content and providing a way to browse and interact with it. It&#39;s by far my favorite approach. It&#39;s great for authoring web content.</p>
+<p><code>IPFS</code> has a lot of hype and is trying to spread to multiple programming languages and is trying to be &quot;future proof&quot; for various protocols and encodings. It&#39;s being used a lot in conjunction with various Blockchain apps as a storage layer.</p>
+<p><code>SSB</code> is primarily for sharing chains of events and is primarily used in apps like <a href="https://github.com/ssbc/patchwork">patchwork</a> as a tight-knit social media platform. However, it can also be used for publishing <a href="https://github.com/noffle/ssb-webify">web content</a>.</p>
+<p>At a high level, they pretty much do the same thing. You author content, and share it in a p2p network.</p>
+<p>The details, however, are all very different from each other. And what&#39;s more, each system is fundamentally incompatible with the other.</p>
+<p>This means that not only do you need to implement a bunch of custom (and every-changing) code, but it won&#39;t be reusable across the various environments.</p>
+<h2 id="bittorrent-is-p2p-">BitTorrent is P2P.</h2>
+<p>BitTorrent is one of the, if not <strong>the</strong>, most popular and sccessful P2P applications around.
+It&#39;s likely that many people that aren&#39;t even particualrly into p2p will have used BitTorrent for downloading data to some extent. Whether explicitly when downloading an OS ISO file, or indirectly when using software that embeds bittorrent for downloading updates.</p>
+<p>Wouldn&#39;t it be cool if we could take 99% of the existing BitTorrent infrasturcture and network, and add a little bit of special sauce to allow people to distribute and update sturctured content like websites?</p>
+<p>Luckily, that&#39;s already a thing! (Kind of)</p>
+<h2 id="bep-46">BEP 46</h2>
+<p>Despite being a proven, stable, technology, BitTorrent is actually still evolving through <a href="http://www.bittorrent.org/beps/bep_0000.html">Bittorrent Enhancement Proposals</a>.
+<code>BEP</code>s are specifications that describe how BitTorrent works, as well as extentions that are can be implemented by BitTorrent clients in order to guarantee interoperability with other implementations.</p>
+<p><a href="http://www.bittorrent.org/beps/bep_0046.html">BEP 46</a> is one such extension which enables people to publish mutable torrents that don&#39;t rely on a central authority.
+Currently, to share a torrent you can create a <code>magnet link</code> which will contain the hash of your torrent&#39;s metadata, the <code>infohash</code>.
+Then, if somebody takes this hash, they can find who has the metadata in the Distributed Hash Table (<a href="http://www.bittorrent.org/beps/bep_0005.html">BEP 5</a>), and use that to download the torrent data.
+One limitation of this (and of using torrent files), is that if you want to change something in your torrent, you must create a new one since it would change the hash.</p>
+<p>With <code>BEP 46</code>, instead of using a hash of your torrent, you send a magnet link which contains your public key. Then, you use <a href="http://www.bittorrent.org/beps/bep_0044.html">BEP 44</a> to post custom messages to the <a href="http://www.bittorrent.org/beps/bep_0005.html">BitTorrent Distributed Hash Table</a> which contain the <code>infohash</code>. It then signs the infohash with your private key. Thus, when somebody wants to download your torrent, they&#39;ll look up values on the DHT using your public key, find the link, verify that it was signed by you, and start downloading your torrent. Now, if you have a change that you want to publish, you will need to publish new DHT entries with the updated magnet link. An example of using WebTorrent in conjunction with <code>BEP 46</code> to publish and load mutable torrents can be found <a href="https://github.com/lmatteis/dmt">here</a>.</p>
+<h2 id="on-the-web">On the web</h2>
+<p>With this enhancement to BitTorrent it now makes sense to publish websites on BitTorrent since you now have a straightforward, though a potentially slow, method of updating them.</p>
+<p>The same way that the Beaker Browser enables people to view and publish Dat content on the web, a browser could be made to do the same with BitTorrent.
+This would be easier to port to other platforms because one could reuse existing BitTorrent client code for most of the heavy lifting, and would need to add the changes in <code>BEP 46</code>, which shouldn&#39;t be too much effort. A good place to start might be my earlier post about <a href="/posts/making-a-browser">making a browser</a> using built-in webviews from whatever OS a user is on. The <a href="https://brave.com/features/#feature-list">Brave browser</a> has support for downloading content with <a href="https://webtorrent.io/">WebTorrent</a>, but it&#39;s more of a built-in torrent client and doesn&#39;t support loading webpages, let alone mutable torrents.</p>
+<h2 id="what-s-next-">What&#39;s next?</h2>
+<p>I&#39;m going to try to look into this stuff more. Hopefully this post will re-kindle some of the interest that was around in 2016 when this BEP was created. And maybe we&#39;ll see a new browser (or browser extension?) which supports this new technology.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

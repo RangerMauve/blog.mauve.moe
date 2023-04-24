@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dat On The Web</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif', Arial; }
+      text { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: #ae40ca;
+        color: #fff;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 80vmin;
+        height: 80vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, datbg
+
+# Dat On The Web
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hi all, I'm going to be talking about how we got Dat working on the web, and how we got it to perform decently.
+
+---
+
+class: center, middle, purplebg
+
+# @RangerMauve
+
+"Mauve"
+
+"Georgiy Shibaev"
+
+Dat Foundation
+
+Mauve Software Inc.
+
+---
+
+class: center, middle
+
+![Dat Logo Here](dat-logo.png)
+
+???
+
+So let's quickly recap on what dat looks like under the hood.
+
+---
+
+class: center, middle
+
+![Diagram with folders and files](files.svg)
+
+???
+
+- At a super high level, it's like a file system.
+- You can create or load an archive, then read and write files in it
+- This is handled by the Hyperdrive module
+
+---
+
+class: center, middle, beakerbg
+
+# random-access-*
+
+???
+
+- Hyperdrive doesn't actually know how to store data anywhere, though.
+- You can plug in your own layer for that by using a library that adheres to the random-access-storage interface.
+- Essentially, you provide APIs to read and write chunks from files, and it handles how those APIs should be invoked.
+- By default hyperdrive uses a random-access implementation that persists to files on the filesystem.
+- Another handy one that I see used a lot is random-access-memory which stores data in memory, an gets cleared if your process stops.
+
+---
+
+class: center, middle
+
+![Diagram representing pers connected in a mesh](mesh.svg)
+
+???
+
+- So once you have hyperdrive, and you have a way to store the data you now need a way to get the data and share it
+- This is where discovery-swarm comes in (and soon hyperswarm)
+- It's what Dat uses to advertise your dats on the network, and discover peers with dats that you want to load
+
+---
+
+class: center, middle
+
+# ️🤷️🤷️🤷️🤷️
+
+???
+
+And of course none of this stuff works in web browsers out of the box.
+
+---
+
+class: center, middle
+
+![Browserify logo](wizard_hat_blue.png)
+
+???
+
+Well, actually you can get pretty far by using browserify. You can get hyperdrive running, and get random-access-memory working, but sadly all the networking and filesystem stuff requires a bit more work.
+
+---
+
+class: center, middle, beakerbg
+
+![WebRTC Logo](webrtc-logo.png)
+
+???
+
+- Luckily, the networking stuff could be replaced by something a bit more browser friendly, namely WebRTC.
+- With Webrtc and Browserify, you could create a Dat inside your browser in memory, then share it with other browsers with P2P connections.
+
+---
+
+class: center, middle, purplebg
+
+# 🙂👍
+
+???
+
+- And that worked pretty well, but came with a few drawbacks
+
+---
+
+class: center, middle
+
+## WebRTC connections = 🐌
+
+## Fast, Persistant Storage = 👻
+
+## Non-Browser Dats = ❓❗
+
+???
+
+- WebRTC connections are sadly kinda heavy, and trying to make a bunch of them hurts performance a lot.
+- Storage was kinda limited too, storing stuff in memory is fast, but you can't persist it. There were some modules for getting storage working in browsers, but they weren't super fast and sometimes needed extra effort to get them to work.
+- And of course the most difficult part was loading things from outside the browser. If you created a Dat from the CLI or Beaker, you couldn't easily load it through dat-js.
+
+---
+
+class: center, middle
+
+# ❗ 😲 ❗
+
+```url
+wss://
+```
+
+???
+
+- So, the other networking primitive we have are Websockets. They're basically two-way communication channels between a server and the browser, much like how WebRTC Data Channels connect between two browsers.
+
+---
+
+class: center, middle, purplebg
+
+![Diagram with dat in browser connected to server which connects to the network](gateway.svg)
+
+???
+
+- In addition to the P2P WebRTC stuff in the browser, we could also reach out to a server over websockets, and have it connect to the rest of the network
+- This way, the server could use the usual methods to load a Dat, and then communicate to the client over the websocket to replicate the data.
+- This approach was added to the dat-gateway module and some time later integrated into dat-js
+
+---
+
+class: center, middle, datbg
+
+## Fast 🦎
+
+## Advertise / Discover 🔎
+
+## WebRTC Compatibility 🧠
+
+???
+
+- This worked pretty well, it was pretty fast, especially if the dat was already loaded on the gateway
+- It enabled the browser to both discover dats and advertise it's own dats to the rest of the network
+- And it could work in tandem with the WebRTC layer so that data would be loaded from the gateway, and then reshared amongst browser peers through WebRTC
+
+---
+
+class: center, middle
+
+## Less Privacy 😱
+## Less Flexability 😢
+
+???
+
+- Since the gateway was loading the hyperdrive locally, that meant that a gateway could potentially snoop on what data was going through it.
+- As well, since the gateway was geared towards hyperdrive, you can't use it for applications like Cabal which replicate different types of data over the network
+
+---
+
+class: center, middle, datbg
+
+# 🤔❔
+
+???
+
+So, that's not exactly ideal. Maybe we could have both!
+
+---
+
+class: center, middle
+
+<div class="mermaid" title="Diagram of server connecting to swarm and a proxied connection to client">
+  sequenceDiagram
+    participant Browser
+    participant Gateway
+    participant Swarm
+
+    Browser->>Gateway: Connect Websocket
+    Browser->>Gateway: Join Discovery
+    Gateway->>Swarm: Advertise / Discover
+    Swarm->>Gateway: Peer Found / Incoming
+    Gateway->>Swarm: Connect to Peer
+    Swarm-->>Browser: Proxied Duplex Stream
+</div>
+
+???
+
+- So, same as before, we establish a connection to the server
+- But this time, it has a single connection for all the dats
+
+- Instead of replicating the hyperdrive directly with the server,
+- The client tells the server it wants to search for peers for a particular dat
+
+- Then the server establishes connections to the swarm, and multiplexes the connections down the socket
+
+---
+
+class: center, middle, purplebg
+
+# 🎉🎉🎉🎉
+
+???
+
+- So now we have better privacy, can do any fancy stuff we want
+- Like replicating multiple streams over a single connection,
+- This could enable stuff like Cabal to work on the web
+- And of course this is still combined with the WebRTC portion
+
+---
+
+class: center, middle, datbg
+
+## random-access-idb
+
+**+**
+
+## random-access-chrome-file
+
+**+**
+
+## random-access-idb-mutable-file
+
+**=**
+
+## random-access-web
+
+---
+
+class: center, middle
+
+```shell
+dat-js
+dat-archive-web
+etc..
+```
+
+???
+
+- So, this stuff has been put into Dat-js which makes it fairly easy to do cool stuff with Dats in non-beaker browsers.
+- In addition, this has been added to Dat Archive Web, which implements some of Beaker's JS APIs for interacting with dats.
+
+---
+
+class: center, middle
+
+```html
+<script src="//unpkg.com/dat-archive-web/bundle.js"></script>
+<script>
+  const url = 'dat://07fbbfac111898371ea8bf87054bdc730b41bdd8705fed5e76a1ab1bda4b087a/'
+  const archive = new DatArchive(url)
+
+  archive
+    .readFile('/index.html', 'utf8')
+    .then(console.log)
+</script>
+```
+
+???
+
+- So you can add this to your Beaker-based website, and get non-beaker support for free™.
+
+---
+
+class: center, middle
+
+# 😎👍💯
+
+???
+
+Nice!
+
+What's cool about these building blocks is that they're not specific to the Beaker API or even to Dat as a whole.
+
+Just like the rest of the Dat ecosystem, you can take these parts and mix them with your own ideas for data structures and ways of talking between peers.
+
+If you're feeling adventurous and want to do something cool, check out how Cabal works under the hood and try your hand at making a web client for it.
+
+---
+
+class: center, middle, purplebg
+
+# 🔥 🙇‍ Thank you! 🙇‍ 🔥
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script src="./mermaid.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create();
+
+      slideshow.on("afterShowSlide", s => {
+        const [slide] = document.getElementsByClassName("remark-visible");
+        mermaid.init(Array.from(slide.getElementsByClassName("mermaid")));
+      });
+    };
+    </script>
+  </body>
+</html>

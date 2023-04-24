@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Modules On The Web</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Here's some thoughts I've had about how ESM can be used for a healthy module ecosystem on the web, and the p2p web." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="modules-on-the-web">Modules On The Web</h1>
+<p>Here&#39;s some thoughts I&#39;ve had about how ESM can be used for a healthy module ecosystem on the web, and the p2p web.</p>
+<h2 id="background">Background</h2>
+<p>For those not in the know, JavaScript has had a cool spec for a few years now called <a href="http://2ality.com/2014/09/es6-modules-final.html">EcmaScript Modules</a>, or ESM.</p>
+<p>This defines new syntax, <code>import</code> and <code>export</code>, as well as a spec for how content should be resolved and loaded.</p>
+<p>The short story is that you can do the following:</p>
+<p>In <code>mylibrary.js</code></p>
+<pre><code class="language-javascript">class SomeLibrary {
+  static doAwesomeThing() {
+    console.log(&#39;Wow so cool!&#39;);
+  }
+}
+
+// This is how you can &quot;export&quot; a value that can be `import`ed
+export default SomeLibrary</code></pre>
+<p>And in <code>myapplication.js</code></p>
+<pre><code class="language-javascript">// Load the default export from the library into the `SomeLibrary` variable
+import SomeLibrary from &#39;https://example.com/mylibrary.js&#39;
+
+// Use the library in your application
+document.body.onclick = () =&gt; SomeLibrary.doAwesomeThing()</code></pre>
+<hr>
+<p>This new syntax is <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Browser_compatibility">supported in all major browsers</a>, and has basic support in <a href="https://nodejs.org/api/esm.html">Node.js</a>. For more details on how the Node.js support is going, check out my <a href="https://rangermauve.hashbase.io/posts/esm-with-node-vm">blog post about it</a>.</p>
+<p>That&#39;s great news because now we can have modules in our applications without needing extra build tools!
+This also means that including third party libraries doesn&#39;t depend on a bunch of global variables barely being able to coordinate with each other.</p>
+<p>Publishing modules with ESM is as simple as hosting the files on a webserver.</p>
+<p>What this doesn&#39;t mean is that we have an alternative to npm. Since anybody can host the files for their modules, there&#39;s no central registry for it (yet), and there&#39;s no standard way to version files.</p>
+<h2 id="commonjs">CommonJS</h2>
+<p>Modern JavaScript development relies heavily on Node.js and the <a href="https://www.npmjs.com/">npm</a> module registry.</p>
+<p>The core of npm and node modules rely on a spec called <code>CommonJS</code> and a manifest called <code>package.json</code>.</p>
+<p>These specs combined with npm have made JavaScript explode with thousands of modules being created and downloaded all the time.</p>
+<p>This has enabled JavaScript developers to create awesome applications and libraries for web servers, command line tools, and ever browser applications.</p>
+<p>The downside is that <code>ESM</code> is fundamentally different from <code>CommonJS</code> and the two can&#39;t easily interact.</p>
+<h2 id="using-esm-with-npm">Using ESM with npm</h2>
+<p>Although <code>CommonJS</code> doesn&#39;t work with <code>ESM</code>, npm can still sort of be used.</p>
+<p>This is thanks to tools like <a href="https://unpkg.com/">unpkg</a> that let you use code like this:</p>
+<pre><code class="language-javascript">import SomeLibrary from &#39;https://unpkg.com/somelibrary@4.2.0/index.js&#39;
+
+document.body.onclick = () =&gt; SomeLibrary.doAwesomeThing()</code></pre>
+<p>What <code>unkpg</code> does, is it downloads the package at the version you specified, finds the file you&#39;re referencing, and returns that in an HTTP response.</p>
+<p>This lets you load modules that use ESM that are published on npm, and solves the issue of versioning since you can use a <a href="https://semver.org/">semver</a> version to allow for automatic updates for patches.</p>
+<p>This doesn&#39;t work for Node.js because it&#39;s ESM support doesn&#39;t support <code>https</code> URLs. Again, see my <a href="https://rangermauve.hashbase.io/posts/node-loader-for-web-and-p2p">older blog posts</a> about the matter.</p>
+<p>TL;DR, use <a href="https://github.com/RangerMauve/webrun">Webrun</a> instead. 😛</p>
+<h2 id="browser-roadmap">Browser roadmap</h2>
+<p>When ESM was being developed, one of the rquirements was that each &quot;identifier&quot; string for importing must be a valid URL. That&#39;s either a relative URL starting with <code>/example.js</code> or <code>./example.js</code>, or a full URL with the protocol like <code>https://example.com/example.js</code>.
+This means that ESM doesn&#39;t support something like <code>import React from &quot;react&quot;</code>.</p>
+<p>Browser vendors are working on a spec called <a href="https://github.com/domenic/package-name-maps">package name maps</a>.</p>
+<p>The gist is that an HTML page can add a script tag with <code>type=&quot;packagemap&quot;</code>, which contains some JSON that maps these raw identifiers to URLs where the actual module code will live.</p>
+<p>This allows developers to use <code>import &quot;marked&quot;</code> in their code, and let build tools figure out what URL that should actually resolve to.</p>
+<p>It enables the npm-centric workflow we&#39;re used to, but it adds complexity and adds the requirement of maintaining this mapping.</p>
+<p>It also has the limitation that the top-level application author must be the one to specify the package map, any dependencies that are being <code>import</code>ed cannot specify their own package maps (yet?).</p>
+<p>Given the higher complexity, it seems that this has been a dealbreaker for <a href="https://github.com/denoland/deno/issues/8">deno</a>.</p>
+<h2 id="peer-to-peer-web-dat-beaker-">Peer to Peer Web (Dat/Beaker)</h2>
+<p>As many will know, I&#39;m pretty obsessed with <a href="https://datproject.org/">Dat</a> and the ideas behind the peer to peer web.</p>
+<p>The gist of it is that you can create a <code>Dat Archive</code> which is a (versioned) filesystem that only the creator can write to, but anybody can read from if they have the <code>dat://</code> URL.</p>
+<p>For example, my blog is at <a href="dat://0a9e202b8055721bd2bc93b3c9bbc03efdbda9cfee91f01a123fdeaadeba303e/">dat://0a9e202b8055721bd2bc93b3c9bbc03efdbda9cfee91f01a123fdeaadeba303e/</a> and you can look at all the files in it using <a href="beaker://library/dat://0a9e202b8055721bd2bc93b3c9bbc03efdbda9cfee91f01a123fdeaadeba303e/">Beaker</a>.</p>
+<p>Since Dat is peer to peer, it also has the benefit of being offline-first. So if you don&#39;t have a connection to the internet, it will try to load content from it&#39;s local cache, or try to find peers on the local (wifi/LAN) network.</p>
+<p>That means that a person can publish their ESM modules to a <code>dat://</code> URL, and use the <code>import</code> syntax to load them into Beaker!</p>
+<p>Since <code>dat</code> allows you to include a version in the URL, you can safely pin a given dependency to a specific version and know that there&#39;s no way that version can refer to different content in the future.</p>
+<p>Dat is fully peer to peer, so if you&#39;re publishing a module, anybody that&#39;s downloaded your module&#39;s code will be contributing to re-sharing it&#39;s contents.</p>
+<p>When a module gets more popular, it&#39;s network grows and the original publisher needs fewer and fewer resources to ensure peopel can get at it.</p>
+<p>I&#39;ve got <a href="dat://da03b54ff070571e65e41766544e0924ca1212b212d881542fd1abcebb9593bb/">a few modules</a> that are dat-first, and it&#39;s been working out so far.</p>
+<p>The Dat community doesn&#39;t have anything like npm for sharing modules on the web yet. So if you want to load a module from <code>dat://</code>, you&#39;ll need to somehow discover it first.</p>
+<p>The versioning provided by Dat also works differently than semantic versioning. Instead of a version string like <code>6.6.6</code>, versions are an integer which starts at <code>0</code> and goes up by one every time a file is added/updated/removed in the archive.</p>
+<p>At the moment my goal has been to post all my reusable modules within a single archive, and people can import just the ones they want, and easily discover the other stuff I&#39;ve published.</p>
+<p>This has been working for me, but I could see it getting difficult to manage large dependency trees, and manually figuring out and updating dat versions is a pain.</p>
+<h2 id="prior-art-dat-npm">Prior art: dat-npm</h2>
+<p>About a year ago, @mafintosh created <a href="https://github.com/mafintosh/dat-npm">dat-npm</a> which is a mirror of the npm registry that&#39;s stored within a dat archive.</p>
+<p>I&#39;m not sure how far this has gotten, and I kinda lost the twitter thread where it was announced, but feel free to look into it further. 😛</p>
+<h2 id="dat-mounts">Dat Mounts</h2>
+<p>A few mounts ago, @pfrazee created a <a href="https://github.com/datprotocol/DEPs/issues/32">discussion</a> to talk about &quot;mounts&quot; in dat archives.</p>
+<p>The gist of it is that you could have something similar to <a href="https://en.wikipedia.org/wiki/Symbolic_link">Symbolic Links</a> in a dat archive which would let you redirect certain paths to a given URL.</p>
+<p>This opens up some possabilities.</p>
+<h3 id="use-case-1-module-registries">Use case 1: Module Registries</h3>
+<p>As mentioned before, npm has been crucial in the growth of the JavaScript community in that it helps developers discover and load tools and libraries, and makes it easy to use specific versions of a given dependency.</p>
+<p>One could easily create the same concepts with mounts.</p>
+<p>A centralized (or one of many) service can exist which allows people to claim names in the registry which are added under a folder to a dat archive using mounts.</p>
+<p>If I have a library at <code>dat://example.com/mycoollibary/mycoolibrary.js</code>, I could ask the registry to mount that path at <code>dat://registry.example.com/myoollibrary</code>.</p>
+<p>From there, registries can build up search indexes and users can have a standard way of looking up and installing depdencies.</p>
+<p>This doesn&#39;t address versioning, however.</p>
+<h3 id="use-case-2-versioning">Use case 2: Versioning</h3>
+<p>This one is a little crazier. What if instead of relying on the version of a dat archive when refering to versions, you could use a semantic versioning string.</p>
+<p>This can be done with a tool that takes a version string, then generates folders for matching it.</p>
+<p>For example, given the version <code>6.9.13</code>, the tool could create mounts at the following locations:</p>
+<pre><code>/versions/x.x.x/
+/versions/6.x.x/
+/versions/6.9.x/
+/versions/6.9.13/</code></pre><p>This approach makes it easy to say &quot;I want anything at version 6&quot;, or &quot;I want patches for version 6.9&quot; in addition to getting the latest or tagged version.</p>
+<p>If this was turned into a standard, it would be easy enough for people to get into the habit of including versions when importing something.</p>
+<p>It&#39;d also work well enough with the non-p2p web as HTTPS servers could use HTTP redirects to direct to the specific version that should be loaded by the browser.</p>
+<p>Updating versions would mean going to each file that imports a given dependency and updating the version, which could be a pain, but would also push people to structure their code differently so there&#39;s fewer points for dependencies to be integrated.</p>
+<h2 id="what-about-the-http-web-">What about the HTTP web?</h2>
+<p>The JavaScript ecosystem has been rooted pretty strongly in small modules posted on npm combined with build tools into bundles.</p>
+<p>This new ESM/Filesystem-first approach would pretty much throw all of that out the window.</p>
+<p>Personally, I think that&#39;s a good thing. Modern browsers provide a lot of high level iterfaces as it is, and this could encourage people to start relying on smaller depdency trees.</p>
+<p>People, especially application developers, should aim for focused libraries that use modern JavaScript / Web APIs in order to reduce the amount of utility code necessary.</p>
+<p>The Dat-based versioning I mentioned could still apply to similar schemes over HTTPS urls. If npm decided to create a canonical alternative to unpkg, we could get rid of the cli entirely.</p>
+<h2 id="ipfs-ipns">IPFS / IPNS</h2>
+<p>Pretty much everything that I&#39;ve said for Dat translates more or less to IPFS. The main difference is that IPFS doesn&#39;t handle versioning, though that can be overcome by keeping track of all the hashes for the versions somewhere in the code repository (through IPNS?).</p>
+<h2 id="vendoring-using-tooling">Vendoring using tooling</h2>
+<p>Of course, in addition to doing fancy things with URLs, you can using tooling to help with versions.</p>
+<p>Inspired by the vendoring suggestion in <a href="https://github.com/denoland/deno/issues/195#issuecomment-395765429">this comment</a>, one could use the following approaches.</p>
+<p>I&#39;m personally not the biggest fan of having additional tooling, since I&#39;d rather use what&#39;s baked into the platform and use file paths / protocols as a core building block.</p>
+<h3 id="download-everything-locally-">Download everything locally!</h3>
+<p>One of the benefits of the <code>import</code> syntax is that it&#39;s very easy to statically process the entire dependency tree and figure out what needs to be downloaded without actually executing anything.</p>
+<p>This would make it easy to make a tool that statically analyzes imports, downloads dependencies locally, and rewrites the URLs to import from the local domain.</p>
+<p>For example, if I wanted to use <code>https://example.com/visalizer.js</code>, which in turn had a bunch of dependencies, the tool could download it, and all it&#39;s dependencies to a <code>/vendor/</code> folder, which I could then import from in my main application.</p>
+<p>This has the advantage of giving you full control over the code, and knowing that it will never update unless you want it to.</p>
+<p>This is similar to what the npm cli does at the moment, only it doesn&#39;t need to do any rewriting because node supports this use case.</p>
+<p>The main disadvantage to this approach (on the web) is that you&#39;d lose the de-duplication across domains. If Two websites both rely on the same version of <code>React.js</code>, why should the browser download it twice?</p>
+<h3 id="have-a-file-for-import-exports">Have a file for import/exports</h3>
+<p>A big pain point with ESM, is that importing a file from multiple files in your project make it annoying to update the version.</p>
+<p>You&#39;d need to go through all the files and update the URL.</p>
+<p>What if you could have one place that needed to be updated?</p>
+<p>That&#39;s the approach suggested in this <a href="https://github.com/denoland/deno/issues/195#issuecomment-395765429">post</a> by @janpot.</p>
+<p>Essentially, for each library you&#39;re importing, you can have a file in <code>/vendor/</code> which will export all the contents of a url using the <code>export * from &quot;url&quot;</code> syntax.</p>
+<p>This means that you could create <code>/vendor/react.js</code> which would contain <code>export * from &quot;https://example.com/react/4.2.0/react.js&quot;</code>. In your code you can then use <code>import React from &quot;/vendor/React.js&quot;</code>.</p>
+<p>With this approach you have more freedom with updating versions, and it could feasibly be done by hand.</p>
+<p>Dependencies of your dependencies wouldn&#39;t be under your control, however. So you&#39;ll need to trust that they have their versions pinned using an intelligent algorithm.</p>
+<p>Plus you still have to worry about the source going offline or serving unexpected content.</p>
+<h2 id="is-importing-from-a-url-even-ok-">Is importing from a URL even OK?</h2>
+<p>There&#39;s been some debate, specifically in the <a href="https://github.com/denoland/deno/issues/195#issuecomment-395721616">deno community</a> (thanks to @millette for the link!), about whether importing code from a random URL is safe to do in the first place.</p>
+<p>Personally, I think that loading from URLs is a core feature of the web that we won&#39;t be removing any time soon, and other JavaScript environments should follow suite.</p>
+<p>If you worry about trust and providers changing the contents unexpectedly, you can add processing steps to your codebase to rewrite all your imports to be from the local domain / fs, or use p2p technologies where the version is cyrprographically guaranteed to always refer to the same contents.</p>
+<p>Flexability is a great base to build on, and you can add restrictions on top of it if you need to for your use cases.</p>
+<h2 id="other-environments">Other environments</h2>
+<p>As mentioned earlier, deno is a new JS environment that&#39;s competing with Node. They currently support loading from the local FS and from the web, so anything that works on the web will work here.</p>
+<p>Another environment that might be a little less known is <a href="https://gitlab.gnome.org/GNOME/gjs/wikis/home">GJS</a>, the JavaScript environment that comes built into the <a href="https://www.gnome.org/">GNOME</a> desktop environment.
+They&#39;re <a href="https://gitlab.gnome.org/GNOME/gjs/merge_requests/150">working on</a> adding support for ESM, though they seem to be at the early stages and are only going to be supporting loading from relative file paths for now, but my hope is that that might change in the future.
+This is very exciting because it could mean that you could distribute full-blown desktop applications by running <code>gjs -m https://example.com/myapplication.js</code>, and having it use GTK APIs</p>
+<hr>
+<p>Let me know what you think on either the <a href="https://webchat.freenode.net/?channels=dat">#dat IRC channel</a>, <a href="https://gitter.im/datproject/discussions">gitter</a>, or send me a message on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>.</p>
+<p>I&#39;ll update this article as I get new information and ideas.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

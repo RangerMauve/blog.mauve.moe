@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agregore</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Agregore - What is it, Why is it.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      text { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        //font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+<img src="./icon.svg"/>
+
+# Agregore
+
+### Using Standard Web APIs to Mix P2P Protocols
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hi friends, thank you for coming out.
+
+Today I'll be talking about how I'm using standard web APIS to Mix P2P protocols in Agregore
+
+---
+
+class: center, middle, purplebg
+
+## [Mauve](https://blog.mauve.moe/) / [@RangerMauve](https://twitter.com/RangerMauve)
+
+### [Mauve Software Inc.](https://software.mauve.moe/)
+
+???
+
+I'm Mauve, or @RangerMauve.
+
+I do consulting through my company Mauve Software Inc.
+
+And I'm high key obsessed with local first software and the web
+
+---
+
+class: center, middle, agbg
+
+# What 🤔
+
+- A Minimalist Web Browser
+- A Mix of Protocols
+- Fun
+
+???
+
+So what is Agregore?
+
+Basically, It's a minimalist web browser that mixes a bunch of protocols together
+
+And it tries to do the absolute minimum to be a browser,
+
+while trying to be extendable, and fun to work with.
+
+---
+
+class: center, middle, datbg
+
+# Why 🔍
+
+???
+
+So why did I start working on Agregore?
+
+There's a lot of p2p protocols
+
+and each Each has their own strengths
+
+and their own APIs
+
+It felt like there was a way to make it easier to use them together
+
+And to simplify how you could work with them
+
+As well, I was frustrated that browers don't let us do "real" p2p
+
+And wanted a browser that could leverage local networks without
+
+extra gateways or setup
+
+---
+
+class: center, middle
+
+## Goals:
+
+- Simplify local-first tech
+- Be open to anything p2p
+- Be minimal & customizable
+- Partner with community networks
+
+???
+
+With that said, here are the projects goals
+
+We want to simplify creating and distribute local-first tech
+
+We want to be open to working with any p2p projects
+
+We want to stay minimal and customizable
+
+And we want to partner with community network projects
+
+Because they stand to gain the most from building on local-first tech
+
+---
+
+class: center, middle, agbg
+
+## How 📝
+
+???
+
+So how is agregore approaching these goals?
+
+---
+
+class: center, middle, agbg
+
+### Electron + P2P + Extensions = 💜
+
+???
+
+Well, Agregore is built on Electron in order to make it easier to 
+
+contribute new protocols 
+
+and to reuse as much as possible from 
+
+the Node and Web ecosystem.
+
+---
+
+class: center, middle
+
+### `ipfs://` `ipns://` `hyper://` `dat://` `gemini://`
+
+### `your thing here://`
+
+???
+
+In addition, we support various protocols as first class citizens of the web.
+
+So far we have support for multiple protocols
+
+ipfs, ipns, hypercore protocol, dat, and gemini
+
+And we're interested to add yours to the list
+
+---
+
+class: center, middle
+
+# 💜 URLs Are Awesome 💜
+
+???
+
+As you may have noticed, all these protocols come with their own URL scheme
+
+And in my opinion URLs are awesome and are one of the best parts of the web.
+
+All of these protocols can mix together thanks to the web's ability to hyperlink between different resources
+
+For example, a page loaded in hypercore can load content from IPFS and the legacy web at once
+
+Intead of having all those ecosystems isolated in separate apps
+
+We can mix them together on the web
+
+---
+
+class: center, middle
+
+# `fetch("agregore://")`
+
+???
+
+The way that works is that
+
+These protocols are all abstracted behind the Browser's fetch API
+
+This makes it so that you can interact with any protocol in the same way you would a web server
+
+This also simplifies the amount of things a person needs to learn to use different protocols if they're already familiar with the web
+
+But We'll get back to that in a demo in a sec
+
+---
+
+class: center, middle, agbg
+
+## Extensions 🛠️
+
+???
+
+On top of this core, we have a thin shell which provides additional functionality via standard web extensions.
+
+In fact, even the history tracking is done entirely within an extension and can be customized or ripped out.
+
+---
+
+class: center, middle, purplebg
+
+## 🎉 Demo Time 🎉
+
+???
+
+So wtih that in mind, I'd like to give you a hands on demo.
+
+Open agregore homepage
+
+Go to hypercore protocol site, copy logo
+
+Go to ipfs protocol site, copy logo
+
+Go to `hyper://speakeasy`
+
+Show PUT for index.html, with Hello World
+
+Import agregore://theme/style.css
+
+Add hypercore-protocol logo
+
+Add ipfs logo
+
+Wrap them in marquee
+
+Add iframes for ipns website and Mauve blog
+
+---
+
+class: center, middle
+
+## Next 🥳
+
+- Partner with projects
+- Extensions over p2p
+- Customizable shell
+- `earthstar://` `bt://` `eth://`
+- Mesh networks / Mixnets
+- Example webapps
+
+???
+
+Here's some cool stuff on our roadmap
+
+We'd like to partner with projects that could make use of this tech
+
+We want to be able to load extensions over p2p protocols
+
+We want to make the shell fully customizable
+
+We want to add more protocols like earthstar and bittorrent
+
+We want better out-of-the-box support for mesh networks
+
+And we want to start showcasing example local-first web apps for others to build off of
+
+---
+
+class: center, middle, datbg
+
+## Shoutouts 🙇
+
+- [KyGost](https://github.com/KyGost)
+- [metanomial](https://github.com/metanomial)
+- [DeltaF1](https://github.com/DeltaF1)
+- [cinnamon-bun](https://github.com/cinnamon-bun)
+- [Beaker](https://beakerbrowser.com/)
+- [Gateway](https://twitter.com/GatewayBrowser)
+- [Brave](https://brave.com/)
+- [Dat Ecosystem](https://discord.gg/eGV5Uuebbc)
+
+???
+
+I'd like to give some shoutouts to
+
+KyGhost, Metanomial, DeltaF1, and Cinnamon-bun
+
+for their contributions to the project
+
+to Beaker, Gateway, and Brave as other web browsers embracing peer to peer tech
+
+And to the folks in the Dat ecosystem who have inspired me to work on this stuff
+
+---
+
+class: center, middle, agbg
+
+## Get Involved
+
+- Join our [Discord chat](https://discord.gg/QMthd4Y)
+- Check out the [Github repo](https://github.com/AgregoreWeb/agregore-browser)
+- Open an [issue](https://github.com/AgregoreWeb/agregore-browser/issues/new)
+- Bug [@RangerMauve](https://twitter.com/RangerMauve) via DMs
+
+---
+
+class: center, middle, purplebg
+
+# Thank you! 🎉
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script src="./mermaid.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:8'
+      });
+
+      slideshow.on("afterShowSlide", s => {
+        const [slide] = document.getElementsByClassName("remark-visible");
+        mermaid.init(Array.from(slide.getElementsByClassName("mermaid")));
+      });
+    };
+    </script>
+  </body>
+</html>

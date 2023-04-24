@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Local-First Cyberspace Components</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Last year I was talking about building a [Local-First Cyberspace](https://github.com/RangerMauve/local-first-cyberspace)." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="local-first-cyberspace-components">Local First Cyberspace Components</h1>
+<p>Last year I was talking about building a <a href="https://github.com/RangerMauve/local-first-cyberspace">Local-First Cyberspace</a>.</p>
+<p>This year we&#39;re a lot closer to having something like this exist.</p>
+<p>I&#39;m going to go over some of the pieces we could put together to build and load virtual worlds from a p2p network of devices.</p>
+<h2 id="p2p">P2P</h2>
+<p>This hasn&#39;t changed much since I last talked about it.
+I&#39;m still very much into peer to peer protocols for loading and sharing data.</p>
+<p>Having everyone&#39;s data on a single monolitic service has been the standard for tech lately, and people are so used to it I think we forget that it&#39;s not the only way to use data.</p>
+<p>Although there&#39;s some upsides with convenience, I think there&#39;s a lot of downsides with privacy and resiliancy.
+It feels like wherever you look, there&#39;s another company doing something sketchy with the data they collected from people.
+I hear a lot of folks say that this is the cost of getting all of these services for free, but you don&#39;t actually need to have any sort of services for sending data anymore.</p>
+<p>With peer to peer protocols, we can have our data stored on our own device, and if we want somebody else to load it, they can download it directly from us without needing to do anything more than send them a hyperlink.
+You can do backups more easily, too, run a computer anywhere and send it the links to the data you want backed up and it&#39;ll keep it all together.
+If you want a different computer or service to back up your data, you can just send the links to them instead.</p>
+<p>Similarly, when everything relies on a central service, there&#39;s more catastrophic failures when the service is down.
+For developers, think of what happens when Github is down for a few hours during busy work days.
+Why should we rely on whether a server is online when everyone that needs to use the data is online at the same time?</p>
+<p>When you build on top of p2p protocols, you no longer need to worry about a single service being down and can instead load data from any peers that are online, whether it&#39;s the actual devices that &quot;own&quot; the data, somebody&#39;s copy of the data on their device, a backup service, or the copy of the data you have stored locally.
+More modes of loading data mean more resilience to different kinds of outages, and at the end of the day, if you own the data you want to work on, then you don&#39;t need to be connected to anything at all to get your work done.</p>
+<p>Lastly, for cases where the service provider isn&#39;t making money off of your data, there&#39;s either a cost to do the hosting, or a cost in technical know-how to set something up.
+When your building block is some files in a folder that exist locally, you don&#39;t need much technical skill and you don&#39;t need to pay anyone anything.</p>
+<p>I&#39;m still really into <a href="https://hypercore-protocol.org/">Hypercore-Protocol</a> for p2p since it does mutability well, but I&#39;m also excited about experimenting more with <a href="https://ipfs.io/">IPFS</a> and <a href="https://github.com/earthstar-project/earthstar">EarthStar</a>.</p>
+<h2 id="the-web">The Web</h2>
+<p>One thing that I strongly believe in is the use of the web to load applications across different platforms.</p>
+<p>The web not only gives us a runtime that&#39;s somewhat standard across all devices that people own, it also gives us a standard way of loading content across all these devices.</p>
+<p>When people develop an application on the web, they don&#39;t need to worry about packaging and distributing it for every single device they want to target.</p>
+<p>This lowers the barrier to entry for who can create an application and it sidesteps the issues of walled gardens on each platform tryint go limit what you can create and to take a cut of any profits you want to make.</p>
+<p>If someone wants to make an application, they can glue together some HTML/CSS/JavaScript, put it in a website, and send somebody the link to their website.</p>
+<p>Setting up a website usually means going with some sort of service provider to host your content, which can be easy but can cost money or require technical skill / vendor lock-in.
+The p2p aspect helps here in that a website is just some files in a folder on your device that you can shae a hyperlink to.</p>
+<p>This makes application distribution even easier in that you can make a website or have a website generate one on your device, and share a link without needing to go with any third party tools.</p>
+<p>With this in mind, thre&#39;s two web browsers that I&#39;m excited about which make p2p web stuff easy to use.</p>
+<p><a href="https://twitter.com/GatewayBrowser/status/1256344174921646080">Gateway</a> is a mobile web browser that works on Android and iOS. 
+I&#39;m super excited by this since it&#39;s a functional p2p web browser that has all the usability features you&#39;d want form it.
+With gateway you can load websites from the Hypercore-Protocol directly from other people&#39;s devices over the peer to peer network.
+We&#39;re also talking about eventually integrating a Bluetooth based mesh network so that people can load data from each other&#39;s phones without needing to be connected to the internet or a wifi hotspot.</p>
+<p><a href="https://github.com/RangerMauve/agregore-browser/">Agregore</a> is another browser that I&#39;m very excited about since I&#39;m currently working on it. 😁
+It&#39;s similar to <a href="https://beakerbrowser.com/">Beaker</a> in that it&#39;s an Electron-based web browser that supports Hypercore-Protocol, but it&#39;s more minimal and isn&#39;t only focusing on Hypercore-Protocol.
+Agregore&#39;s main schtick is using <code>fetch()</code> for interfacing with P2P protocols. Existing browsers have already gotten basic <code>fetch()</code> integration working by implementing <code>GET</code> requests for <code>hyper://</code> URLs.
+Agregore, extends this by giving developers a <code>PUT</code> and <code>DELETE</code> HTTP method which lets you add files to a folder or delete files from a folder.
+Development of this <code>fetch()</code> interface is happening in <a href="https://github.com/RangerMauve/dat-fetch/">Dat-Fetch</a> and I&#39;m hoping to get the same interfaces integrated into Gateway in the near future to have feature parity.</p>
+<p>This fetch interface is interesting because it can scale out to other protocols.
+For example, with IPFS, you can do the same <code>GET</code> interface to <code>ipfs://</code> URLs for loading data.
+I think there&#39;s room to imagine a <code>PUT</code> interface for <code>ipns://somename/path/to/file.txt</code> which would take the body of your request, turn it into an info hash, and then upload it to an existing IPNS directory structure.</p>
+<p>I&#39;m hoping that having similar webby interfaces for different protocols will again lower the bar for what people need to learn to start building local-first applications with the web.</p>
+<h2 id="decentralized-spatial-indexing">Decentralized Spatial Indexing</h2>
+<p>One thing that&#39;s important for cyberspace is the organizing of data in space.</p>
+<p>For example, in virtual worlds, something has to keep track of who and what is where and people need some way of loading stuff that&#39;s nearby them or near the place they&#39;re looking at.</p>
+<p>Ordering stuff by it&#39;s location in space is called <a href="https://en.wikipedia.org/wiki/Spatial_database#Spatial_index">Spatial Indexing</a>. A Spatial Index makes it more efficient to find data within a given spatial bound.</p>
+<p>Some databases like MongoDB have spatial indexes built into them which make it easy to save and query against spatial data. In videogames, there&#39;s data structures that can be used for finding data &quot;near&quot; a given area.</p>
+<p>In p2p protocols, this seems to be a novel concept and there&#39;s likely many fancy ways of approaching it.</p>
+<p>I propose an approach based on <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtrees</a>.</p>
+<p>Essentially you divide your 2D space into 4 equal boxes. Then you place all the objejs into the boxes that they fully fit into.
+On top of this you have a maximum number of items per box. If a box has too many items, it should be divided into 4 smaller boxes and then have items placed within them.</p>
+<p>Items would be JSON values which would be encoded as items in the hypertrie that look like <code>x-y-width-height-name.json</code></p>
+<p>The data for these indexes would be stored in P2P archives so that peers could download just the parts of the archive metadata that are related to the spatial query they want to test against.</p>
+<p>One thing that might be important to play around with is what happens when the bounding box for an object is too large to fit inside the quadtree box when it&#39;s being divided up.</p>
+<p>An alternative to quadtrees for the layout might be to use <a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Heigharchies</a>.
+This is similar to quadtrees, but instead of paritioning into 4 eaqual squares, stuff is partitioned into axis aligned bounding boxes.</p>
+<p>Ideally you&#39;d have an interface that looks something like this:</p>
+<pre><code class="language-js">const index = new SpatialIndex([url1, ur2, url3])
+
+for await (let {x,y,width,height,value} of index.get({x, y, width, height}) {
+  console.log(x,y,width,height, value)
+}
+
+await index.put({x,y,width,height, name}, {some: &#39;data&#39;})</code></pre>
+<p>On top of this spatial index you could start storing different kinds of data.
+For example your JSON could contain some sort of messages that you want to leave for folks, and an application can render them in VR or AR, or even a hyperlink to some p2p content.</p>
+<p>I think that it&#39;d be cool if we could link our spatial maps together in communities and build up virtual worlds.</p>
+<p>Spatial indexing could be used to map virtual objects on top of GPS coordinates in reality, or could be used with arbitrary coordinates in shared virtual spaces.</p>
+<p>Although this gives us a way to represent data, we should still think about how stuff is actually rendered in cyberspace.</p>
+<h2 id="webxr">WebXR</h2>
+<p>So, one thing that I imagine from cyberspace is an integration with virtual reality and augmented reality headsets.</p>
+<p>Ideally, we&#39;d be able to load content off of the p2p web, and render it in VR.</p>
+<p>Loading regular web pages seems pretty straighforward if we put them on 2D planes, but 3D content requires some special APIs for the spatialization.</p>
+<p>For that we can use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API">WebXR API</a> which provides web pages access to all the sensor data from VR and AR headsets.</p>
+<p>With this web pages can render their scenes based on whatever method they want.
+They could be unity apps, besoke WebGL code, or declarative libraries like <a href="https://aframe.io/">Aframe</a> or <a href="https://janusxr.org/">JanusXR</a>.</p>
+<p>People can glue some code together and make a 3D scene and share it with someone over the p2p web.</p>
+<p>One cool thing that could be used is <a href="https://docs.webaverse.com/docs/index.html">Webaverse&#39;s XRPK API</a> which lets you load multiple WebXR scenes in tandem.
+An app could load packages from a P2P network, and display them all at once with XRPK&#39;s APIs.</p>
+<p>Tools could be created that give you a graphical way to generate 3D scenes and save them for later or remix them with others.</p>
+<h2 id="putting-it-together-">Putting It Together.</h2>
+<p>I propose something like the following:</p>
+<ul>
+<li>Get writable APIs from Dat-fetch into Agregore and Gateway</li>
+<li>Make sure WebXR is working in those browsers with P2P websites</li>
+<li>Get P2P message passing into dat-fetch (for multiplayer)</li>
+<li>Create a spatial indexing library over dat-fetch</li>
+<li>Use XRPK to load WebXR scenes from the index</li>
+<li>Get it all running in Gateway and Agregore</li>
+<li>Test it out with an AR headset</li>
+<li>Bam!</li>
+</ul>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mixing P2P Protocols on the Web</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Mixing Peer to Peer Protocols on The Web with Agregore">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: 'Fira Code', system-ui; }
+      text { font-family: 'Fira Code', 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.75em;
+        font-size: 1.25em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, purple
+
+# Peer to Peer `URLs://`
+
+## And the Agregore Browser
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small>Press <b>C</b> for a popout window</small>
+
+???
+
+Hey folks, thanks for coming out today!
+
+Today I'm going to be talking about Mixing Peer to Peer Protocols with the Agregore Browser.
+
+---
+
+class: center, middle, agbg
+
+## [Mauve](https://blog.mauve.moe/) / [@RangerMauve](https://twitter.com/RangerMauve)
+
+### [Mauve Software Inc.](https://software.mauve.moe/)
+
+???
+
+---
+
+class: center, middle, omibg
+
+# Peer to Peer Protocols
+
+- No hoarding of data 🤫
+- Person To Person 🤝
+- No central point of failure 📈
+- Apps over any network 🌐
+
+???
+
+I like peer to peer protocols because they enable me to stop hoarding user data for applications and to stop worrying about managing backend infrastructure.
+
+Instead of having all interactions between users mediated by a third party service, people can connect directly to each others devices to exchange data.
+
+One of the cool parts of this is that there's no longer a central point of failure to go offline, and if you're within network range of somebody, you can still use all your p2p apps without a hitch.
+
+Since this is an IPFS meetup, we'll be focusing more on IPFS, but Agregore supports several protocols with different tradeoffs.
+class: center, muddle, ipfsbg
+
+---
+
+class: center, middle, ipfsbg
+
+### IPFS
+
+![IPFS logo](./ipfs-logo.svg)
+
+- Content Addressible (individual data)
+- Can update through IPNS
+- archiving data
+- web3 / blockchain content
+
+???
+
+So, IPFS is a great example of a versatile P2P protocol that can store a variety of data types.
+
+IPFS is content addressible which enables us to trust that data hasn't been tampered with when we load a bit of data without needing to trust the source that we downloaded the data from.
+
+IPFS's specific implementation of content addressibility advertises individual chunks of data so that peers can share pieces between large datasets.
+
+This also means that IPFS does a lot more under the hood and uses more resources as a result
+
+IPFS also has a system called IPNS which enbles you to use public key cryptography to create mutable pointers to immutable data.
+
+Combined these protocols have been used for storing archives of data with projects such as WebRecorder and have been acting as an "off-chain" storage solution for various web3 or blockchain technologies.
+
+---
+
+class: center, middle, beakerbg
+
+## 🤔 Web Integration 🤔
+
+???
+
+So on their own these protocols are pretty cool, but how can they be used on the web?
+
+---
+
+class: center, middle, agbg
+
+### URLs
+
+- `scheme`://`origin`/`path`?`searchParams`
+- `ipfs://bafybeibtqqzunuqb4dilnvrwz5kqrz7mkct3mkzbnlym35ptszkoncrtkq/`
+- `bittorrent://0fcfd57f4fb16e403c90a3c4127872970374c3b5/`
+- `hyper://843356e1611b76b6b90ecc7141e2d5b9e8859f8e8f8b3685333c279c3b46d1fc/`
+- `ipns://ipfs.io/media`
+
+???
+
+Most of the  protocols Agregore supports have URL schemes that can be used to identify data, and these URLs all follow a similar specification and format.
+
+First is the protocol `scheme` which identifies what sort of URL this is
+
+Next the `origin` represents the root of some dataset. Normally this is where a domain name would go for HTTP.
+
+`origin` is case-insensitive, clashes with protocols that use uppercase chars
+
+`origin` separates web pages storage from each other, one origin per "app"?
+
+The `path` can help you specify a particular bit of data in the dataset
+The `path`s ending in a `/`, either resolve to a directory listing, or load an index file
+
+---
+
+class: center, middle, datbg
+
+- web pages (html, iframes)
+- images
+- audio
+- video
+- stylesheets
+- scripts / workers
+- `fetch()`
+- `EventSource`
+
+???
+
+These URLs are used in various places in the browser in order to load pages, media, and interactive elements like JavaScript.
+
+Scripts can make use of P2P URLs in order to read and author content with the browser's `fetch()` API
+
+And for some protocols you can listen for incoming updates for protocols using standard browser APIs like `EventSource`.
+
+---
+
+class: center, middle, purple
+
+### HTTP
+
+- Request { `Method` + `URL` + `Headers` + `Body` }
+- Response { `Status` + `Headers` + `Body` }
+- `GET http://example.com/example.txt` => `200 "Hello World!"`
+- `GET ipns://ipfs.io/` => `200 "something"`
+- `POST hyper://mywebsite/example.txt "Hello World"` => `200`
+
+???
+
+These URLs can be used in combination with HTTP requests, where you specify a method like GET or POST, the URL you want to interact with, some headers for extra metadata, an optional body for your request, and you get back a status code, with som extra metadata in headers, and potentially the contents of whatever URL you're accessing in the body.
+
+So what if we took the same conventions, but applied them to peer to peer URLs.
+
+What does it mean to GET an IPNS URL.
+
+And what would it mean to try to POST some data to hypercore protocol.
+
+---
+
+class: center, middle, purplebg
+
+## Gateways
+
+- `GET /ipns/ipfs.io/ => some homepage`
+- `PUT /ipfs/bafyaabakaieac/index.md {body: "Hello World"} => /ipfs/bafywhatever/`
+
+???
+
+A lot of these protocol handler APIs conveniently map to HTTP gateways which support reading and writing APIs.
+And in fact, in a lot of cases the underlying mechanism for the protocol handler is a proxy to a gateway running on localhost.
+
+---
+
+class: center, middle, agbg
+
+# [Agregore](https://agregore.mauve.moe/)
+
+![Agregore Browser Logo](./agregore-logo.svg)
+
+???
+
+Agregore is a minimal web browser that I created to explore what it'd be like to mix these protocols together under a common HTTP-like interface.
+
+It aims to have as few assumtions as possible, and to focus on being extendable via standard Web Extensions which can access any of it's peer to peer protocols.
+
+---
+
+class: center, middle, beakerbg
+
+### Protocols
+
+- ipfs:// (ipns:// / pubsub:// / ipld://)
+- hyper://
+- bittorrent:// (magnet:)
+- gun://
+- gemini://
+- ssb://
+
+???
+
+We currently support a few protocols out of the box, and are working towards adding more.
+
+In fact, we've even got the IPFS protocol working on the Android version of Agregore.
+
+---
+
+class: center, middle, omibg
+
+# 🎉 Demo Time 🎉
+
+???
+
+- Make a website using Markdown
+- Use fetch API
+- Special "identity CID" for an empty IPFS directory
+- `index.md`
+- Include raw markdown in the body
+- Get the URL from the response
+
+```JavaScript
+response = await fetch('ipfs://bafyaabakaieac/index.md', {
+method: 'PUT',
+body: `
+# Hello World!!
+
+🎉🎉🎉🎉🎉🎉🎉🎉🎉
+`})
+
+window.location.href = response.headers.get('Location')
+```
+
+---
+
+class: center, middle
+
+## 😭 Pain Points 😭
+
+- IPNS is slow to publish (>60s)
+- Can't pin mutable data
+- Hole punching new / not everywhere
+
+???
+
+So there's the demo! Amazing how this stuff Just Works™️
+
+Sadly in the case of IPFS there's been some pain points.
+
+The main one being that often when people are working on websites and datasets, they'd want to be able to update these datasets.
+
+And although you can use IPNS for mutable data, it's sorely in need of some optimization to speed up publishing.
+
+Similarly, if you're working with a mutable dataset, there's no easy way to pin your updates with an external service.
+
+Although some services are out there, they either need a copy of your key, or require you to have your local node online to re-publish periodically.
+
+Finally, the actual peer to peer connectivity isn't as solid as some other platforms though this is being improved with the new Hole Punching functionality that recently got released.
+
+Thankfully a lot of this stuff is being actively improved, and I'm personally invested in improving upon these points.
+
+---
+
+class: center, middle, datbg
+
+## Local-First Software
+
+- User-owned data
+- Works offline
+- Local-area network
+- Over the internet
+
+???
+
+That said, what is the benefit of using p2p in these ways.
+
+These p2p protocols combined with the web create what's called local-first software which was coined by Ink and Switch.
+
+This is software in which
+- the user owns their data
+- which works fully offline
+- can scale out to local-area networks
+- and can also scale out globally via the internet
+
+---
+
+class: center, middle, agbg
+
+## Community Mesh Networks
+
+- Resilient to outages
+- Exchange data without internet
+- Disribute applications as web apps
+
+???
+
+This style of app also pairs well with communtiy run mesh networks.
+
+Local-first applications built using Agregore are resilient to network and power outages
+
+They can exchange data over the local network without needing access to the internet, boosting speed, and reducing overall costs
+
+And finally it makes it easy to distibute applications to your local community in the same way you would any other content.
+
+---
+
+class: center, middle, omibg
+
+# Thank You! 🎉
+
+#### (Questions?)
+
+???
+
+I'm hoping that this overview has given you the info to start thinking more about peer to peer protocols and the web, and that it will insire you to create something cool.
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>

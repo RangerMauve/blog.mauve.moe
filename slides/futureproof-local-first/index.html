@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Intro to Local-First Thinking</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Mixing Peer to Peer Protocols on The Web with Agregore">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: 'Fira Code', system-ui; }
+      text { font-family: 'Fira Code', 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.75em;
+        font-size: 1.25em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# Intro to Local-First Thinking
+
+#### By [Mauve](https://twitter.com/RangerMauve)
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small>Press <b>C</b> for a popout window</small>
+
+???
+
+Hey folks, I'm Mauve, my pronouns are they/them, I do consulting on various peer to peer and decentralization things, and today I'm going to be getting us all into the mindset of local first software.
+
+We're going to start by figuring out exacly what local-first thinking even is,
+and then we're going to have a bit of a breakout session to talk about it,
+review what we talked about, and have a general Q&A session for however much time we have left.
+
+---
+
+class: center, middle, beakerbg
+
+## Cloud-First Thinking
+
+### "The status quo"
+
+???
+
+Before we get into Local-First thinking, lets look at what the status quo when it comes to how tech gets made today..
+
+I like to call this, cloud-first thinking and it's what most developers end up following  when they set out to create a new piece of software that touches the internet.
+
+---
+
+class: center, middle, beakerbg
+
+## What is it?
+
+- Servers managed by a company / group
+- Central database with all users data
+- "Light" clients
+- APIs between data and clients
+- Server does access control
+
+???
+
+In my opinion, cloud-first thinking supposes the following building blocks.
+
+Firstly, there exist "servers" somewhere which are defined and managed by a company or group.
+
+These servers act as the "gateway" to a centrally administered database which contains all of the data relevant to an application.
+
+This database might actually be distributed by a bunch of machines or not, but at the high level it acts as a cohesive unit.
+
+Due to the database being large and central, most clients (the user facing part of the application) are "light" in that they put most of the work for managing data into the servers and fetch data on the fly.
+
+This is usually done via APIs that sit between the client and the database.
+
+These APIs are also what manage access to the databse for individual clients using the API.
+All of the database is usually available to the API server, but a client can only access data that the API permits them to.
+
+---
+
+class: center, middle, beakerbg
+
+## Cloud-First Advantages
+
+- Monetization through Mediation
+- One API can serve many
+- Aggregation + Search
+- Central Moderation
+
+???
+
+This leads to some useful advantages to both service providers and to clients.
+
+A big advantage to service providers is that they can use their control over the API as a way to put strategic paywalls to features of the system that users will need to pay for. Either for the API as a whole, to premium feaures, or to access to the data in bulk for analsys for ads and whatnot.
+
+For developers, it can make stuff easy because having a centrally managed API to serve all users can make architechting the software more straightforward. If you want to figure out how a client will interact with your system, you can slap together an HTTP server and go from there.
+
+Having all the data in one place is also nice in that it makes it staightforward to aggregate it into meaningful collections and to search through it. e.g. if I want to search for all makers of porcelin frogs on a platform, I can ask the API and it can search through the data for me and I don't need to worry about finding each manufacturer individually.
+
+Finally, it makes it possible for the people running the platform to moderate misuse. For example if people are using it for illegal activity, for spam, or just being generally shitty, there's a path for the platform owners to cut off access to the API for that particular user.
+
+So overall, the status quo is actually pretty useful to people building large systems that want to support lots of customers.
+
+However, it does come with some tradeoffs.
+
+---
+
+class: center, middle, beakerbg
+
+## Cloud-First Disadvantages
+
+- Single point of failure
+- Expensive at scale
+- Needs constant internet
+- Centralizes power / risk
+
+???
+
+So, even though the cloud is really useful for certain things, there's other aspecs of it which are arguably less than useful.
+
+One thing we might have seen is that cloud services are built on many single points of failure. This can happen at the application server level, at the database level, or at the datacenter level. If your smart house relies on some cloud service on AWS to be always online, your house suddenly becomes a lot less smart when that service gets any sort of disruption. Although there's ways to reduce the impact of outages and failures, they're usually bandaids on this central issue of centralized systems having dramatic collapes when the center gives out.
+
+Speaking of all those bits, even though it's fairly straightforward to set up cloud services these days, the costs of keeping them running add up quickly as your ecosystem scales up. If you need a beefy server to store and process data, the costs go up as you need to make it beefier and beefier to scale with demands. In some cases, where you enable automatic scaling to avoid the issues of services being overwhelmed, you can run into issues where your once cheap cloud bill suddenly grows to huge numbers and as your system is dependent on these cloud services, you have little choice but to sink more money into them.
+
+Another aspect of the cloud is that most applications built with it require constant internet connections to the cloud in order to be effective. This means that in a lot of cases if you have a sudden internet outage, all of your fancy electronics that rely on the cloud become fancy bricks. This isn't a huge deal when you can afford fancy internet connections and can rely on local infrastructure to go down, but those things aren't true for everybody at all times and the switch between the modes can be jarring.
+
+Finally, the thing that I find most concerning about cloud based thinking is that centralizing authority, power, and risk can have adverse societal implications. Lets look into this a bit more.
+
+---
+
+class: center, middle, beakerbg
+
+## Power Dynamics of Centralized Software
+
+- Centralization creates liability
+- Coerced "Consent" for terms of service
+- Moderation ineffective at scale
+- Who gets to decide the moderation?
+
+???
+
+The thing about centralizing authority and power is that it also centralizes liability. This can be seen in the enforcement of various laws around different platforms. For a tiny blog for a single person, they might be able to get away with using copyrighted materials or having a bit of descent against their government as a treat, and likely it won't get anything done to it. However if you have a large cloud platform that hosts thousands of blogs like this, you can open the door to being sued since your're technically the one hosting the content. This means that large platforms are pretty much required to analyze content and start censoring stuff preemtively or on behest of a third party like a media conglomorate. You could also be liable to implement privacy preserving logic like GDPR and other stuff that countries around the world are starting to require from people. This can be hard work, and if you don't have the resources to do it in house you either need to be very strict about content and deal with false positives, or outsource to third parties which now get more control over your product and will be taking more of your revenue.
+
+At the same time, users of the platform have little to no say in how the platform will change over time. Companies are generally free to update their services and policies according to what their goals / requirements are, and users are often left with "giving consent" to the changes by using the platform or hitting "I agree" without having much other choice but dropping the platform which might be gatekeeping their access to tools to do their work or to access their community. In my opinion, if a person depends on something and you tell them you're going to fundamentally change it regardless of what they want and they can take it or leave it, it's more a fascade of consent. If it isn't enthusiastic, it's likely coerced.
+
+And speaking of access to communities. When your "community" is the entire world of strangers, and potentially a bunch of non-human accounts, moderation can actually be really hard. If you look at some of the largest platforms, their moderation teams can get burnt out really quick from all the harmful content they're exposed to, and automated moderation can often be exploited by bad actors to try to take somebody down over petty squabbles.
+
+Since a platform is unlikely to fairly moderate the entire userbase, the question becomes, what will get prioritized to be moderated and who will be represented in those decisions.
+
+Often what happens in largely centralized systems is what happens in our society at large where we have a lot of centralization of wealth and power.
+
+And the social effects of systemic inequality in our social relations can be seen in the systemic inequality within the software realm.
+
+---
+
+class: center, middle, beakerbg
+
+## Censorship
+
+???
+
+This leads to people talking about how these platforms lead to censorship. Sometimes it's "legit" in that people are posting awful stuff like revenge porn or gore, or maybe they've done a bit of targetting harassment and got muted for a few months.
+
+Other times it's not quite as clear cut. For example on TikTok LGBTQ+ creators often have to self-censor themselves and not say things like "Lesbian" due to automated censorship taking their videos down. In some cases it's stuff like sex workers being banned from platforms in general due to laws like SESTA and FOSTA making it hard for comapnies to legally host their content at all regardless of how above board it is.
+
+Often times people could be "violating" some of these censorable platform requirements, but getting away with it due to the having a high social status or by the moderator reviewing their content giving them an arbitrary pass.
+
+When you have a large centrally governed dataset, people at its margins will always fall through the cracks and the systemic effects of collecting all that data and social connecitity in one place makes it hard to have real equality.
+
+---
+
+class: center, middle, purplebg
+
+## Local-First Software / Mindset
+
+???
+
+So now that we have a nice picture painted of the dynamics of the status quo, lets talk about how what local-first software is and how it changes these tradeoffs and dynamics.
+
+---
+
+class: center, middle, purplebg
+
+## What is it?
+
+- Coined by [Ink & Switch](https://www.inkandswitch.com/local-first/)
+- User-controlled data
+- Sharable with others
+- Works fully offline
+- Over local networks
+- Over the internet
+
+???
+
+The term was coind by Ink and Switch in 2019, and I strongly recommend reading their blog post since it's full of interesting details.
+
+The super terse form is that it's software where data is fully controlled by users and can be shared between them. That works fully offline without any extra servers or peers, that can also work exclusively over local networks when there's no internet, but can also scale up to the internet if necessary.
+
+With these core principles in places, lets look at some of the advanteges of designing systems this way.
+
+---
+
+class: center, middle, purplebg
+
+## Local-First Advantages
+
+- Private data First
+- Less liability (arguably?)
+- Outage resilience First
+- Automatic caching
+- User agency First
+- No server upkeep required
+- Popular data gets faster
+
+???
+
+Some of the advantages on the technical / social side is that when you use this principle it's easiest to create data that is private first. In fact, making data not-private requires extra coordination to make it available pubicly or to aggregate it on a third party dataset.
+
+This also means that developers building these apps have no insight and no control over the data thats being exchanged. Potentially this could mean that you can be spared from liability issues, however past systems like Limewire that were primarily used for piracy are an example where creators got held accountable for the actions of their platform. I'm not a laywer, but this might be an exciting new real for the EFF to explore as local-first software becomes more common.
+
+Since being able to work offline is a priority, apps written with this in mind are resilient to network outages, and sidestep the issue of server or data center downtime entirely. This stuff _can_ be done with cloud based services to an exent, but it's hard and usually involves limiting functionality. A cool aspect of the local-first paradigm is that you can have applications that work great using on the fly wireless connections through stuff like Bluetooth or phone based wifi hotspots.
+
+When you use local-first tech, you're usually also building apps that take advantage of caching by default. So if data is already on your device, you don't need to do anything else to get at it. Similarly, the caching can take advantage of local networks where rather than two people downloading the same video twice from a datacenter to their local network, they can stream chunks of the video between each other and not bother with reaching out to the internet.
+
+Ultimately, what users gain from this arrangement is agency where the control over the software they use and their data is closer to their hands by default. There's of course limitations in cases where developers don't expose ways to easily export or import data, but it's easier to do than having everything behind a third party API with rate limits.
+
+Finally, for developers, they don't need to bother with server maintenance by default. Since everything works locally, once an app is in a users hands they can start using it regardless of whether the original company is even still around to maintain it. This also means that companies working on the tech can save on having to hire back-end engineers that will build and orchestrate cloud services in the first place.
+
+As well, popular data in your ecosystem will actually get faster to load as more people have a copy of it. In cloud based systems, if a small blog's videos suddently take off, they can quickly get overloaded since their servers might not be ready for the spike.
+
+There's some social stuff I'd like to dig into more, but first lets get a reality check on why this isn't a silver bullet.
+
+---
+
+class: center, middle, purplebg
+
+## Local-First Disadvantages
+
+- Initial load often slow
+- No peers, no data
+- Hard to aggregate / discover globally
+- No central moderation
+- Harder to monetize (no rent-seeking!)
+
+???
+
+The first pain point that people often see when they try out a peer to peer app or the such is that initial loads of data can be kinda slow compared to what we're used to in the cloud-first paradigm. Part of this is that instead of know which IP address to connect to to get the data right away, we first need to discover who in the network has a copy of the data we want. Do note that not all systems suffer from this, and if you're authoring content it could actually be faster than cloud-first software since you often don't need to touch the network at all to creat data. As well, once that initial load is over, subsequent ones are pretty much instant since they'll be cached.
+
+Another pain point is that if there's nobody out there that has a copy of the data you want, or nobody you can actually connect to, then it won't be loadable by a new person coming along. This usually means you need to keep backups of your data online if you want random people to view it, or you could set up systems where you back data up for your friends and collaboratively increase the odds that it'll be offline. This usually isn't an issue if you're actively trying to share something from one device to another when they're beside each other.
+
+Another convenience we've grown accustomed to is being able to search large datasets of all data we could ever hope for. Since there's no central database, you're left with only being able to search through stuff you've already loaded or from devices you're already connected to that are sharing their content publicly. What's more, if you don't know that people exist either directly or via your peers, you likely won't know to search for them in the first place. This can make discovery and visibility harder to do when people are fully divorced from a given social context.
+
+Another places where the lack of centralization can be an issue is the inability to centrally moderate a local-first system at large. If you have full user agency, it also means that users have the agency to not be moderated! This means that approaches to moderation tend to be opt-in and exist at the level of communities interacting with each other rather than a global on off switch per account.
+
+Finally, since developing stuff usually takes resources and money to do, the question of monetization becomes a lot more fuzzy when the industry is used to creating artificial scaricty by acting as gate keepers between users, their data, and each other. In order to monetize on local-first software, you'll likely need to do some experimentation with funding models that will likely need to be outside of the realm of holding people's data ransom, or selling off their data to advertisers.
+
+---
+
+class: center, middle, purplebg
+
+## Social impact
+
+- Cloud-first benefits the powerful.
+- Local-first benefits the marginalized.
+
+???
+
+A lot of the tradeoffs in these systems are just that. Tradeoffs.
+
+In my opinion, the tradeoffs of the cloud generally make it easier for powerful people to gain power, and for marginalized people to struggle at the fringes.
+
+And local-first makes it harder for powerful people to leverage their existing power and instead privileges marginalized people by giving them agency they can't get elsewhere and connectivity to each other that they might not have otherwise.
+
+Even though it's harder to make something like Twitter's algorithmic timeline using local-first tech, I think it's almost a blessing.
+
+Instead of forcing a corporation in the US to moderate everything that can exist in an ecosystem, people can connect directly to each other and have collective ownership over their communities, with the responsibilities that come with it.
+
+This means that when building local-first systems, we aren't just taking tradeoffs in how we build tech, but we're adopting new systems of relationships and new ways of thinking about interactions between people.
+
+---
+
+class: center, middle, purplebg
+
+## Resisting the (Algorithmic) Attention Economy
+
+???
+
+One thing that worries me is that it looks like large parts of social structure is turning into an age of harnessing and centralizing people's attention rather than an age of information.
+
+I would suggest that this is at least in part in the way that cloud-first thinking and agregation of user content has led to the aggregation of user attention and the guidance of people's thought at large by algorithms rather than social interactions with people they have actual connections with.
+
+With local-first software and thinking, rather that pitting everyone in the world into a contextless jumble by default, the default is to connect people via meaningful connectiosn through their social networks.
+
+In my opinion this is going to be important as automated agrothims optimize social interactions for social engagement on topics that will cause polarization and debates rather than productive discussions that people opt into on their own.
+
+---
+
+class: center, middle, agbg
+
+## Building Blocks
+
+- Peer to Peer protocols
+- Content addressability
+- Gossip protocols
+- Encryption
+- Subjective Moderation
+
+???
+
+Before we go further, lets take a break from the intense stuff and jump into the practical building blocks that can be used to create local-first software.
+
+I'm going to be going really high level with these bits, but if you're curious about the details, feel free to reference the talk I did last year at the Bloom Fireside which went more in depth on the technical details.
+
+---
+
+class: center, middle, agbg
+
+## Peer to Peer Protocols
+
+`network 🌐 (topic 📃) => Peers[😎, 🥳, 😤]`
+
+???
+
+The first, and in my opinion is the concept of peer to peer connections in general.
+Wheras in the cloud you have an address that points you to a specific server which mediates your connections to others,
+in peer to peer systems the fundamental building block is a "topic" which you can search the peer to peer network to get a list of peers, or other people's devices that are also interested in that topic.
+This is the core to distributing connectivity and it's what lets local-first software discover peers either locally or over the internet in a way that doesn't matter to other parts of the stack.
+
+---
+
+class: center, middle, agbg
+
+## Content Addressability
+
+`address 🛂 => content 📃`
+
+???
+
+The next big piece is to ditch the concept of API servers telling you how to access data, and to instead reference data directly via Content Addressability.
+Usually this is done in such a way where given an address for some data, you can look up peers on the network that are saying they have it, and when they give it to you, you can verify that the data they gave you hasn't been tampered with by checking it against the key. This can be done with various cryptographic primitives like asymmetric key signatures, or hash functions which I encourage you to look into later.
+
+This fits in with p2p protocols in that the address of some content can be used as the topic used to discover peers and means that you can find the peers you need without a centralized mediator.
+
+---
+
+class: center, middle, agbg
+
+## Encryption / Cryptography
+
+`Malicious peer 😈 + 🔐📃 encrypted content = 👿 No insight`
+
+`address 🔐  = 🔑 decryption key + 🛂 content address (📃)`
+
+???
+
+One of the things about centralized systems is that since we can have servers acting as mediators between the data and clients, we can put some trust into them so that they can pinky swear not to leak our data if we keep it in plain text on their services.
+
+For local-first software, and decentralized software in general, if you want data to flow through potentially malicious peers, you need to design stuff from the start to use encryption and other cryptographic primitives to prevent malicisous actors in the network from being able to access your data if you don't give them permission to.
+
+The privacy benefits of local-first software stem from cryptography being a necessity rather than a premium feature that's added after the fact or that can be subverted by a third party if needed.
+
+Usually this means that the address you share with a person that needs full access to the data will also have a method to decrypt the referenced content.
+
+---
+
+class: center, middle, agbg
+
+## Gossip Protocols
+
+`😮 🗪 🤔 gossip(topic 📋) + address🔐 => Peers(address)[😊, 😎, 🥳]`
+
+???
+
+Once you have a way to address data and get it from peers, applications usually need another compontent to tell each other about new data on the fly. This is important for stuff like a chat system or a collaborative document editor where you might not know the address of each bit of data ahead of time, and instead know a general topic or encryption key that a bunch of peers know ahead of time, and can use this to establish connections with them and gossip new data between each other as each peer creates it.
+
+---
+
+class: center, middle, agbg
+
+## Subjective Moderation
+
+`👿 👀🤝👀`
+
+Opt-into moderation with trusted peers
+
+e.g. [TrustNet](https://cblgh.org/trustnet/)
+
+???
+
+As mentioned before, since there's no central place to do moderation, you can either leave it to yourself for deciding which content you do or don't want to load and who you share your addresses with, or you can opt into following other people's moderation decisions if you trust them to. This means that communities that have levels of trust with each other can have recourse when somebody is acting maliciously, and the levels of moderation are local to individual people based on whose decisions they trust rather than an opaque process in a third party.
+
+One interesting phenomenon is that since data is private by default, people have to opt into viewing data by default. This means that stuff you see is already likely brought into your network by people that you trust which reduces the opporunities for trolls to come in and wreak havoc.
+
+---
+
+class: center, middle, agbg
+
+## Existing applications
+
+- [Berty](https://berty.tech/) (chat)
+- [Manyverse](https://www.manyver.se/) (social media)
+- [Mapeo](https://www.digital-democracy.org/mapeo/) (mapping)
+- [PushPin](https://www.inkandswitch.com/pushpin/) (notes board)
+- [Agregore Browser](https://agregore.mauve.moe/) (web browser)
+
+???
+
+Combinations of these building blocks are used in existing open source local-first applications in the wild which you can check out via these links.
+
+Berty is a peer to peer chat application which can use bluetooth to connect peers togehter. It uses the IPFS protocol to connect phones to each other in order for groups to exchange encrypted messages directly without needing to register a phone number or email with a third party to have an account. This uses content addressing and encryption for their data, peer to peer to connect, and gossip for the connected devices in a chat to exchange addresses for data.
+
+Manyverse is a social media platform built on Secure Scuttlebutt. It replicates feeds of data between folks following each other and does moderation by letting users publicly announce when they're blocking a person for bad behavior which can be used by folks following them to decide if they'd like to block the person too. SSB data isn't generally encrypted, but they're working on encrypted chats between folks following each other on the network.
+
+Mapeo from Digital Democracy uses peer to peer data structures to help indigenous peoples in the Amazon document misuse of their land and to pin it to a map so that it can be used to visualuze the damage spatially and to use it in court cases. They use local wifi and bluetooth connections to fully replicate data between devices so that there's no single point of failure. It's a great example of the software paradigm being used actively for social good.
+
+Pushpin comes from the folks that coined the term Local-First and lets folks organize boards of information which they can link to each other and can collaboratively edit. They use a data structure called Conflict Free Replicated Data Types to make it possible to merge a bunch of data together.
+
+Finally, a project that I'm working on, Agregore, is a web browser which enables folks to author and load content from peer to peer networks. One of the goals is to make it easier for people to build and distributed local-first apps without needing to worry so much about making them work accross operating systems and device form factors. It exposes some of the raw primitives I mentioned so that developers can build applications on top using plain JavaScript.
+
+---
+
+class: center, middle, agbg
+
+## Example Use Cases
+
+- Low (or no) connectivity environments
+- Disaster-prone communities (the world on climate change)
+- Off-Grid / Camping communications
+- Marginalized people getting censored on platforms (e.g. queer people, activists)
+- People not wanting to deal with the cloud
+
+???
+
+Here's some groupes and places where this thinking could be beneficial.
+
+This is in no way extensive and I'm sure the folks here probably have better and more precise thoughts based on the communities that they're a part of and the experiences they've had.
+
+One of the really obvious use cases that just _can't_ be effectively served by cloud-first systems are low-connectivity environments. This could be rural or "underdeveloped" regions where connectivity isn't great or isn't cost effective for internet service providers to serve.
+
+This also includes places where it's true temporarily like disaster scenarios where certain infrastructure might be down or spotty. At the moment, if your ISP goes down, a lot of the tools we're used to having on our devices suddenly stop working, and this can be something that folks in disaster prone areas could be interested in combatting.
+
+Kinda adjacent is places where flolks are into being able to be "off grid", either on a boat, or some sort of solarpunk farm. I've got some friends out in Vermont that are keen on setting up some interesting tooling on top of this stuff once they have infrastructure, and having local-first software available pairs well with that use case.
+
+Outside of the network connectivity use case, folks in communities that are marginalized on existing platforms could benefit from using local-first tools which keep their data and their community in their hands instead of in the hands of a third party. For example, what if we had something like a local-first tiktok where you could say "Lesbian" or whatever other terms you want without having your videos automatically flagged and taken down.
+
+Lastly, I think it can be useful for developers that just want to make software and connect people together without having to bother setting stuff up in the cloud and instead focus on the data, the user experience, and direct sharing.
+
+---
+
+class: center, middle, datbg
+
+## Breakout Session
+
+- How would you describe local-first software and thinking now that you've learned abou it?
+- What have you experienced that would benefit from local first thinking?
+- List some ways this mindset works outside just the technical realm.
+- What communities have you seen that are seeing adverse effects from cloud-first thinking?
+
+https://hackmd.io/fDH9eeKnT-eGNZsgRob7sg?edit
+
+???
+
+So, now that we've all got a holistic view of local-first thinking, we're going to split up into small groups and talk about it.
+
+I've got a link to a hackmd editor in the chat and on the screen, as well as some prompts for stuff you can talk about.
+
+If you'd like to, write done any thoughts you'd like to share with other groups at the bottom of the hack md and we'll review it after we've all had a chance to chat.
+
+---
+
+class: center, middle, datbg
+
+## Breakout Review
+
+What did you talk about?
+
+???
+
+Cool! So that was fun. If anyone would like to talk about stuff they thought was interesting, feel free to use the "raise hand" feature of Zoom or post a message in the chat.
+
+Else, we could take a look at what folks wrote in the hackmd.
+
+---
+
+class: center, middle, purplebg
+
+## What next?
+
+- Who can benefit
+- Work with them
+- Local-First is People-First
+
+???
+
+So. I hope you've come out of this with a better appreciation for the hidden tradeoffs in the status quo of how software gets made, and the differences that local-first software can make when you change your approach to data.
+
+Next, it's time to think about who could benefit from this, be it yourself, your community, or a particular group that's not being served by centralization.
+
+Then, work with them to help build software that's local to their needs first and that centers their agency over a centralized authority.
+
+Local-first, means that it's people first.
+
+---
+
+class: center, middle, purplebg
+
+## Q&A
+
+???
+
+So next I think we have time for general Q&A until the meeting runs out or we run out of steam. 😁
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Mauve's Vision for IPLD</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="This post will go over some of my thoughts on how IPLD can be advanced in the ecosystem to enable more advanced linked data use cases in the IPFS ecosystem." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="mauve-s-vision-for-ipld">Mauve&#39;s Vision for IPLD</h1>
+<p>This post will go over some of my thoughts on how IPLD can be advanced in the ecosystem to enable more advanced linked data use cases in the IPFS ecosystem.</p>
+<h2 id="why-improve-ipld-">Why improve IPLD?</h2>
+<p>From my perspective, while IPFS is great for sharing large numbers of static files, more advanced data use cases like CRDTs and databases are much more difficult to represent in this paradigm.</p>
+<p>IPLD serves these more advanced use cases, but it&#39;s currently underutilized by the general developer and is left to a few people that understand the lowest levels to take advantage of it.</p>
+<p>I believe that the time is right to make IPLD more accessible in order to enable more powerful distributed applications.
+New developments in the ecosystem like Probibalistic B-Trees, and the IPVM working group can drastically change what&#39;s possible with raw IPLD, and we should be taking advantage of this fact sooner than later.</p>
+<p>I&#39;ll go over some specific things we could focus on to have IPLD create a bigger impact on the ecosystem.</p>
+<h2 id="more-obvious-onboarding">More obvious onboarding</h2>
+<p>Often, when I bring up IPLD in IPFS spaces, people end up not knowing what exactly it is, or what it&#39;s used for outside of the basics like codecs.
+Usually, people don&#39;t think too hard about the uses of the IPLD Data Model and lenses over top of it such as Schemas or Advanced Data Layouts.</p>
+<p>This speaks to a lack of onboarding into what IPLD is in our documentation, and in the documentation of the rest of the IPFS ecosystem.</p>
+<p>Ideally, people new to IPFS and content addressible data should have a path onboarding them onto IPLD and to take advantage of it in their applications.
+There&#39;s already been a start to <a href="https://github.com/ipld/ipld/issues/240">cleaning up the IPLD Docs</a> and we can piggyback off of the general formatting improvements to create better onboarding docs within and outside of the ipld.io website.</p>
+<h2 id="higer-level-apis">Higer Level APIs</h2>
+<p>Similarly, the current state of IPLD APIs is fragmented accross the different implementations, and knowledge of available features is spread out based on who is working on what setup.
+In particular, there&#39;s high level way of combining raw IPLD data, with a way to retrieve it via libp2p, and to apply various lenses like ADLs/Schemas over top of the traversal.</p>
+<p>I&#39;ve been working on this as part of my proposal for <code>ipld://</code> URL schemeas and a new IPFS gateway <code>/ipfs/*</code> path <a href="https://github.com/ipfs/specs/pull/293">here</a>.
+This gives developers a clear way to interpret IPLD in a way that exposes the raw data model, the ability to convert between codecs, and the ability to apply lenses over top of data.
+Part of this effort is to merge the concept of lesnes with path traversal into a single reusable unit.
+This works via the ability to specify extra parameters to path segments using the <a href="https://www.logicbig.com/quick-info/web/matrix-param.html">URL Matrix Parameters Spec</a>.
+For example, if we want to treat data at some path of the URL as a HAMT in order to more effectively search through its key space we could do the following: <code>ipld://CID_HERE/HAMT_KEY_HERE;adl=hamt/</code>.
+This can be combined with other features like IPLD Schemas and future features like AutoCodec where we can specify CIDs of the lense to apply and load it dynamically from IPFS/libp2p.</p>
+<p>Along side this, the new  <a href="https://ipld.io/specs/patch/">IPLD Patch</a> spec gives us a clean way to mutate arbitrary IPLD trees in a determenistic manner than can translate well between applications.
+Patch sets are easier to understand than arbitrary code for mutations, and have the added benefit of being encodable to IPLD itself so that it can be referenced by higher order structures.
+This works well along side the HTTP Patch method, where we can provide application authors a way to PATCH IPLD data and get back a new IPLD URL the same way that they can POST some data to a writable IPFS gateway.</p>
+<p>At the moment, I&#39;ve been experimenting with this in JS in the <a href="https://github.com/RangerMauve/js-ipld-url-resolve/">js-ipld-url-system</a> repository and in the Agregore Browser&#39;s p2p protocol handlers.</p>
+<p>Overall, the existing APIs can be useful for advanced users which are comfortable gluing everything together with their own application specific code, but there&#39;s an opportunity here to reduce the barrier to entry into the IPLD space with a higher level API that centers all of IPLD&#39;s high level features.
+This is something where we can leverage IPLD fixtures to guide API implementation in several languages at once with a few developers.</p>
+<h2 id="robust-rust-implementation">Robust Rust implementation</h2>
+<p>On the topic of IPLD APIs, the Rust implementations of IPLD are in sore need of some improvement.
+At the moment they focus mostly on codecs to translate data between Rust structs, and Blocks intended to be sent to blockstores.</p>
+<p>Missing entirely, is a high level IPLD <code>Node</code> interface used by the go-ipld-prime data model to enable higher level features such as Schemas and ADLs to work on top.</p>
+<p>Rust is a major part of the IPFS ecosystem with its use in the <a href="https://fvm.filecoin.io/">FVM</a>, <a href="https://github.com/wnfs-wg">WNFS</a>, and <a href="https://github.com/n0-computer/iroh/">Iroh</a>.</p>
+<p>It&#39;s important that IPLD gets represented properly in this space in order to secure it&#39;s capabilities in the future.</p>
+<p>With that in mind, we would need to fund work on bringing the state of Rust IPLD on par with what is available in Go and looking for projects that would wish to make use of this functionality.</p>
+<p>I&#39;ve been working with the team at KEN Labs on a devgrant to standardize IPLD Prolly Trees, and they would be interested in working on some of this Rust tooling as part of their effort to integrate the spec with FVM use cases.</p>
+<h2 id="wasm-integration">WASM Integration</h2>
+<p>As well, this year we&#39;ve had some interesting developments on the integration between IPLD/IPFS and WebAssembly in projects like Adin&#39;s <a href="https://www.youtube.com/watch?v=Z6ZLawrc94g&amp;list=PLuhRWgmPaHtSVgToYLfsj-gggF9vB1Hzy&amp;index=16">WASM-IPLD</a> and Fission&#39;s <a href="https://fission.codes/blog/ipfs-thing-breaking-down-ipvm/">IPVM</a> initiative.
+There&#39;s now a few use cases where WebAssembly and IPLD interplay together, and it seems like the right time to standarize an ABI based on the IPLD data model that WASM modules can either consume arbitrary IPLD data that&#39;s initiated from the host environment, or in the autocodec use case, provide IPLD data to be used in traversal at the host level.</p>
+<p>This will work well with the Rust effort where we can have Rust bindings for this interface to use either in standalone projects, or projects running within WASM contexts like the IPVM or IPLD URL resolvers.</p>
+<h2 id="p2p-database-use-cases">P2P Database Use Cases</h2>
+<p>Ultimately, I beleive that all these improvements to IPLD will improve the IPFS ecosystem&#39;s position in using decentralized peer to peer databases.
+I imagine ADLs like Prolly trees being used to publish large datasets from either community sourced data, or blockchains publishing their state on p2p indexes instead of centralized full node databases.
+Lots of projects in the web3 ecosystem end up reinventing databases and data schemas which don&#39;t end up interoperating and often centralize storage and querying on mostly centrally managed infrastructure.</p>
+<p>With IPLD we can give people an alternative which can spread the load for querying and can make it possible to verifyably load data while using local caches and direct peer to peer connectivity.</p>
+<p>There&#39;s a few groups working on things around peer to peer databases for <a href="https://rorur.com/">search indexing</a>, for <a href="https://github.com/pando-project/pando">big data</a> use cases, and for <a href="https://berty.tech/features/">local-first chat apps</a>.
+At the moment it requires a lot of digging and domain knowledge to make something, but I think we&#39;re in a good position to help create some higher level tools that can be reused in more projects.</p>
+<p>This is something that can be enabled with the higher level APIs, better Rust/WASM support, and by having paths to groups to leverage these tools when applying to devgrants.</p>
+<h2 id="upkeep-on-existing-issues">Upkeep on existing issues</h2>
+<p>Currently Rod is the main person watching and fixing loads of IPLD related issue accross dozens of repos and several languages.
+It can be hard to prioritise new things that would be useful for ecosystem growth when we&#39;re constantly playing catch up with issues.
+With that in mind, getting one or two more people on the backlog, or having more strict policies of closing issues that don&#39;t have champions could help us push the ecosystem forward without accruing more technical debt.</p>
+<h2 id="takeaway">Takeaway</h2>
+<p>There&#39;s a bunch of areas where IPLD can use some more attention and person-hours, but we&#39;re in a good position to ride the wave of web3 projects gaining maturity and to create some useful tools for people to work with data.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

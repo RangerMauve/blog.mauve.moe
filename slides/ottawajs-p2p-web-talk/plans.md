@@ -1,0 +1,94 @@
+# ottawajs-p2p-web-talk
+My presentation on the P2P web, focusing on Dat and the Beaker Browser
+
+# Plans
+
+- Quick demo
+    - Make a site using Beaker
+    - Load it
+- What _is_ the P2P web
+  - Centralization
+    - Star topology diagram
+    - Two people connect through the central node
+    - If the central node is down, can't connect
+  - P2P
+    - Mesh topology diagram
+    - Rout between two people
+    - Alternate route between two people
+- Why is Centralization so popular
+  - Setting up a website is hard
+  - DNS
+  - Servers
+  - Costs for bandwidth
+  - Businesses want to control the data for profit
+- Why has made P2P hard to use
+  - Difficult to discover peers
+  - Traversing networks can be difficult to set up
+  - Dealing with malicious peers
+  - Lack of easy-to-use tech
+- Dat
+  - Created to help share scientific data securely
+  - Data is shared by linking to a URL
+    - The URL is a public key used for encryption
+    - Peers are found on the network using a discovery key that's derived from the public key
+    - If someone doesn't know the URL, they can't see the data
+  - Backed by append-only logs (hypercore)
+    - Kinda like a blockchain, but the fundemental building block it's based on
+    - Can load parts of the log from any peer and know that it's valid
+    - Structure is efficiently stored such that you only need to get the subset that you want
+  - High level API looks like a filesystem
+    - Can read/write files and directories
+    - Can watch for filesystem changes
+  - The data is versioned
+    - Can look at the change history
+    - Can check out an older version
+  - Repliation diagram
+    - Two sides with blocks
+    - Some blocks are greyed out
+    - Arrows representing downloads
+  - Offline first
+    - If you've viewed a Dat, the files you viewed are cached locally and available offline
+    - Can work with data locally and sync with others eventually when you're both online
+- Discovery-swarm
+  - Bittorrent DHT
+    - Diagram of DHT
+    - Can publish your IP address to advertise yourself to peers
+    - Can find peers for data you want
+  - MDNS
+    - Advertise on local network
+    - Discover local machines without an internet connection
+- Beaker Browser
+    - Make sure [logo](dat://beakerbrowser.com/img/logo/logo.png) is displayed over `#5743ff` background
+    - Experimental browser
+    - Based on Electron
+    - Able to load `dat://` urls
+    - Provides interfface for creating and managing "dat sites"
+    - JavaScript API for manipulating Dat archives
+    - Demo: WYSIWYWiki
+    - Demo Fritter
+ - Outside of beaker
+    - http://gateway.mauve.moe:300/
+    - https://github.com/RangerMauve/dat-polyfill
+    - Can view and interact with Dat in any browser
+    - Can create dats using the JS API with private keys being stored in the browser
+    - Not as private or offline-friendly because the gateway sees what you access
+    - [Fritter for web](http://gateway.mauve.moe:3000/fritter-web-rangermauve.hashbase.io)
+ - Gotchas
+    - When nobody is seeding a dat, new users can't get it
+        - Easy to set up own "seeding" peer
+        - https://hashbase.io/ does 200MB hosting for free (open source service) https://hashbase.io/assets/images/logo.png
+        - No vendor lock in since anyone can set up hosting for your dat
+    - When a file is updated in a Dat, the full file is saved in the history
+        - Prefer smaller files
+        - Split up large data sets
+ - What to do with this
+    - Centralization is empowering large corporations to build monopolies
+    - They control what data you can share, who you can share it to, and what data you can see
+    - It enables advertisers to learn everything about you
+    - It makes it so that you _have_ to buy hosting if you want to get information on your own terms
+    - The web was initially made to be decentralized, but its evolution has made it hard to do so
+    - We need to connect people _together_, not via a third party
+    - Instead of storing users data in a centralized repo, have users store their data in their own dats
+        - Data is owned by users, they decide who sees it by sharing their URL
+        - You don't need infrastructure to support them
+        - Your apps can work offline or over local networks with zero internet

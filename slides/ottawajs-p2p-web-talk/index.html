@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>P2P Web</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      
+      textarea {
+        display: none;
+      }
+      body {
+        font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      li {
+        font-size: 2em;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: #ae40ca;
+        color: #fff;
+      }
+      
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 50vmin;
+        height: 50vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        font-size: 3em !important;
+      }
+      a:link, a:visited { color: inherit; }
+
+     .frontpage {
+        background: url(background.svg);
+        background-position: -25% -25%;
+        background-size: 25%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source" title="Text are containing raw presentation code">
+
+class: center, middle, frontpage
+
+# P2P Web
+
+(Press P for notes)
+
+???
+
+- Welcome!
+- Today I'm going to be opening your mind to a new mode of web development
+- At the end of this talk,
+- you'll know a bit more about the hidden tradeoffs in regular web application development,
+- and how we can work around these tradeoffs with Peer To Peer technology
+
+---
+
+class: center, middle, purplebg
+
+# @RangerMauve
+
+Georgiy Shibaev
+
+Founder - Mauve Software Inc.
+
+P2P / Distributed System Consulting
+
+[Mastodon](https://infosec.exchange/@RangerMauve)
+
+[Twitter](https://mobile.twitter.com/RangerMauve)
+
+[Github](https://github.com/RangerMauve)
+
+---
+
+class: center, middle
+
+# 🤷 🤷 🤷️
+
+???
+
+- What _is_ the P2P web?
+- Create a new website
+- Say "Hello Forward JS"
+- URL on twitter (via gateway)
+
+---
+
+class: center, middle
+
+# Centralization
+
+![Star topology - Nodes connected to the center](/star.svg)
+
+???
+
+- Centralization is the default mode of accessing data these days
+- When two peopl want to exchange data, they use a well-known third party in order to relay the data between them
+
+---
+
+class: center, middle
+
+# Oops ‼
+
+![Star Topology - Center node is missing](/star-missing.svg)
+
+???
+
+- If the central node is down, or if it decides not to connect the two people, everything stops working
+- In this case, it's more than just the server burning in a fire
+- If a client doesn't have a direct internet connection,
+- Amazon has downtime,
+- Or the server is just overloaded with too many connections
+- Suddenly your app doesn't work
+
+---
+
+class: center, middle
+
+# Decentralization / P2P
+
+![Mesh topology diagram](/mesh.svg)
+
+???
+
+- The opposite is Decentralization or P2P
+- People interested in data will connect to others directly and will exchange information with each other
+- If you want to get data from a person, you get it directly from them, or through any peer that's also connected to them
+
+---
+
+class: center, middle
+
+# Yay ‼
+
+![Mesh topology, direct connection is missing](/mesh-missing.svg)
+
+???
+
+- If a peer is missing in a P2P network, you can get data from the others in the swarm
+- Data can live in the network outside of the peers that originally created it
+
+---
+
+class: middle
+
+# Why Centralization?
+
+- Websites are hard! 😭
+- Servers 😨
+- Bandwdith 😩
+- DNS 😰
+- Control 😈
+
+???
+
+- Building websites is hard, you need to worry about a whole bunch of moving parts
+- You need to set up servers (hardware and software)
+- You need to worry about paying for bandwidth if you suddenly get popular
+- You need to set up a DNS record to have a domain name for your website
+- And generally centralization leads to having tight control over platforms
+
+---
+
+class: middle
+
+# Why not P2P?
+
+- Peer discovery 😞
+- Network traversal 😕
+- Malicious peers 👿
+- No easy-to-use apps 🤳
+
+???
+
+- In order for P2P to work, you need to think more about how to actually find peers to connect to
+- As well, not all peers are even connectable. Certain networks like Universities or Corporate networks are really strict with what sort of traffic can be sent over it.
+- You also need to design your system with the risk of there being malicious peers that might try to exploit it
+- And finally, there haven't been that many apps that "just work" without you needing to be an uber nerd
+
+---
+
+class: middle, center, purplebg
+
+# 🤔 Why now? 🤔
+
+???
+
+- New technology created to overcome problems
+- Buzz in development sphere about decentralized tech
+- Centralization on the web is proving harmful
+
+---
+
+class: center, middle
+
+![Dat hexegon logo](/dat-data-logo.svg)
+
+???
+
+- The Dat project is my favorite technology in this space
+- Created to distribute versioned scientific data
+- Backed by a non-profit organization
+- Funded by grants so there's no VC funding expecting exponential returns on investment
+
+---
+
+class: center, middle, datbg
+
+[dat://d3f8f648fdcca1925bdb0b601d723ec8960cb9ec88cad49aae785ed5eb3367b0/](dat://d3f8f648fdcca1925bdb0b601d723ec8960cb9ec88cad49aae785ed5eb3367b0)
+
+???
+
+- At a high level Dat uses these links to share data
+- The link contains the hex for a public key used for singing content, and used for encryption
+- Unless somebody has this URL, they are incapable of accessing your data
+
+---
+
+class: center, middle
+
+# It's just files and folders!
+
+![Filesystem Diagram](/files.svg)
+
+???
+
+- Dat URLs point to "Archives" which are containers with files and folders
+- You can use Dat to sync data with a folder on your computer, or use it to view files in a browser
+- Having a filesystem gives a lot of flexability with how you can store your data
+- You write your file to the Dat Archive, share the link using the Dat URL, and the peer will download it from the P2P network
+
+---
+
+class: center, middle
+
+# BLOCKCHAINZ 😂 👌 🔥
+
+![Append Only Log Diagram](/log.svg)
+
+???
+
+- The underlying data is represented in an append-only-log
+- This is the general purpose data structure that "blockchain" technology is based on
+- The idea is that each new entry in the log points at the previous one
+- When a file is changed, the data is added to the "content log", and the information about the change is added to the "metadata log"
+- This means that you can download the history of the dat without having to download all the files in that history
+
+---
+
+class: center, middle
+
+# Only download what's needed
+
+![Replication diagram](/replication.svg)
+
+???
+
+- The peers use the dat URL as a "secret key" in order to establish an encrypted connection
+- Each new item in the log is signed by the public key from the URL, this means that you can download blocks from any peer and know that they're valid
+- Peers look at the latest blocks that they have locally in order to only download what's needed
+
+---
+
+class: center, middle, purplebg
+
+# 👀 How do you find peers? 👀
+
+???
+
+- Should be able to discover peers for the dat URL
+- Should not expose the dat URL to the network to keep it secret
+- Should work over the internet, and on local networks
+
+---
+
+class: center, middle
+
+# Distributed Hash Tables
+
+![DHT circle diagram](/dht.svg)
+
+???
+
+- Distributed hash tables are a way for a P2P network store and retrieve data
+- A p2p network is formed where keys are evenly distributed between all nodes in the network
+- The most popular implementation is called the Kademlia DHT which uses a "logical distance" function to distribute connections
+- This is used in the BitTorrent network to discover peers for a torrent without any centralization
+- A "discovery key" is used to identify data, and peers that hold the data write to multiple nodes in the network that are "close" to the key
+- Peers looking to get the data then query the DHT to find those peers and connect to them to download
+
+---
+
+class: center, middle
+
+# Multicast DNS
+
+
+![Multicast DNS diagram](/mdns.svg)
+
+???
+
+- MDN is a protocol used to find peers on a local network
+- It works similar to the DHT where a discovery key is broadcast to the network along with an IP address and port
+- Peers will listen on MDNS event on their local network to find other local peers
+
+---
+
+class: center, middle
+
+![Dat project background](/dat-data-logo.svg)
+
+---
+
+class: middle, datbg
+
+
+- Working with data is simple
+- Dat URLs are easy to share
+- End-to-end encrypted
+- Offline / Local friendly
+
+---
+
+class: center, middle, beakerbg
+
+# Beaker
+
+![Beaker browser logo](/beaker-logo.png)
+
+???
+
+- Dat is useful, but it's geared towards sharing files, not applications
+- Beaker is a new experimental browser that's incorporating peer to peer technologies with the web
+- It allows loading Dat URLs directly in your browser
+- In addition to loading data from the Dat network, it provides tools for creating Dat archives that can be used as websites
+- Provides JavaScript APIs for creating, reading, and manipulating dat Archives
+
+---
+
+class: center, middle
+
+# Self-editing WIKI
+
+[dat://wysiwywiki-pfrazee.hashbase.io/](dat://wysiwywiki-pfrazee.hashbase.io/)
+
+---
+
+class: center, middle, beakerbg
+
+# Twitter clone
+
+[dat://fritter.hashbase.io/](dat://fritter.hashbase.io/)
+
+---
+
+class: center, middle
+
+🤔 But what about Chrome/Safari/Firefox/Edge 🤔
+
+???
+
+- Beaker is awesome, but not everybody is ready to switch their browser, plus it doesn't exist on mobile yet
+
+---
+
+class: center, middle, beakerbg
+
+[Gateway](https://github.com/garbados/dat-gateway)
+
+[Firefox extension](https://github.com/cliqz-oss/dat-webext)
+
+[JS API](https://github.com/datproject/dat-js)
+
+???
+
+- You can use the "dat gateway" in order to access any dat URLs from a regular browser
+- You can either use my public instance, or set up a local instance for greater privacy
+- Dat-Webext is a Firefox extension Sam Macbeth which lets you use firefox to view Dat URLs and provides the DatArchive API
+
+---
+
+class: center, middle
+
+![Hashbase logo](/hashbase-logo.png)
+
+???
+
+- Peers can only download data if there are available peers to download it from
+- If you want to guarantee that your data is available, hashbase is a hosting service that will ensure there's at least one peer online for others to replicate from
+- It gives you 200 MB free for your account, and provides an HTTPS subdomain for easy sharing
+- This is different from other hosting providers because they just act as a single peer in the P2P network and you can migrate away from them with zero reprucusions
+
+---
+
+class: center, middle
+
+```
+npm install -g dat
+
+dat clone dat://d3f8f648fdcca1925bdb0b601d723ec8960cb9ec88cad49aae785ed5eb3367b0
+
+cd ~/mywebsite
+
+dat create
+```
+
+???
+
+- You can also interact with Dat from the CLI
+- You can clone Dat archives to a local folder
+- Or publish a website to the Dat network from a folder with static files
+
+---
+
+class: center, middle
+
+# 🤦 Gotchas 🤦
+
+- Need peers to keep content online
+- URLs need to be kept secret
+- History keeps track of full files
+- Knowing the URL means knowing IPs
+
+???
+
+- If you don't expect to have Beaker open all the time to seed your data, you should use either Hashbase or create a dedicated peer
+- Make sure to only share your URLs with trustworthy people because there's no way to revoke access
+- When files are updated in the history, the entire file is re-added to the content log
+- This means that changing large files will create a bunch of duplicate data which can be hard to maintain
+- Splitting up large datasets into multiple files makes it cheaper to do updates to content
+- Regarding privacy, if somebody knows a Dat URL, they could potentially track which Peers IP addresses are seeding the data
+
+---
+
+class: center, middle, purplebg
+
+# 😵 What should I do with this? 😵
+
+???
+
+- Apps made with Dat are offline-first, let you skip back-ends and hosting costs
+- Centralization, corporations, monopolies
+- Your data is being controlled, and you cannot choose who sees it and what you get to see
+- The web was originally created to enable people to build their own websites and control their own data
+- This technology is going to support that vision by bringing the power back into the hands of users instead of middle-men
+
+---
+
+class: center, middle
+
+# Thank you
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" width="512" height="512">
+	<style>
+		text {
+			font-size: 32px;
+			alignment-baseline: middle;
+			text-anchor: middle;
+		}
+		line {
+			stroke: rgba(0,0,0,0.9);
+			stroke-width: 4px;
+		}
+	</style>
+
+	<defs>
+		<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+				markerWidth="6" markerHeight="6"
+				orient="auto-start-reverse">
+			<path d="M 0 0 L 10 5 L 0 10 z" />
+		</marker>
+	</defs>
+
+	<text x="128" y="384">😁</text>
+	<text x="384" y="128">😁</text>
+
+	<line x1="128" y1="128" x2="128" y2="360" marker-end="url(#arrow)"/>
+	<line x1="128" y1="128" x2="360" y2="128" marker-end="url(#arrow)"/>	
+
+	<line x1="384" y1="384" x2="153" y2="384" marker-end="url(#arrow)"/>
+	<line x1="384" y1="384" x2="384" y2="153" marker-end="url(#arrow)"/>	
+
+	<text x="128" y="128">😁</text>
+	<text x="384" y="384">😁</text>
+
+</svg>

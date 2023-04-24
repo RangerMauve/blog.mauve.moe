@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Speech OS</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="I really like the wave of speech-based assistants that have gained popularity.
+Devices like the Amazon Echo, Google Home, etc, are a new paradigm for how people can interact with computers, and what a computer really means to people." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="speech-os-">Speech OS 🗨</h1>
+<p>I really like the wave of speech-based assistants that have gained popularity.
+Devices like the Amazon Echo, Google Home, etc, are a new paradigm for how people can interact with computers, and what a computer really means to people.</p>
+<p>One of the things I really like about these devices is the speech aspect.
+In order to interact with the device, you don&#39;t need to be able to stare at a screen, operate a keyboard, or even pay direct attenion to the device outside of listening for it&#39;s responses.
+This means that people with visual and physical impairments can likely use the device without any extra accessability features.
+This also extends to people that don&#39;t have these impairments, too.
+You can speak to the machine, and it will speak back to you.</p>
+<h2 id="the-cloud-sucks-">The Cloud Sucks ☁</h2>
+<p>The main issue I have with all of these devices is that they&#39;re cloud-native.
+When you speak to it, it sends your voice to a third party&#39;s servers, the command gets processed by those servers, and the servers generate the response.
+This is great in a way since it lets your device be very low power and it abstracts the interaction with the service away from specific devices and to a users account.
+It also allows the provider to updated and add services without any action on behalf of the user.</p>
+<p>Although I appricate the benefits of this model, there&#39;s three things that make it a deal breaker: The inability to work offline, the lack of privacy, and the difficulty in customizing your assistant.</p>
+<h3 id="not-everything-is-online-">Not everything is online 📴</h3>
+<p>I&#39;ve got ADD and it&#39;s sometimes hard to keep track of things or to stay on tasks.
+That&#39;s one of the reasons I really like using the Google Assistant on my phone.
+If there&#39;s a task that I need to remember to do, I can just say &quot;Ok Google, Remind me to get cat food tomorrow at eighteen thirty&quot; and move on with whatever I&#39;m doing.
+Then, once the task needs to be done, I&#39;ll have a reminder ready for me so that I don&#39;t forget.
+Of course I could use other methods like writing notes in my phone, or using a calendar app of some sort, but this hands-free and speech based approach works well with how my head works.
+This makes it extra frusterating when I&#39;m in a parking garage or an elevator and after saying my reminder, my phone spits back the phrase &quot;Sorry, I can&#39;t do that while you&#39;re offline&quot;.</p>
+<p>Why is it that I can&#39;t add a reminder on my phone or take a note? Why is it that I can&#39;t use <em>any</em> speech based apps unless I talk to Google first?
+I think that a lot of applications are better off being offline-first. If my data isn&#39;t being pulled from somewhere, and it doesn&#39;t explicitly have to be shared with a third party to work, I shouldn&#39;t need the internet.
+In fact, even if it does need to be shared with an online service, it should still work offline as much as possible.
+If twitter needs an internet connection to send a tweet, my device should be able to defer sending it until I&#39;m online.</p>
+<p>Although we get a lot of benefits of having speech applications exist in the cloud, it makes speech based applications a second class citizen with regards to the sort of programs that can be created.</p>
+<h3 id="don-t-analyze-me-">Don&#39;t analyze me 🔏</h3>
+<p>Cue <code>tinfoil hat</code>.</p>
+<p>Another obvious problem with sending all your data to a third party, is that they now have access to all of your habits.
+I&#39;m not going to go too far into it, but the Amazons and Googles of the world are pretty sketchy when it comes to analyzing people and selling their personal information to third parties for who knows what.</p>
+<p>When you send all your voice data to a third party, they get the ability to not only fingerprint you by your voice, but use it for things like speech synthesis that can impersonate you.</p>
+<p>It&#39;s OK if you don&#39;t mind these things, but the technology doesn&#39;t give you a way to opt-out at the moment, and I beleive it should.</p>
+<h3 id="let-me-make-scripts-">Let me make scripts 📜</h3>
+<p>If you have an idea for an app to run over these assistants you need to first:</p>
+<ul>
+<li>Create an account with the service</li>
+<li>Create an HTTP server somewhere (probably a few sets if you don&#39;t have one)</li>
+<li>Configure the service to use webhooks on your server for commands</li>
+<li>Associate your test device with the service and your new app</li>
+<li>Write your code</li>
+</ul>
+<p>This works, if you&#39;re ready to go through all that effort and don&#39;t mind making HTTP servers.
+I get that it&#39;s there to let people use their own infrastructure and own code stack, but it&#39;s much more daunting for a beginner than creating a script and running it right away.</p>
+<p>It&#39;d be cool if the device acted like a shell like Bash, but with speech. Then you could write small text based programs that could invoke and interpret other text based programs.
+You could have a note taking program, and have another program prompt you to take a note on a given schedule.
+Note that I don&#39;t expect these programs to work the same as a chat bot.
+Chat bots are cool, but I&#39;d really like to have something that&#39;s more akin to giving orders to a robot. Although it might be less &quot;intuitive&quot;, commands could be documented and it&#39;d be a lot more obvious as to what your device can and can&#39;t do, in addition to being able to explore the commands a program has.</p>
+<p>This should be paired with the ability to have actual programs installed on the device which is what you can do with pretty much any other computer you own.</p>
+<h2 id="mvp-">MVP 😀</h2>
+<p>Although I don&#39;t have the time or money to invest in making this into an actual product, I want to design how it would work if I could. Feel free to steal my idea and follow my design. 😉</p>
+<h3 id="hardware-support-">Hardware support 💻</h3>
+<p>In order for this device to be useful, it would need some basic hardware to actually run on.</p>
+<ul>
+<li>An optional physical microphone</li>
+<li>Bluetooth support for external headsets (unless it&#39;s being embedded in one)</li>
+<li>An OK CPU so you can run programs and speech recognition</li>
+<li>WiFi or Cellular connectivity, for internet access when we need it.</li>
+</ul>
+<p>I think that to start, a <a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-a-plus/">Raspberry PI</a> would be sufficient, or any other popular SBC like the <a href="https://www.khadas.com/vim">Khadas VIM2</a> or a <a href="https://www.pine64.org/?page_id=7147">Rock64</a>.</p>
+<h3 id="kernel-os-">Kernel / OS 🖥</h3>
+<p>Since SBCs usually support Linux, and Linux gives us a lot of flexability with what we include in the OS, it&#39;s the way to go.</p>
+<p>It should have something installed for interacting with bluetooth, audio, and networking.</p>
+<p>Since this is going to be speech based, it doesn&#39;t need to support graphics at all.</p>
+<h3 id="loading-apps-">Loading apps 🏗</h3>
+<p>Similar to how Android works, apps should probably run as separate users to have security boundries between them.</p>
+<p>Apps shouldn&#39;t be actual executible binaries in order to avoid platform-specific compilation issues.
+As such, I think that focusing on JavaScript and <a href="https://webassembly.org/">WebAssembly</a> is the way to go.
+JS is a general purpose language that gives people a lot of flexability, and there are a lot of different flavors of languages that compile down to it.
+WebAssembly is there to fill in the gaps where JS is too slow.
+It lets you compile C/C++/Rust programs into a binary instruction set that is easy to translate into machine code, but is constrained to prevent malicious code from escaping it&#39;s provided sandbox and accessing memory it shouldn&#39;t.</p>
+<p>Apps should be folders which contain an <code>speech.json</code> manifest which contains metadata about the application like the permissions it requires and the set of commands that it supports.
+Each app should have a main <code>activation command</code> and describe it&#39;s subcommands. The subcommands will then map to <code>.js</code> or <code>.wasm</code> files which will be envoked when the command is spoken.
+Installing an app should involve creating a folder somewher, and running a command to associate it&#39;s commands with the OS.
+It should be possible to for users to remap the <code>activation command</code> to something else after installing the application.</p>
+<p>When a command is invoked, it can reply with a sentance (need to add a limit on size) and wait for more input.</p>
+<h3 id="speech-scripting-">Speech Scripting ⌨</h3>
+<p>Not entirely sure what to put here yet, but it should be possible to have a high level programming language in English which a person could speak instead of coding.</p>
+<p>This language should primarily rely on executing commands, and doing basic conditional logic and string manipulation with them.</p>
+<p>Separating statements should use the keyword &quot;period&quot;. Whitespace in the scripts should be processed out.</p>
+<p>Scripts should be started with the command <code>define a script called &lt;name&gt;</code>, and will invoke commands with the <code>say</code> command.
+Whenever a command is run, the output will be saved to a temporary variable, which will stay until another <code>say</code> command runs.
+It will be possible to make <code>if -- otherwise</code> statements here.
+Not sure what sort of questions can be asked about the results yet, but basic things like interpreting the result as text, asking about specific indexes of words, seeing if a word is within the statement, and basic greater than / less than questions about numbers.
+When running <code>say</code>, it should be possible to add <code>out loud</code> in order to have the result output to the user instead of parsed by the script.
+Scripts can run <code>speak</code> with any text in order to have that text output to the user.</p>
+<p>e.g. </p>
+<pre><code>define a script called what&#39;s the mesage of the day.
+say read somewebsite.com.
+say out loud second paragraph.
+finish.
+
+---
+or
+---
+
+define a script called is it daytime.
+say what hour is it.
+if greater than six and less than nineteen.
+speak Daytime.
+otherwise.
+speak Nighttime.</code></pre><h3 id="nesting-prompts-">Nesting / Prompts 💬</h3>
+<p>It should be possible for a script to invoke another script and get it&#39;s results.
+However, scripts may want to access prompts from the user directly for security purposes.
+Some scripts, for example, might be priviledged and it would be dangerous to invoke it without the user&#39;s consent.</p>
+<h3 id="scheduler-">Scheduler ⌚</h3>
+<p>Some sort of service (probably <a href="https://crontab.guru/">cron</a> or event based?) should be in place to allow scheduling things to happen at certain times.
+This should be available to JS/WASM as well as a high level command for users.
+The scheduler should have limits on how precise it is and have limits on how often an app can schedule things and should require user input to confirm schedules when they&#39;re created.
+All scheduled actions and the name of their origin app should be available to the user and should be cancellable.</p>
+<p>Example events that would be useful in addition to cron schedules:</p>
+<ul>
+<li><code>restart</code> - Runs when the device has restarted and initialized</li>
+<li><code>reconnected</code> - Runs when the device reconnects to the network</li>
+<li><code>sync</code> a user configurable / high level event that should be used for applications trying to sync data</li>
+</ul>
+<h3 id="alerts-">Alerts 💥</h3>
+<p>Now, most speech based apps should be unable to grab a user&#39;s attention without their consent, but it should still be possible for an app to queue up a notification to users in the background.</p>
+<p>As such, there should be three levels of alerts: <code>None</code>, <code>Passive</code>, <code>Active</code>.
+<code>Passive</code> alerts will be buffered up in the background, and will be waiting there for the user to ask for the status.
+<code>Active</code> alerts will be pushed to the user as soon as they&#39;re created. Users should be able to configure what level of alert an app has.</p>
+<h3 id="speech-emphasis-">Speech emphasis ❗</h3>
+<p>Similar to how ANSI escape codes can be used to send hints to TTY for adding colors to a screen, there should be escape sequences for hinting at emphasis on certain words with either volume or pitch.</p>
+<p>No idea how to do this yet, but I think it&#39;d be cool.</p>
+<h3 id="structured-text-documents-">Structured text / Documents 📚</h3>
+<p>When screen readers interact with graphical OSs, they build up a tree of headers which help people navigate large amounts of data.
+Speech OS should have a standard for representing higharchies of data</p>
+<h3 id="caching-">Caching 📦</h3>
+<p>The OS should support loading content from different protocols like <code>https:</code>, <code>dat:</code>, <code>magnet:</code>, and <code>ipfs:</code> / <code>ipns:</code>.</p>
+<p>This will be built into a high level fetch API available to JS and WASM, and should handle offline caching with a Least Recently Used mechanism for deleting old data.</p>
+<h3 id="interacting-graphically-">Interacting graphically 🖼</h3>
+<p>Devices that support video output should have a basic commandline-like shell which takes in speech commands from a keyboard, and outputs the results as text and </p>
+<h3 id="built-in-os-commands-">Built-in (OS) commands 🏠</h3>
+<ul>
+<li><code>install &lt;path&gt; - &lt;confirmation&gt;</code> installs an application from a given path in the FS, asks the user to confirm before installing</li>
+<li><code>read &lt;url&gt;</code> Reads a URL, attempts to convert it to a structured document, and provides commands for navigating it.</li>
+<li><code>play &lt;url&gt;</code> Reads a URL, attempts to interpret it as an audio file, and play it.</li>
+<li><code>schedule - &lt;command&gt; - &lt;schedule&gt;</code> Asks the user for a command to schedule, and then which schedule should be used.</li>
+<li><code>what&#39;s the your status</code> Gives a status report about the device, lists the time, network status, battery (if it exists), and number of alerts.</li>
+<li><code>open configuration</code> Starts an interactive session for configuring OS settings like scheduler and alert preferences and app specific permissions.</li>
+<li><code>finish</code> This can be said at any time in order to exit the current application and go back to the root command interface.</li>
+</ul>
+<h3 id="permissions">Permissions</h3>
+<p>As mentioned before, apps will need to list all permissions that they want to access. Here&#39;s some ideas for what those would be.</p>
+<ul>
+<li><code>network</code>: Should list URLs or URL paterns for requests an app wants to make</li>
+<li><code>schedule</code>: Should be present if the app will want to attempt to schedule commands to run later. Should list CRON patterns or events that this script wants to bind on.</li>
+<li><code>files</code>: Should be present if the script wants to save files. Should specify the amount of data it wants allocated to it in MB. This can be adjusted by the user at runtime and the app should have APIs for querying it&#39;s storage quota.</li>
+<li><code>notifications</code>: Should be present if the script wants to send alerts to the user. This is configurable by the user and the app has no way of knowing what level it&#39;s been granted or if it even has it granted.</li>
+</ul>
+<h2 id="nice-">Nice 👌</h2>
+<p>Hopefully this was an interesting read, and if you&#39;re interested in making this happen, hit me up on Twitter or send me an email.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

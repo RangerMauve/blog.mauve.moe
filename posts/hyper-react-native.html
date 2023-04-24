@@ -1,0 +1,669 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Hypercore Protocol in React Native</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="This guide will go over the steps needed to get Hypercore-Protocol working in Android and iOS apps using nodejs-mobile.
+The guide is aimed at developers and is fairly code-heavy, so you'll want to buckle up and get a tab with your favorite [search engine](https://duckduckgo.com/) ready." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="hypercore-protocol-in-react-native">Hypercore Protocol in React-Native</h1>
+<p>This guide will go over the steps needed to get Hypercore-Protocol working in Android and iOS apps using nodejs-mobile.
+The guide is aimed at developers and is fairly code-heavy, so you&#39;ll want to buckle up and get a tab with your favorite <a href="https://duckduckgo.com/">search engine</a> ready.</p>
+<h2 id="hypercore-protocol">Hypercore-Protocol</h2>
+<p>The <a href="https://hypercore-protocol.org/">Hypercore-Protocol</a> team has released a bunch of usefil Node.js libraries for creating and interacting with peer to peer data structures and networking.
+Their code is, in my opinion, easy to reuse and mix in different ways to satisfy the constraints of different applications.
+The only downside, is that the code is primarily writte in JavaScript using Node.js specific APIs.
+This means that while you can easily run the code anywhere where you have Node.js installed, it&#39;s really hard to get it running in other environments where that isn&#39;t the case.
+More specifically, not only do you need the JavaScript portion of Node.js for stuff like networking and cryptography, you also need support for the native binaries for stuff like <a href="https://www.npmjs.com/package/sodium-native">sodium-native</a> and <a href="https://www.npmjs.com/package/utp-native">utp-native</a> which use C++ code and Node.js&#39; NAPI bindings.
+This poses a bit of a problem for native Android and iOS apps since those usually use compiled code written in Java or Swift.</p>
+<h2 id="nodejs-mobile">Nodejs-mobile</h2>
+<p>Luckily, this is something that a lot of folks have dealt with in the past, and there&#39;s a way to get node.js code to run in Mobile environments via <a href="https://github.com/JaneaSystems/nodejs-mobile">nodejs-mobile</a>.
+It works by tweaking the Node.js API so that it can actually run on iOS and Android (by default iOS doesn&#39;t support v8 due to it&#39;s JIT functionality).
+To use it, you can install it into your project, then put your node.js specoific code in the <code>nodejs-assets/nodejs-project/</code> folder, which it will then process and embed in your project.
+Your node.js code will have access to a new API called <code>rn_bridge</code> which you can load via <code>const bridge = require(&#39;rn-bridge&#39;)</code>, and your React-Native code will have a new API called <code>nodejs</code> which you can load with <code>import nodejs from &#39;nodejs-mobile-react-native&#39;</code>.</p>
+<h2 id="project-setup">Project Setup</h2>
+<p>Before we can work on getting Hypercore set up with your project, you&#39;ll need to set some stuff up.</p>
+<ul>
+<li><a href="https://nodejs.org/en/">Node.js version 12.19.1</a> for running scripts that build the native libraries (make sure it&#39;s 12.19.1!)</li>
+<li><a href="https://www.npmjs.com/package/node-gyp">Node-gyp</a> for building native addons</li>
+<li><a href="https://reactnative.dev/docs/environment-setup">React-Native CLI</a> (I used v0.66.3)</li>
+<li>For Android:<ul>
+<li><a href="https://developer.android.com/studio/">Android Studio</a></li>
+<li>Install NDK 21.4 via the SDK manager</li>
+<li>Set up your ANDROID_HOME variable</li>
+<li>Set up ANDROID_NDK_HOME environment variable (should be something like $ANDROID_HOME/ndk/21.4.7075529)</li>
+</ul>
+</li>
+<li>For iOS:<ul>
+<li>XCode</li>
+<li><code>sudo gem install cocoapods</code></li>
+<li><code>pod setup</code></li>
+<li><code>brew install autoconf automake libtool openssl</code></li>
+</ul>
+</li>
+</ul>
+<p>Having some idea of how Android and iOS development works is useful to have, but you can learn as you go if you don&#39;t have it yet.</p>
+<p>First, we&#39;ll modify some config files to make them work better with nodejs-mobile.</p>
+<p>Set <code>metro.config.js</code> to this:</p>
+<pre><code class="language-javascript">module.exports = {
+  // Might help with some edge cases
+  // TODO: See if this can be disabled for perf improvements
+  resetCache: true,
+  transformer: {
+    getTransformOptions: async () =&gt; ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: false
+      }
+    })
+  },
+  resolver: {
+    // Avoid processing nodejs-mobile assets
+    blockList: [
+      /\/nodejs-assets\/.*/,
+      /\/android\/.*/,
+      /\/ios\/.*/
+    ]
+  }
+}</code></pre>
+<p>Then, we&#39;ll need to edit the <code>package.json</code>.</p>
+<p>In the <code>scripts</code> section, after all the other scripts, add a line that looks like this:</p>
+<pre><code class="language-json">&quot;postinstall&quot;: &quot;node ./scripts/install_modules.js &amp;&amp; node ./scripts/patch_modules.js&quot;</code></pre>
+<p>This will add the command <code>npm run postinstall</code> which will install the native modules and patch the nodejs-mobile libraries.</p>
+<p>Next, we&#39;ll want to set up a React-Native application:</p>
+<pre><code>npx react-native init MyApplication
+cd MyApplication</code></pre><p>We&#39;ll also want to install <a href="https://browserify.org/">Browserify</a> which will be used to compile our node.js code into a single file (for performance reasons).</p>
+<pre><code>npm install --save-dev browserify</code></pre><p>Then we&#39;ll want to install <a href="https://github.com/nodejs-mobile/nodejs-mobile-react-native">nodejs-mobile-react-native</a>.</p>
+<pre><code>npm install --save nodejs-mobile-react-native</code></pre><p>This will create the <code>nodejs-assets/nodejs-project</code> directory for you.</p>
+<p>You&#39;ll want to then go into that directory and set up your Node.js code.</p>
+<pre><code>cd nodejs-assets/nodejs-project/
+
+npm install --save corestore@next hyperswarm@next sodium-native-nodejs-mobile github:rangermauve/utp-native-nodejs-mobile#ios-support
+
+# On MacOS you might want to add the envrionment variable PLATFORM_NAME=iphoneos to get native libraries to compile correctly
+PLATFORM_NAME=iphoneos npm install --save corestore@next hyperswarm@next sodium-native-nodejs-mobile github:rangermauve/utp-native-nodejs-mobile#ios-support</code></pre><p>Note that this is using my fork of utp-native-nodejs-mobile that adds support for iOS.</p>
+<p>Finally, we&#39;ll want to create a barebones <code>main.js</code> file which will act as the entrypoint for our node.js process.</p>
+<p>This example will set up a <a href="https://github.com/hypercore-protocol/corestore-next">corestore</a> for managing storage of many <a href="https://github.com/hypercore-protocol/hypercore-next">hypercores</a>, and rig it up to <a href="https://github.com/hyperswarm/hyperswarm">hyperswarm</a> for networking.
+It will also listen on messages from the frontend to tell it to load a hypercore and start replicating it.</p>
+<pre><code class="language-javascript">const Corestore = require(&#39;corestore&#39;)
+const Hyperswarm = require(&#39;hyperswarm&#39;)
+const Hypercore = require(&#39;hypercore&#39;)
+const bridge = require(&#39;rn_bridge&#39;)
+const {join} = require(&#39;path&#39;)
+
+const userDataPath = bridge.app.datadir()
+const storage = join(userDataPath, &#39;corestore&#39;)
+
+// Monkey patch out the locking in hypercore storage
+// For some reason fsctl.lock doesn&#39;t seem to want to work
+const originalStorage = Hypercore.defaultStorage
+Hypercore.defaultStorage = (storage, opts = {}) =&gt; {
+  return originalStorage(storage, { ...opts, lock: -1 })
+}
+
+const corestore = new Corestore(storage)
+
+const swarm = new Hyperswarm()
+
+// Replicate all connections with the corestore
+swarm.on(&#39;connection&#39;, (connection, peerInfo) =&gt; {
+  connection
+    .pipe(corestore.replicate())
+    .pipe(connection)
+
+  // Get the public key of the connected peer
+  const { publicKey } = peerInfo
+  const key = publicKey.toString(&#39;hex&#39;)
+  bridge.channel.send({type: &#39;connection&#39;, key})
+})
+
+// Listen to events from the frontend
+bridge.channel.on(&#39;message&#39;, (message) =&gt; {
+  // Load a hypercore when the frontend tells us to
+  if(message.type === &#39;load&#39;) loadCore()
+})
+
+// Tell the frontend we&#39;re ready!
+store.ready().then(() =&gt; {
+  bridge.channel.send({type: &#39;ready&#39;})
+}, (error) =&gt; {
+  bridge.channel.send({type: &#39;error&#39;, error})
+})
+
+async function loadCore() {
+  const core = corestore.get({
+    // Specify a name to derive the keys from
+    // Using the same name on a device will generate the same key each time
+    name: &#39;example&#39;
+  })
+
+  await core.ready()
+
+  // Get the piblic key of the hypercore
+  const { publicKey, discoveryKey } = core
+  const key = publicKey.toString(&#39;hex&#39;)
+
+  // Send over the key for the hypercore to the frontend
+  bridge.channel.send({
+    type: &#39;key&#39;,
+    key
+  })
+
+  const discovery = swarm.join(discoveryKey, {
+    server: true,
+    client: false
+  })
+
+  // Stop advertising when the core is closed
+  core.once(&#39;close&#39;, () =&gt; discovery.destroy())
+
+  // Wait for the discovery to finish before saying we&#39;ve done a round of lookups
+  await discovery.flushed()
+
+  // Tell the frontend we&#39;ve done a round of scans and are listening on a key
+  bridge.channel.send({ type: &#39;listening&#39;, key })
+}</code></pre>
+<p>Sadly, just having this code in place isn&#39;t enough, and we&#39;ll need to do some monkey-patching and other fancy stuff in order to get everything running in your app.</p>
+<h2 id="build-scripts">Build Scripts</h2>
+<p>In order to get apps to actually compile and run we&#39;ll need to do the following:</p>
+<ul>
+<li>After installing:<ul>
+<li>Patch nodejs-mobile&#39;s <code>build.gradle</code> file to remove some unnecessary attributes</li>
+<li>Replace nodejs-mobile&#39;s <code>require</code> of the EventEmitter library with <code>import</code></li>
+</ul>
+</li>
+<li>Before nodejs-mobile rebuilds the native dependencies:<ul>
+<li>patch <code>sodium-native</code> and <code>utp-native</code> to use their <code>-mobile</code> counterparts</li>
+<li>Clear duplicate sodium-native and utp-native modules from the source tree</li>
+<li>Patch <code>sodium-native-nodejs-mobile</code> and <code>utp-native-nodejs-mobile</code> to work better with Browserify</li>
+</ul>
+</li>
+<li>After nodejs-mobile rebuilds the native dependencies<ul>
+<li>Compile all your js code into a <code>bundle.js</code> to load in the app</li>
+<li><strong>FOR ANDROID</strong>: Copy libsodium&#39;s <code>.a</code> files over to your <code>jniLibs</code> folder<ul>
+<li>Clear all folders from node_modules which aren&#39;t needed after the build (all that don&#39;t have native dependencies)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>To that end, here&#39;s some build scripts you can copy-paste into your project and edit as needed</p>
+<h3 id="scripts-constants-js">scripts/constants.js</h3>
+<p>This contains some useful constants that will get reused between scripts</p>
+<pre><code class="language-javascript">const { join } = require(&#39;path&#39;)
+
+const ROOT = join(__dirname, &#39;../&#39;)
+
+const ANDROID_DIR = join(ROOT, &#39;android&#39;)
+const IOS_DIR = join(ROOT, &#39;ios&#39;)
+
+const PROJECT_DIR = process.env.NODEJS_PROJECT_DIR || join(ROOT, &#39;nodejs-assets/nodejs-project/&#39;)
+const MODULE_FOLDER = join(PROJECT_DIR, &#39;node_modules&#39;)
+
+const NODEJS_MOBILE_DIR = join(ROOT, &#39;node_modules/nodejs-mobile-react-native&#39;)
+
+module.exports = {
+  ANDROID_DIR,
+  IOS_DIR,
+  PROJECT_DIR,
+  NODEJS_MOBILE_DIR,
+  MODULE_FOLDER,
+  ROOT
+}</code></pre>
+<h3 id="scripts-install_modules-js">scripts/install_modules.js</h3>
+<p>Run this when you want to install modules into your node folder.
+Note that if you&#39;re trying to build Android on a Macbook, you&#39;ll want to add the <code>--android</code> flag.
+Also note that switching between compiling for iOS and Android will require reinstalling the node modules since they get configured in different ways.</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const util = require(&#39;util&#39;)
+const childProcess = require(&#39;child_process&#39;)
+const exec = util.promisify(childProcess.exec)
+
+const { PROJECT_DIR } = require(&#39;./constants&#39;)
+
+const IOS = &#39;ios&#39;
+const ANDROID = &#39;android&#39;
+
+let platform = (process.platform === &#39;darwin&#39;) ? IOS : ANDROID
+if (process.argv.includes(&#39;--android&#39;)) { platform = ANDROID }
+if (process.argv.includes(&#39;--ios&#39;)) { platform = IOS }
+
+let isSimulator = false
+isSimulator = process.argv.includes(&#39;--simulator&#39;)
+
+const PLATFORM_NAME = ((platform === IOS) &amp;&amp; !isSimulator) ? &#39;iphoneos&#39; : &#39;&#39;
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+// - Run install inside of `nodejs-assets/nodejs-project`
+  console.log(&#39;Installing nodejs-project dependencies&#39;)
+  const env = (platform === IOS)
+    ? makeEnv({
+        PLATFORM_NAME,
+      })
+    : makeEnv({
+    })
+  await exec(&#39;npm install --no-optional&#39;, {
+    cwd: PROJECT_DIR,
+    env
+  })
+}
+
+function makeEnv (vars = {}) {
+  return { ...process.env, ...vars }
+}</code></pre>
+<h3 id="scripts-patch_modules-js">scripts/patch_modules.js</h3>
+<p>This should be run after you run <code>npm install</code> in your React-Native project</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const { readFile, writeFile } = require(&#39;fs&#39;).promises
+const { join } = require(&#39;path&#39;)
+
+const {
+  NODEJS_MOBILE_DIR
+} = require(&#39;./constants&#39;)
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+  console.log(&#39;Patching nodejs-mobile gradle script&#39;)
+  const NODEJS_MOBILE_GRADLE = join(NODEJS_MOBILE_DIR, &#39;android/build.gradle&#39;)
+  const mainSectionMatch = / {8}main {[^}]+}/gm
+  const existingGradle = await readFile(NODEJS_MOBILE_GRADLE, &#39;utf8&#39;)
+  const patchedGradle = existingGradle.replace(mainSectionMatch, &#39;&#39;)
+  await writeFile(NODEJS_MOBILE_GRADLE, patchedGradle)
+
+  console.log(&#39;Patching nodejs-mobile EventEmitter import&#39;)
+  const toReplaceRequire = &#39;var EventEmitter = require(\&#39;react-native/Libraries/vendor/emitter/EventEmitter\&#39;);&#39;
+  const replaceWithImport = &#39;import EventEmitter from \&#39;react-native/Libraries/vendor/emitter/EventEmitter\&#39;;&#39;
+
+  const NODEJS_MOBILE_INDEX = join(NODEJS_MOBILE_DIR, &#39;index.js&#39;)
+  const indexContent = await readFile(NODEJS_MOBILE_INDEX, &#39;utf8&#39;)
+  const patchedIndex = indexContent.replace(toReplaceRequire, replaceWithImport)
+  await writeFile(NODEJS_MOBILE_INDEX, patchedIndex)
+}</code></pre>
+<h3 id="scripts-prepare_modules-js">scripts/prepare_modules.js</h3>
+<p>This script will delete duplicate sodium-native and utp-native modules, create fake ones that point at their mobile versions, and patch the originals to change how they load their native bindings.</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const { rmdir, mkdir, writeFile } = require(&#39;fs&#39;).promises
+const { join } = require(&#39;path&#39;)
+
+const { PROJECT_DIR, MODULE_FOLDER } = require(&#39;./constants&#39;)
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+  // console.log(&#39;Deleting .bin dir to fix builds&#39;)
+  // const BIN_DIR = join(PROJECT_DIR, &#39;node_modules/.bin&#39;)
+  // await rm(BIN_DIR, { recursive: true, force: true })
+
+  console.log(&#39;Clearing duplicate sodium-native and utp-native modules&#39;)
+  const DUPLICATE_FOLDERS = [
+    // This list might need to be changed to account for your application
+    &#39;sodium-universal/node_modules/sodium-native&#39;,
+    &#39;@hyperswarm/dht/node_modules/utp-native&#39;,
+    &#39;hyperswarm/node_modules/utp-native&#39;
+  ]
+
+  for (const folder of DUPLICATE_FOLDERS) {
+    const location = join(MODULE_FOLDER, folder)
+    console.log(&#39;Clearing&#39;, location)
+    await rmdir(location, { recursive: true, force: true })
+  }
+
+  const SODIUM_NATIVE_DIR = join(PROJECT_DIR, &#39;node_modules/sodium-native&#39;)
+  console.log(&#39;Clearing existing sodium-native package&#39;)
+  await rmdir(SODIUM_NATIVE_DIR, { recursive: true, force: true })
+
+  console.log(&#39;Clearing sodium-native-nodejs-mobile build&#39;)
+  const SODIUM_NATIVE_MOBILE_DIR = join(MODULE_FOLDER, &#39;sodium-native-nodejs-mobile&#39;)
+  await rmdir(join(SODIUM_NATIVE_MOBILE_DIR, &#39;build&#39;), { recursive: true, force: true })
+
+  console.log(&#39;Creating fake sodium-native package&#39;)
+  await mkdir(SODIUM_NATIVE_DIR, { recursive: true, force: true })
+  await writeFile(
+    join(SODIUM_NATIVE_DIR, &#39;package.json&#39;),
+    JSON.stringify({
+      name: &#39;sodium-native&#39;,
+      main: &#39;index.js&#39;,
+      // Technically the version is 3.2.0, but that is just a change to builds, not API
+      version: &#39;3.3.0&#39;
+    })
+  )
+  await writeFile(
+    join(SODIUM_NATIVE_DIR, &#39;index.js&#39;),
+    &#39;module.exports = require(\&#39;sodium-native-nodejs-mobile\&#39;)\n&#39;
+  )
+
+  const UTP_NATIVE_DIR = join(PROJECT_DIR, &#39;node_modules/utp-native&#39;)
+  console.log(&#39;Clearing existing utp-native package&#39;)
+  await rmdir(UTP_NATIVE_DIR, { recursive: true, force: true })
+
+  console.log(&#39;Creating fake utp-native package&#39;)
+  await mkdir(UTP_NATIVE_DIR, { recursive: true, force: true })
+  await writeFile(
+    join(UTP_NATIVE_DIR, &#39;package.json&#39;),
+    JSON.stringify({ name: &#39;utp-native&#39;, main: &#39;index.js&#39;, version: &#39;2.3.5&#39; })
+  )
+  await writeFile(
+    join(UTP_NATIVE_DIR, &#39;index.js&#39;),
+    &#39;module.exports = require(\&#39;utp-native-nodejs-mobile\&#39;)\n&#39;
+  )
+
+  console.log(&#39;Patch imports for sodium and utp mobile&#39;)
+  const SODIUM_INDEX = join(PROJECT_DIR, &#39;node_modules/sodium-native-nodejs-mobile/index.js&#39;)
+  await writeFile(SODIUM_INDEX, `
+var path = require(&#39;path&#39;)
+var requirePath = path.join(__dirname, &#39;build/Release/sodium.node&#39;)
+var sodium = require(requirePath)
+
+module.exports = sodium;
+`)
+
+  const UTP_BINDING = join(PROJECT_DIR, &#39;node_modules/utp-native-nodejs-mobile/lib/binding.js&#39;)
+  await writeFile(UTP_BINDING, `
+var path = require(&#39;path&#39;)
+
+module.exports = require(&#39;bindings&#39;)({
+  bindings: &#39;utp_native.node&#39;,
+  name: &#39;utp-native-nodejs-mobile&#39;,
+  module_root: path.join(__dirname, &#39;../&#39;)
+})
+`)
+}</code></pre>
+<h3 id="scripts-build_bundle-js">scripts/build_bundle.js</h3>
+<p>This uses Browserify to compile the node.js code into a single <code>bundle.js</code> file</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const browserify = require(&#39;browserify&#39;)
+const { createWriteStream } = require(&#39;fs&#39;)
+const { join } = require(&#39;path&#39;)
+
+const { PROJECT_DIR } = require(&#39;./constants&#39;)
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+  const entry = join(PROJECT_DIR, &#39;main.js&#39;)
+  const output = join(PROJECT_DIR, &#39;bundle.js&#39;)
+  console.log(`Compiling bundle from ${entry} to ${output}`)
+  const build = browserify(entry, {
+    basedir: PROJECT_DIR,
+    ignoreMissing: true,
+    node: true
+  })
+
+  const progress = build.bundle().pipe(createWriteStream(output))
+
+  await new Promise((resolve, reject) =&gt; {
+    progress.once(&#39;error&#39;, reject)
+    progress.once(&#39;close&#39;, resolve)
+  })
+
+  console.log(&#39;Built&#39;)
+}</code></pre>
+<h3 id="scripts-copy_jni_libs-js">scripts/copy_jni_libs.js</h3>
+<p>This will copy the libsodium files to the jniLibs folder on Android
+You might want to adjust this if you have more native libraries that require this.</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const { mkdir, copyFile } = require(&#39;fs&#39;).promises
+const { join } = require(&#39;path&#39;)
+
+const { MODULE_FOLDER, ANDROID_DIR } = require(&#39;./constants&#39;)
+
+const SODIUM_NATIVE_FOLDER = join(MODULE_FOLDER, &#39;sodium-native-nodejs-mobile&#39;)
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+  // - Copy over sodium files into `android/app/src/main/`
+  console.log(&#39;Copying native files to android jni&#39;)
+  const SODIUM_LIBS = join(SODIUM_NATIVE_FOLDER, &#39;lib/&#39;)
+  const JNI_FOLDER = join(ANDROID_DIR, &#39;app/src/main/jniLibs/&#39;)
+
+  // Map from nodejs folder name to Android folder name
+  const ABI_FOLDER_MAP = {
+    &#39;android-arm&#39;: &#39;armeabi-v7a&#39;,
+    &#39;android-arm64&#39;: &#39;arm64-v8a&#39;
+  }
+
+  const SODIUM_LIB_FILE = &#39;libsodium.so&#39;
+
+  for (const [nodeName, androidName] of Object.entries(ABI_FOLDER_MAP)) {
+    const nodeFolder = join(SODIUM_LIBS, nodeName)
+    const androidFolder = join(JNI_FOLDER, androidName)
+    await mkdir(androidFolder, { recursive: true })
+    await copyFile(
+      join(nodeFolder, SODIUM_LIB_FILE),
+      join(androidFolder, SODIUM_LIB_FILE)
+    )
+  }
+}</code></pre>
+<h3 id="scripts-clear_modules-js">scripts/clear_modules.js</h3>
+<p>Use this to clear unnecessary modules and reduce the app&#39;s size</p>
+<pre><code class="language-javascript">#!/usr/bin/env node
+const { rmdir, readdir } = require(&#39;fs&#39;).promises
+const { join } = require(&#39;path&#39;)
+
+const { MODULE_FOLDER } = require(&#39;./constants&#39;)
+
+const SODIUM_NATIVE_FOLDER = join(MODULE_FOLDER, &#39;sodium-native-nodejs-mobile&#39;)
+
+run().catch((e) =&gt; {
+  process.nextTick(() =&gt; {
+    throw e
+  })
+})
+
+async function run () {
+  console.log(&#39;Deleting unnecessary modules and build-specific files&#39;)
+  const TO_PRESERVE = [
+    // You may need to adjust this to preserve other native modules
+    &#39;sodium-native-nodejs-mobile&#39;,
+    &#39;utp-native-nodejs-mobile&#39;,
+    &#39;sodium-native&#39;,
+    &#39;utp-native&#39;,
+    &#39;fd-lock&#39;,
+    &#39;fsctl&#39;,
+    &#39;crc32-universal&#39;
+  ]
+
+  const moduleNames = await readdir(MODULE_FOLDER)
+  const nonEssentialModules = moduleNames.filter((name) =&gt; !TO_PRESERVE.includes(name))
+
+  const toDelete = [
+    join(SODIUM_NATIVE_FOLDER, &#39;libsodium&#39;),
+    join(SODIUM_NATIVE_FOLDER, &#39;lib&#39;),
+    ...nonEssentialModules.map((name) =&gt; join(MODULE_FOLDER, name))
+  ]
+
+  for (const folder of toDelete) {
+    await rmdir(folder, {
+      recursive: true,
+      force: true
+    })
+  }
+}</code></pre>
+<h2 id="android-gradle">Android - Gradle</h2>
+<p>With these scripts in place, we can start integrating them into the Android build process.</p>
+<p>Android uses a build system called <a href="https://gradle.org/">Gradle</a> which uses a programming language called <a href="https://groovy-lang.org/">Groovy</a> to define it&#39;s builds combined with a sytem for creating a &quot;graph&quot; of tasks and their dependencies.</p>
+<p>By default, react-native will have generated some gradle files in the <code>android</code> folder, and nodejs-mobile will have hooked some build steps into this process as part of that.</p>
+<p>Before we integrate the build scripts, we&#39;ll want to modify our configuration in order to enable the build.</p>
+<p>Open up <code>android/app/build.gradle</code>, which is the file that defines how your application should be configured and compiled.</p>
+<p>Where you see the <code>defaultConfig {</code>, and after the line that contains <code>versionName &quot;1.0&quot;</code>, add a block that looks like the following:</p>
+<pre><code>        ndk {
+            abiFilters &quot;armeabi-v7a&quot;, &quot;arm64-v8a&quot; // , &quot;x86&quot;, &quot;x86_64&quot;
+        }</code></pre><p>This will tell Gradle that you wish to compile native libraries to arm platforms (add more here if you need to support x86 devices and the such).</p>
+<p>Next, find the block that says <code>splits {</code> and change the line that says <code>include:</code> to the following:</p>
+<pre><code>            include &quot;armeabi-v7a&quot;, &quot;arm64-v8a&quot;</code></pre><p>This will exclude the &quot;desktop&quot; CPU architectures since we aren&#39;t targeting them anyway.</p>
+<p>Next, find the block that says <code>buildTypes {</code>.
+Change the line that says <code>abiFilters</code> to the following:</p>
+<pre><code>                    abiFilters &quot;armeabi-v7a&quot;, &quot;arm64-v8a&quot;</code></pre><p>Next, find the part that says <code>applicationVariants.all { variant -&gt;</code>.</p>
+<p>Change the line that says <code>versionCodes =</code> to the following:</p>
+<pre><code>            def versionCodes = [&quot;armeabi-v7a&quot;: 1, &quot;arm64-v8a&quot;: 2] //  &quot;x86&quot;: 2, , &quot;x86_64&quot;: 4]</code></pre><p>This will again disable the unneccesary architectures.</p>
+<p>So with that in mind, here&#39;s some code that will define tasks from our build scripts, and wire them up into the build system.</p>
+<p>Add this near the end of the file, just before the <code>apply from: file(&quot;../../</code> line which will apply the react-native code.</p>
+<pre><code>task patchNodeModules (type:Exec) {
+  commandLine &quot;node&quot;, &quot;${rootProject.buildDir}/../../scripts/prepare_modules.js&quot;
+}
+
+// This makes sure patchin runs right when the build starts
+preBuild.dependsOn patchNodeModules
+
+task generateBundleJS (type: Exec) {
+  workingDir &quot;${rootProject.buildDir}/nodejs-assets/nodejs-project/&quot;
+  // nodejs-mobile copies our assets to a `build` folder
+  // We want to run this script within that folder rather than the source tree
+  environment NODEJS_PROJECT_DIR: &quot;${rootProject.buildDir}/nodejs-assets/nodejs-project/&quot;
+  commandLine &quot;node&quot;, &quot;${rootProject.buildDir}/../../scripts/build_bundle.js&quot;
+}
+
+task copyJNILibs(type: Exec) {
+  // Notice how this says &quot;generateBundleJS&quot; should run before copyJNILibs
+  dependsOn generateBundleJS
+  environment NODEJS_PROJECT_DIR: &quot;${rootProject.buildDir}/nodejs-assets/nodejs-project/&quot;
+  commandLine &quot;node&quot;, &quot;${rootProject.buildDir}/../../scripts/copy_jni_libs.js&quot;
+}
+
+task clearModules(type: Exec) {
+  dependsOn copyJNILibs
+  workingDir &quot;${rootProject.buildDir}/nodejs-assets/nodejs-project/&quot;
+  environment NODEJS_PROJECT_DIR: &quot;${rootProject.buildDir}/nodejs-assets/nodejs-project/&quot;
+  commandLine &quot;node&quot;, &quot;${rootProject.buildDir}/../../scripts/clear_modules.js&quot;
+}
+
+// By saying `clearModules` should be run at the end of `CopyNodeProjectAssetsFolder`
+// We attach our chain of build scripts to run just before the files get finalized into the APK
+tasks.getByPath(&#39;:nodejs-mobile-react-native:CopyNodeProjectAssetsFolder&#39;).finalizedBy clearModules</code></pre><p>With this in place our scripts will execute at the correct time and create an APK which contains just the code we want for our nodejs side.</p>
+<p>One note about the build process, you may want to edit <code>android/gradle.properties</code> and replace the line <code>Xmx2048m</code> to <code>Xmx2048m</code> which will increase the amount of ram that&#39;s used to compile the APK (else it might run out of memory).</p>
+<p>Lastly, when running the app on Android, make sure to use the Release build rather than the Debug build.
+I&#39;m not sure what was causing the debug build to fail, but I&#39;ve found this helps a lot.</p>
+<h2 id="ios-xcode">iOS - XCode</h2>
+<p>Before we jump into running the scripts on iOS, we&#39;ll want to install the pods.</p>
+<pre><code>cd ios
+pod install
+cd ../</code></pre><p>This will install the required dependencies into the project.</p>
+<p>XCode uses a concept called <a href="https://help.apple.com/xcode/mac/10.2/#/dev50bab713d">build phases</a> which are kind of like a more linear alternative to Gradle&#39;s &quot;tasks&quot;.</p>
+<p>nodejs-mobile will actually insert some build phases into your project when you run it that look like <code>[CP-User] [NODEJS MOBILE] Some description</code></p>
+<p>We&#39;ll want to run our <code>prepare_modules.js</code> script after the <code>[CP-User] [NODEJS MOBILE] Copy Node.js Project files</code> build phase so that we can prepare the modules before they get compiled.</p>
+<p>Call it <code>Prepare Node Modules</code> and have it look something like this:</p>
+<pre><code class="language-bash"># Delete unnecessary node modules and patch dependencies before native build
+
+# Tell the scripts which folder to perform this action in
+export NODEJS_PROJECT_DIR=$CODESIGNING_FOLDER_PATH/nodejs-project/
+
+# This is optional for when you&#39;re using NVM, so that the correct `.bin` gets used
+export PATH=$PATH:$HOME/.nvm/versions/node/v12.19.1/bin
+
+# Run the script from the project root
+node $PROJECT_DIR/../scripts/prepare_modules.js</code></pre>
+<p>After this, there will be a phase called <code>[CP-User] [NODEJS MOBILE] Build Native Modules</code> which will compile the native libraries.</p>
+<p>After this phase we&#39;ll add a new Phase called <code>Build bundle.js</code> which will compile the bundle</p>
+<pre><code class="language-bash"># Tell the scripts which folder to perform this action in
+export NODEJS_PROJECT_DIR=$CODESIGNING_FOLDER_PATH/nodejs-project/
+
+# This is optional for when you&#39;re using NVM, so that the correct `.bin` gets used
+export PATH=$PATH:$HOME/.nvm/versions/node/v12.19.1/bin
+
+# Run the script from the project root
+node $PROJECT_DIR/../scripts/build_bundle.js</code></pre>
+<p>After this we&#39;ll add a phase to clear out any unnecessary node_modules with our <code>clear_modules.js</code> script</p>
+<pre><code class="language-bash"># Delete all node modules that don&#39;t contain native dependencies
+# Tell the scripts which folder to perform this action in
+export NODEJS_PROJECT_DIR=$CODESIGNING_FOLDER_PATH/nodejs-project/
+
+# This is optional for when you&#39;re using NVM, so that the correct `.bin` gets used
+export PATH=$PATH:$HOME/.nvm/versions/node/v12.19.1/bin
+
+# Run the script from the project root
+node $PROJECT_DIR/../scripts/clear_modules.js</code></pre>
+<p>With this in place, when you run xcode to compile the app, it&#39;ll automatically run our build scripts in order to prepare the modules to work on your device.</p>
+<h2 id="react-native">React-Native</h2>
+<p>Now that we have the backend figured out, we&#39;ll look at some examples for setting up your frontend.</p>
+<p>In your <code>App.js</code>, import <code>useEffect</code> and <code>useState</code> from React.
+Also, import nodejs-mobile with the following line.</p>
+<pre><code class="language-javascript">import nodejs from &#39;nodejs-mobile-react-native&#39;</code></pre>
+<p>Inside the top level of your <code>App</code> component have some code that looks like this:</p>
+<pre><code class="language-javascript">  useEffect(() =&gt; {
+    // Tells nodejs-mobile to load our `bundle.js` code
+    nodejs.start(&#39;bundle.js&#39;)
+    // Listen to messages from the nodejs-mobile side and log them
+    nodejs.channel.addListener(&#39;message&#39;, (msg) =&gt; {
+      console.log(&#39;From node: &#39;, msg)
+    })
+  })
+
+  // Send a message to the bridge to load the app
+  async function loadCore () {
+    nodejs.channel.send({
+      type: &#39;load&#39;
+    })
+  }</code></pre>
+<p>Then somewhere in your render tree, add a button that looks something like this:</p>
+<pre><code class="language-javascript">&lt;Button title=&#39;Load Core&#39; onPress={loadCore} /&gt;</code></pre>
+<p>When pressed, this will send an event over to the backend and trigger the core to actually load.</p>
+<p>You may want to wait for the nodejs side to send over the <code>ready</code> event and showing some sort of loading screen.
+Or even wait to start loading your hypercore stuff intil the React-Native side sends a message saying to do so (useful for configuration and the such).</p>
+<h2 id="debugging-tips">Debugging Tips</h2>
+<p>iOS simulators won&#39;t work since they require compiling the native modules to whatever architecture your mac is running rather than emulating an actual iphone. Sadly you&#39;ll need to run your app on a physical device, unless you&#39;re willing to put in the time to get the modules to compile for the <code>iossimulator</code> PLATFORM_NAME.</p>
+<p>Make sure you&#39;re using the correct version of node.js, the NDK, xcode, react-native, whatever.</p>
+<p>Also make sure all your necessary environment variables are set like <code>ANDROID_NDK_HOME</code>.</p>
+<p>Try deleting <code>nodejs-assets/nodejs-project/node_modules</code> and run <code>./scripts/install_modules</code> again.</p>
+<p>Make sure you&#39;re using the <code>install_modules.js</code> script with the correct flags for the operating system you&#39;re trying to run.</p>
+<p>On Android, try deleting <code>android/app/build/</code> to clear out the cached code.</p>
+<p>Try running the app from within Android Studio or XCode.</p>
+<p>Put <code>console.trace</code> calls everywhere to see where stuff is going wrong.</p>
+<h2 id="done-">Done!</h2>
+<p>Huge thanks to the <a href="https://www.telios.io/">Telios</a> team for sponsoring this work.
+You can check out their <a href="https://github.com/RangerMauve/telios-mobile/">mobile app</a> to see this stuff in action.</p>
+<p>Hopefully with this in place, you&#39;ll be able to get hypercore running within your own mobile app and create some interesting <a href="https://www.inkandswitch.com/local-first/">local-first apps</a>!</p>
+<p>If you&#39;re interested in getting this to run in your project and don&#39;t have the in-house experience, consider reaching out to <a href="https://software.mauve.moe/">Mauve Software Inc.</a> for a short term contract to get you on your feet.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>P2P Databases with IPLD Prolly Trees</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="This talk goes over how IPLD Prolly Trees work and how they can be used to make a new kinda of peer to peer database.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: 'Fira Code', system-ui; }
+      text { font-family: 'Fira Code', 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+      .ipldbg {
+        background: #1D74F2;
+        color: white;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 80vw;
+        height: 50vh;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      pre {
+        display: inline-block;
+      }
+
+      .agbg code {
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+      }
+
+      .ipldbg code {
+        border: 1px solid white;
+      }
+
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.75em;
+        font-size: 1.25em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# P2P Databases with IPLD Prolly Trees
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+???
+
+
+Hey folks! Thanks for coming out.
+
+My name is Mauve, my pronouns are they/it and
+
+Today I'm going to be talking about peer to peer databases,
+
+and how you can build them on top of IPLD Prolly Trees.
+
+---
+
+class: center, middle, agbg
+
+## How are databases so fast?
+
+`Database = Query(Collections + Indexes)`
+
+???
+
+Now, before we get into Peer to Peer databases,
+
+lets talk about how regular databases work and how they can serve data so fast.
+
+At the core most database engines consist of a query layer that sits on top of collections of data,
+
+and indexes over that data which speed up searches.
+
+---
+
+class: center, middle, agbg
+
+## Non-Indexed Queries
+
+- Search through everything
+- Sort after filter (or build up during)
+- Super slow with large datasets
+
+???
+
+So, lets talk a bit about that indexing bit.
+
+What does it mean to search through data without it?
+
+To start, if you want to search for data related to a given query,
+
+you'd need to search through _all_ of your data in order to know if you satisifed the query.
+
+What's more if you want to perform a sort on your data,
+
+you'll need to do that in tandem with filtering and buffer the order of the results either on disk or in memory.
+
+This is fine for small datasets if your CPU and disk are fast enough, but as your data grows so would the latency for searches.
+
+---
+
+class: center, middle, agbg
+
+## Database Indexes
+
+- Subset of fields sorted by value
+- Sort happens before filter
+- Seek to most relevant data fist
+- Streaming-friendly
+
+???
+
+Database indexes are separate collections that sit along side the main data,
+
+but instead of having the full data that's sorted by ID,
+
+it's just one or two properties that are sorted by value.
+
+What's convenient is that you can have all the data sorted ahead of time
+
+and can quickly seek to what you need and skip anything you don't when you perform a query
+
+This is also very useful for streaming results.
+
+Instead of waiting for a full query to finish, you can start processing data in your application as soon as it's available.
+
+---
+
+class: center, middle, agbg
+
+## B+ Trees
+
+- Building block for indexes
+- Key-Value Store
+- Keys are bytes
+- Sorted by keys
+- Good for seeks / sequential reads
+
+???
+
+Databases typically use B+ trees for storing indexes.
+
+You can think of them as key-value stores where the keys are bytes, and are sorted from lowest to highest.
+
+B+ trees also have the property of being efficient for seeking into the sorted list and sequentially read ranges of key-value pairs.
+
+---
+
+class: center, middle, agbg
+
+## B+ Tree Structure
+
+![Source: https://en.wikipedia.org/wiki/File:Bplustree.png](https://upload.wikimedia.org/wikipedia/commons/3/37/Bplustree.png)
+
+???
+
+So, here's a rough picture of what the structure looks like.
+
+Data is sorted and stored sequentially in "leaf nodes"
+
+And Intermediate nodes are created that point to leaf nodes along with the starting key within the leaf.
+
+You can then replace individual leaves or intermediate nodes up to the root
+
+without needing to update the rest of the tree.
+
+And you can also quickly search through the tree to find the leaf node that contains the start of whatever range you're seeking.
+
+---
+
+class: center, middle, agbg
+
+## B+ Trees are Order-Dependent
+
+add key 1, delete 2, update 3
+
+!==
+
+update 3, delete 2, add key 1
+
+???
+
+One of the downsides is that the order that you insert or delete keys can change the shape of the leaf nodes.
+
+For example if you insert into a tree that had a key deleted before,
+
+or insert in a key that got deleted after,
+
+you could have different boundries between leaf nodes.
+
+This makes them less suitale for distributed systems where peers are authoring and replicating changes in different order.
+
+---
+
+class: center, middle, agbg
+
+## Prolly Trees
+
+B-Tree + Content Addressing + Determenistic Chunking
+
+???
+
+So! An alternative is to make use of another data structure: Prolly Trees.
+
+They're like B+ Trees in that you use ordered key-value pairs within leaves stitched by intermediate nodes.
+
+However, instead of using pointers in memory and chunking keys as they're written,
+
+each leaf and each intermediate node is content addressed (in this case using IPLD).
+
+As well, when keys are being inserted into the structure,
+
+boundries between leaf nodes are calculated based on the content address of the keys rather than on insertion order.
+
+This means that regardless of the order that keys are inserted,
+
+each peer would come to the exact same structure for their tree at the byte level. 
+
+---
+
+class: center, middle, agbg
+
+## Schema
+
+```
+type ProllyTree struct {
+  config &ProllyTreeConfig
+  root &TreeNode
+} representation tuple
+
+type TreeNode struct {
+  isLeaf Boolean
+  keys [Bytes]
+  # If a leaf, contains entry valies
+  # If an intermediate node, contains Links to further TreeNodes
+  values [Any]
+} representation tuple
+```
+
+???
+
+So, here's what it looks like at the Specification Level.
+
+At the root of the tree we add some information about how the tree was chunked so that it can be easily updated and merged.
+
+Each TreeNode then has a list of keys, and a list of values that go with those keys.
+
+It also has the `isLeaf` boolean that lets the application know whether this is a leaf node which contains actual values, or if the values are links to more TreeNodes.
+
+---
+
+class: center, middle, agbg
+
+## Construction Steps
+
+- Add keys to a leaf node
+- Check for chunk boundries
+- On boundry: Make parent and sibling nodes
+- Add remaining keys to sibling
+- Add current node and sibling to parent
+- Repeat for sibling, then up to the parent
+
+???
+
+Here's the gist of how you construct a tree, or how you can go about updating a portion of it.
+
+What's useful is that it's a bottom up approach and you can build the tree as you ingest data.
+
+---
+
+class: center, middle, agbg
+
+## Chunk Boundries
+
+`threshold = 0x0100...`
+
+`is boundry = hash < threshold`
+
+- hash(key2 + value2) = 0x00FF... (no boundry)
+- hash(key1 + value1) = 0xACAB... (boundry!)
+- hash(key3 + value3) = 0x0666... (no boundry)
+
+`lower threshold = larger leaf nodes`
+
+???
+
+The boundries between leaves can be calculated based on a chunking threshold
+
+which is an integer that's used to determine the probability that new a chunk should be started
+
+You take the hash of the given key-value pair,
+
+and if it's less than the given threshold then you know you need to put all subsequent keys into a new chunk.
+
+This is remeniscent of the "hash cash" algorithm used in things like bitcoin.
+
+The lower your threshold value is, the less likely a boundry will occure and the larger your tree nodes will get.
+
+---
+
+class: center, middle, agbg
+
+## Indexing Data
+
+`/` === `0x00`
+
+```
+/posts => metadata, schemas, etc
+/posts/doc/{id} => {id, title, createdAt, tags, content}
+/posts/index/createdAt-tags/ => metadata, version, field
+/posts/index/createdAt-tags/{createdAt}/{tag} => {id}
+```
+
+???
+
+So, from here you can stop worrying about the details as much and focus on the keyspace.
+
+Here's an example of how you can segregate the keyspace for a collection of posts.
+
+You can have a top level prefix for everything related to "posts".
+
+Then you could have a longer prefix for all the individual documents in your database.
+
+And finally you can have separate prefixes per index.
+
+With this you can do sequential reads on documents and indexes and avoid overlap between different collections within a single dataset.
+
+---
+
+class: center, middle, agbg
+
+### Index Ordering
+
+```
+/posts/index/createdAt-tags/{createdAt1}/{tag1} => {id1}
+/posts/index/createdAt-tags/{createdAt1}/{tag2} => {id1}
+/posts/index/createdAt-tags/{createdAt2}/{tag1} => {id2}
+/posts/index/createdAt-tags/{createdAt3}/{tag1} => {id3}
+```
+
+???
+
+For example, here's what an index with a few posts could look like.
+
+We take the `createdAt` and `tags` property out of each post
+
+and make a new index key which points to the post's ID.
+
+Notice how everything is sorted by the timestamp,
+
+so you can seek to a start time,
+
+and filter out irrelevant tags without fetching the full post.
+
+In this example we have 3 posts, but what if you have a million and only want the most recent 50.
+
+You can seek to "today", get the first 50, and ignore the rest of the DAG entirely.
+
+---
+
+class: center, middle, agbg
+
+## The Network is the Database
+
+- Sync as you query
+- Prioritize view data automatically
+- Download more in the background
+- Combine indexes as sparsely as possible
+
+???
+
+With prolly trees, the network is the database.
+
+As you query the keyspace, you'll be loading parts of the DAG using block exchange or graph sync.
+
+Instead of replicating everything and then making it usable,
+
+you can start loading just the data that needs to be on the page _now_.
+
+You can also load more data in the background to speed up subsequent searches and to be available while offline.
+
+When merging datasets you can skip any equivalent branches and stitch in new branches without having to fully traverse the values.
+
+Combined this lets application authors focus more on their data and making efficient queries, and not worry as much about initial load times.
+
+---
+
+class: center, middle, agbg
+
+## Tradeoffs / Considerations
+
+- Wider chunks = more cache invalidation
+- Smaller chunks = more round trips / deeper trees
+- More indexes = more duplicate data in the DB
+- Fewer indexes = Sub-optimal queries
+- Merge conflict resolution is nuanced
+
+???
+
+There's some tradeoffs to consider, however.
+
+If you choose to have larger chunks on average,
+
+you'll end up having them get updated more often as keys are added and changed.
+
+At the same time, if you have smaller chunks your tree will be deeper and you'll potentially need more round trips to load it.
+
+On the indexing side, the more indexes you have, the more duplicate data you have.
+
+But these indexes are also important for making your queries efficient.
+
+Sometime it could be the difference between scanning accross all data and having poor UX, or having a bunch of duplicate data and using up more storage.
+
+Generally speaking, you'd be making indexes for data locally if it's not on the network, so it's usually worth it.
+
+Lastly, the question of how to merge data from multiple sources is nuanced and there's a lot of ways to do it that depends on your application.
+
+---
+
+class: center, middle, agbg
+
+## Let's build!
+
+- [Github ipld/ipld#254 - Spec](https://github.com/ipld/ipld/pull/254)
+- [Matrix Channel #p2p-deebees:mauve.moe](https://matrix.to/#/#p2p-deebees:mauve.moe)
+
+???
+
+So! Hopefully that's given you some more insight into how this stuff works
+
+and maybe it's sparked some ideas on how to build your own databases too.
+
+If you're interested, we've got a spec for how this can be implemented using IPLD,
+
+and we've got a Matrix channel where we've been chatting about peer to peer datbases in general.
+
+Come check out our source and join us in building efficient and usable peer to peer apps.
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>

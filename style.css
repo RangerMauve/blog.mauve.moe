@@ -1,0 +1,41 @@
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: #111;
+  color: #F2F2F2;
+  padding: 1.618em 0.618em;
+  line-height: 1.618em;
+}
+
+a {
+  color: #2de56e;
+  text-decoration: none;
+}
+
+a:visited {
+  color: rgb(165, 24, 201);
+}
+
+code {
+  background: rgb(165, 24, 201);
+  color: white;
+  font-weight: bold;
+  padding: 0.25em;
+}
+
+body {
+  max-width: 666px;
+  margin: 0 auto;
+}
+
+.rm-post-item {
+  font-size: 1.618em;
+}
+
+.rm-title {
+  color: rgb(165, 24, 201) !important;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.618em;
+}

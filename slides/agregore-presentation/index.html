@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agregore</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Agregore - What is it, Why is it.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      texttt { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 80vmin;
+        height: 80vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+<img src="./icon.svg"/>
+
+# Agregore
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hi friends, thank you for coming out.
+Today I'll be talking about Agregore, why I made it, what it does, and what it wants to do.
+
+---
+
+class: center, middle, purplebg
+
+# @RangerMauve
+
+## `Mauve`
+
+### Mauve Software Inc.
+
+???
+
+I'm Mauve, or @RangerMauve.
+
+I do consulting through my company Mauve Software Inc.
+
+And I'm high key obsessed with peer to peer and local first software
+
+---
+
+class: middle, beakerbg
+
+### State of Dat on the Web:
+
+- Beaker
+- Dat-gateway / `dat --http`
+- Dat-Webext (Firefox)
+- Dat-sdk
+
+???
+
+Before we get into Agregore, lets do a quick review over what the state of Dat on the web has been until recently.
+
+Beaker is probably the most well known since it's been the only web browser that's supported Dat (and now Hypercore-protocol) as a first class citizen.
+
+Outside of that, we've had gateways such as the standalone `dat-gateway` utility or the `--http` flag in the Dat CLI. These set up HTTP servers which serve content from Hyperdrives to the legacy web.
+
+This works great, but it's not quite the same thing as having having the protocol integrated on the web.
+
+Finally, there is the dat webextension project which uses experimental Firefox extension APIs to integrate the protocol.
+
+This has been super nice because you can use all of the functionality of Firefox, but there's a limitation in that you need to use Firefox Nightly and enable some experimental flags for it to work.
+
+Finally, I've been playing around with getting all the JS portions working in web browser with Dat SDK. This is fun, but it doesn't have true P2P support due to browser limitations and still needs some sort of proxy or signaling server to work.
+
+What's cool is that the protocol is definately thriving, but I felt like I wanted to experiment at integrating P2P protocols from a slightly different angle than other projects.
+
+---
+
+class: middle, agbg
+
+### Why Agregore?
+
+- Not that hard
+- An actual app
+- Differnt protocols
+- New APIs for protocols
+
+???
+
+I started playing around with Agregore after I added the hyper protocol into the Natakanu electron app.
+
+Since I had worked on a module called `dat-fetch` for loading data from Hyperdrives through a fetch interface, it took less than a dozen lines to add it in.
+
+From there, I thought that it'd be nice to build an actual browser by building off of this bit.
+
+One thought that I had was that it'd be nice to mix different protocols together.
+
+It seems like there's a lot of protocols out there and they're all working in their own silos, I thought it'd be nice to mix a bunch of them togehter and give developers more tools to play with.
+
+Lastly, I wasn't super happy with how a lot of P2P protocols had complex APIs which didn't feel very "webby".
+
+I wanted to try seeing how close I could get them to what developers already have on the web.
+
+---
+
+class: center, middle, purplebg
+
+## What are it's goals?
+
+???
+
+After messing around and getting the initial functional version going, here's what I've come up with as my goals
+
+---
+
+class: middle, agbg
+
+### Enable local-first web apps
+
+- Simple web API surface
+- Partner with projects
+- Extedable examples
+
+---
+
+class: middle, agbg
+
+### Be minimal
+
+- Invent as little as possible
+- No tabs - Windows
+- No extra UI
+- Bookmarks are files
+
+---
+
+class: middle, agbg
+
+### Open to anything decentralized
+
+- [EarthStar](https://github.com/cinnamon-bun/earthstar)
+- [IPFS](https://ipfs.io/)
+- [BitTorrent](https://github.com/bittorrent/bittorrent.org/issues/92)
+- Blockchain payments?
+- Your favorite protocol
+
+---
+
+class: middle, agbg
+
+### Rely on Extensions
+
+- More features in `userland`
+- Can use p2p APIs
+- Load from protocols
+
+---
+
+class: middle, agbg
+
+### Support ad-hoc networks
+
+- WiFi Mesh (MDNS)
+- Bluetooth
+- ???
+
+---
+
+class: center, middle, purplebg
+
+# 🎉 Demo Time 🎉
+
+???
+
+- Navitgate to Agregore home page
+- Show loading a website over hyper
+- Open Dev tools
+- Create a website using FETCH
+- Navigate to it
+- Update it
+
+---
+
+class: middle, agbg
+
+# ⌚ Near Future ⌚
+
+- Usable Hyperdrive fetch
+- Bookmarks as files
+- EarthStar Support
+
+---
+
+class: middle
+
+## How do I get involved?
+
+- Check out the [TODO](https://github.com/RangerMauve/agregore-browser#roadmap--todos)s
+- Open an [Issue](https://github.com/RangerMauve/agregore-browser/issues/new)
+- Bug [@RangerMauve](https://twitter.com/RangerMauve) via DMs
+
+---
+
+class: center, middle, purplebg
+
+# 🔥 🙇‍ Thank you! 🙇‍ 🔥
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script src="./mermaid.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create();
+
+      slideshow.on("afterShowSlide", s => {
+        const [slide] = document.getElementsByClassName("remark-visible");
+        mermaid.init(Array.from(slide.getElementsByClassName("mermaid")));
+      });
+    };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Final thoughts on Natakanu</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Following from my [previous post about Natakanu](./natakanu), I'd like to talk about my experiences working on the project and what I think some future steps could look like." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="final-thoughts-about-natakanu">Final Thoughts about Natakanu</h1>
+<p>Following from my <a href="./natakanu">previous post about Natakanu</a>, I&#39;d like to talk about my experiences working on the project and what I think some future steps could look like.</p>
+<h2 id="thoughts-about-the-process">Thoughts about the process</h2>
+<p>Working on Natakanu has been really fun. The folks at <a href="http://www.wapikoni.ca/home">Wapikoni Mobile</a> were really kind and inspiring.</p>
+<p>I liked their approach of talking to various indigenous groups and figuring out what sort of workflows they had and what sorts of pain points this software could help with.</p>
+<p>Overall our workflow looked like:</p>
+<ul>
+<li>Having a session to talk about ideas and what would be useful</li>
+<li>Summarizing ideas as features</li>
+<li>Splitting up the features into steps</li>
+<li>Putting them on a roadmap</li>
+<li>Implementing a set of features  as a release</li>
+<li>Reviewing what we have and repeating the cycle</li>
+</ul>
+<p>Throughout this process, we were thinking about how to keep the user experience as simple as possible and to make srue stuff would work on the local network as well as the internet.</p>
+<p>I think one thing that would have been nice would have been to get it in front of users more frequently throughout the process, but the few group calls we had were very useful for finding areas that needed improvement.</p>
+<p>I was pretty happy with how it went since it led to each version of the app resulting in something that was usable and would take us further to our final goal.</p>
+<h2 id="room-for-improvements">Room for improvements</h2>
+<p>Although working on Natakanu was overall fun, there were some things that got in the way around the code structure in general.</p>
+<p>Before I had joined up, there was an initial boilerplate that was put together based on <a href="https://github.com/electron-react-boilerplate">electron-react-boilerplate</a> which was probably useful for getting a React + Electron app together out of the box, but made a lot of other things harder.</p>
+<p>Redux is a useful library and it provides a lot of interesting developer feautres such as time travel debugging.
+However, this comes with a bunch of added complexity, especially when it comes to using async code (which the app has a lot of due it&#39;s p2p stack).
+Eventually, I ripped it out and repalced all the redux code with regular <a href="https://reactjs.org/docs/hooks-intro.html">React Hooks</a> which made the code a lot easier to work with and easier to understand.
+In addition to hooks, I added in <a href="https://docs.react-async.com/">React-Async</a> which provided high level modules for waitng for stuff to load, and <a href="https://www.npmjs.com/package/use-async-generator">use-async-generator</a> for watching changes over time. </p>
+<p>Another thing that needed to be wreslted with was the jest testing framework. At one point the tests started hanging and there was no way to run them in a debugger or to output console logs.
+In the end I had to figure out the bugs within the app instead instead of in the unit tests.</p>
+<p>These high level tools can seem appealing, but when they have issues they make everything that much harder to work around compared to putting together lower level tools yourself.</p>
+<p>In the future I&#39;d probably try to avoid boilerplates that pack so many things in one place.</p>
+<h2 id="feelings-about-the-result">Feelings about the result</h2>
+<p>When I was adding in some last minute features last week, I was feeling almost giddy when I saw the features coming together.</p>
+<p>Here&#39;s what it looked like:</p>
+<ul>
+<li>I installed the app on two of my computers</li>
+<li>I launched them and created &quot;accounts&quot; on each device</li>
+<li>Then I opened up the Online Accounts page</li>
+<li>They were already seeing each other so I could browse files</li>
+<li>I decided to test the new Private Circles feature and change my circle name on both computers</li>
+<li>All other online accounts went away and I could just see my two comptuers</li>
+<li>I switched back to the default circle and everyone came back</li>
+</ul>
+<p>One thing that felt nice about this process is taht everything was very reactive and I could see changes happening right away, all while knowing that behind thes scenes there were no servers being involved and it was all happening locally between the computers of the people I saw on the screen.</p>
+<p>Another thing that felt magical was our implementation of collaborative editing of a single project folder.</p>
+<p>If I wanted to allow people to add files to one of my projects, all I had to do was press a checkbox.</p>
+<p>Then, anyone that was connected to me while looking at my project could click a button to request access, and be automatically added to the project.</p>
+<p>From there either one of us could modify it and it&#39;d propogate changes to everyone that had the project loaded.</p>
+<p>It doesn&#39;t sound like much, but I was really happy with how it Just Works™️ .</p>
+<p>I think that what we came up with is fairly versetile while having a minimal set of functions that needed to be implemented and maintained.</p>
+<p>It&#39;ll be nice to hear how groups find it when they start deploying the app in their daily workflows and pushing the limits a little.</p>
+<h2 id="looking-forward">Looking forward</h2>
+<p>I think that putting together Natakanu has been useful for getting a conversation started on how local-first and peer to peer technology can start empowering indigenous groups, and people around the world in general.</p>
+<p>It shows us that we can connect people together within their communities without having to have all our data owned by a third party cloud-based company.</p>
+<p>Going forward I think it would be nice to leverage some more of the strengths of local-first software beyond it&#39;s ability to do the same data sharing as the cloud.</p>
+<p>Specifically, I think it would be useful to reach out to groups that have very little internet or overly expensive internet connections and see how we could enable them to use local-first tech within their local networks so that they could be productive without needing to worry about the costs.</p>
+<p>Ideally, it would be nice to experiment with <a href="https://tomesh.net/">community mesh networks</a> or <a href="https://github.com/calm-rad/MeshTest">ad-hoc phone based mesh networks</a> and then using local-first software on top of it to leverage the strengths of both.</p>
+<p>With this combination people can carry their important data with them and share them with communities the same way information can propogate by word of mouth or oral traditions.</p>
+<p>Lastly, one thing that I&#39;d like to address is how Natakanu needed to be an <a href="https://www.electronjs.org/">Electron</a> app and required us to fiddle around with native dependencies and package distributions accross Linux, Windows, and MacOS.
+This poses a higher barrier to entry for applications than I&#39;d like.
+I think in the future it would be nice to partner with groups on making local-first web apps with P2P-enabled web browsers such as <a href="https://github.com/RangerMauve/agregore-browser">Agregore</a> and <a href="https://gitlab.com/gateway-browser/gateway">Gateway</a>.</p>
+<p>What this will enable us to do is to worry about the platform-specific code within these browsers, and when it comes time for folks to actually make an app, they can put together a Web app, and use the p2p protocols to distribute it across all devices.
+An interesting thing that comes out of this is that applications are now another form of data and can be authored and transmitted just like anything else.
+I&#39;d love to talk to people and instead of telling then &quot;tell us what you need and we&#39;ll make it for you&quot;, saying &quot;Tell us what you need and we&#39;ll help you make it&quot;.</p>
+<p>I think that a big factor of local-first tech to me is strengthening communities and bringing power back in their hands from corporations / external groups.
+I&#39;d love it if I could give people tools for making their own tools and decisions and to give their communities the creative freedom to decide what they want technology to look like and to decide what it should do for them.</p>
+<p>Ultimately I&#39;m excited to see these first steps, and I&#39;m even more excited to see how we can empower people in the coming years.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

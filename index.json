@@ -1,0 +1,8 @@
+{
+  "title": "RangerMauve - Blog",
+  "description": "My Blog - Talking about Dat stuff",
+  "type": [
+    "website"
+  ],
+  "fallback_page": "/index.html"
+}

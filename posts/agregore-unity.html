@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - P2P Web Browser For XR Using Unity</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="One thing that recently got brought up in the [Agregore Discord](https://discord.gg/QMthd4Y) was that it would be nice if we could use Agregore on Virtual Reality headsets like the Oculus Quest.
+Sadly, porting all the Electron-based code isn't doable since the Quest runs on Android, but it got me thinking about what it would take to reimplement Agregore with, say, Unity.
+Here are some of the thoughts I had and some pointers to how it could be implemented." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="agregore-in-unity">Agregore in Unity</h1>
+<p>One thing that recently got brought up in the <a href="https://discord.gg/QMthd4Y">Agregore Discord</a> was that it would be nice if we could use Agregore on Virtual Reality headsets like the Oculus Quest.
+Sadly, porting all the Electron-based code isn&#39;t doable since the Quest runs on Android, but it got me thinking about what it would take to reimplement Agregore with, say, Unity.
+Here are some of the thoughts I had and some pointers to how it could be implemented.</p>
+<h2 id="webview-p2p-protocols">WebView + P2P protocols</h2>
+<p>The first thing that would need to be tackled is the actual Android Webview that will handle custom protocols.</p>
+<p>As some may have seen in my <a href="https://blog.mauve.moe/posts/making-a-browser.md">secret blog post about p2p web browsers</a>, this can be done on Android by hacking their standard WebView class.</p>
+<p>One limitation of the <a href="https://hypercore-protocol.org/">hypercore-protocol</a> is that it&#39;s only been fully implemented in Node.js thus far.
+With that in mind, we&#39;ll need to embed <a href="https://code.janeasystems.com/nodejs-mobile/getting-started-android">nodejs-mobile</a> in our project and expose it to Java.</p>
+<p>Ideally, we should have an HTTP server running on a local port which proxies the various <a href="https://github.com/AgregoreWeb/agregore-browser/tree/master/app/protocols"><code>fetch</code> APIs</a> that Agregore hooks up to Electron on different URL paths.</p>
+<p>After that we&#39;ll need to initialize a Webview and intercept any requests that it gets on the various protocols we support using the <a href="https://developer.android.com/reference/android/webkit/WebViewClient#shouldInterceptRequest(android.webkit.WebView,%20android.webkit.WebResourceRequest)">shouldInterceptRequest</a> API
+We&#39;ll want it to detect when a protocol we support gets invoked, create a <a href="https://developer.android.com/reference/java/net/HttpURLConnection">request</a> to our Node.js proxy, and return a <a href="https://developer.android.com/reference/android/webkit/WebResourceResponse">WebResourceResponse</a> from the response.</p>
+<p>With this we should have a basic webview that can load content from all the protocols that Agregore supports.
+I&#39;m not 100% sure, but I think this will also enable the <code>fetch()</code> API to be used with custom protocols, too.</p>
+<p>This could act as a sort of basic alternative to <a href="https://gitlab.com/gateway-browser/gateway">Gateway Browser</a> which comes with a lot more bells and whistles than just protocol handlers.</p>
+<p>Another alternative we could use for webviews is the <a href="https://wiki.mozilla.org/Mobile/GeckoView">GeckoView</a> library, however I&#39;m not sure whether it supports intercepting requests in Java, though it has the advantage of having WebExtension support.</p>
+<h2 id="rendering-in-unity">Rendering in Unity</h2>
+<p>Luckily, webviews are something that folks have already thought about rendering in Unity, and <a href="https://stackoverflow.com/questions/46479953/render-website-as-texture-in-unity3d-on-android/53582886#53582886">this post on stack overflow shows how we can render to a texture</a>.</p>
+<p>Essentially, the WebView class can render to a custom <code>canvas</code>, and from there you can export a bitmap which can be shoved into a unity <code>RawImage</code> class which can then be put into a texture on screen.
+After that, we&#39;ll need to simulate mouse and keyboard events on the WebView based on where a pointer intersects / have a virtual keyboard.
+Simulating mouse events can be done through the <code>dispatchTouchEvent</code> API <a href="https://github.com/IanPhilips/UnityOculusAndroidVRBrowser/blob/259e80f5dcbcd882505a4ee9ae757705b7db5474/AndroidViewToGLRendering-master/unitylibrary/src/main/java/com/unityexport/ian/unitylibrary/MainGL.java#L154">directly on the webview</a>.</p>
+<p>We can probably reuse the code from <a href="https://github.com/IanPhilips/UnityOculusAndroidVRBrowser/tree/259e80f5dcbcd882505a4ee9ae757705b7db5474">this version of the UnityOculusAndroidVRBrowser project</a> before they migrated to use GeckoView as a basis.</p>
+<p>With that in place we&#39;ll be able to render content off of P2P Networks on any virtual or augmented reality device that supports Unity and Android.</p>
+<p>For example, this could let us use something like the <a href="https://nreal.ai/">NReal Light</a> to render p2p web pages in AR that are loaded from p2p networks.
+Since it&#39;s Android we could probably extend this with ad-hoc mesh networks and all sorts of goodies that would be useful for <a href="https://github.com/RangerMauve/local-first-cyberspace">local-first cyberspace</a>.</p>
+<h2 id="webxr">WebXR</h2>
+<p>Rendering web pages in AR is already cool, but sadly it&#39;ll limit us to 2D frames that can load basic web content.</p>
+<p>It&#39;d be nice if we could render entire VR or AR scenes within the same space from the tabs themselves.
+This is something that can be done in most built-in web browsers for headsets like the Oculus Browser, or Firefox Reality and it works via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API/Fundamentals">WebXR</a> API.</p>
+<p>This API gives you acess to input devices from your headset sich as the head and hand position and provides APIs for rendering to the headset display.</p>
+<p>Sadly, this API isn&#39;t built into the Android WebView, and what&#39;s more it wouldn&#39;t help if it was built in since we&#39;d need to delegate to whatever APIs Unity provides.</p>
+<p>It should be possible to inject a JS API into these WebViews via the <a href="https://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)">webView.addJavascriptInterface</a> API.
+However, this would be avery big undertaking and you&#39;d need to account for how different Unity plugins for VR have their own methods of rendering to the screen, as well as finding a way to unify all the interfaces.</p>
+<p>Perhaps, once the Unity <a href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@0.1/manual/index.html?_ga=2.31133754.429102726.1613167416-1349562428.1606597328#supported-platforms">Open XR</a> Plugin matures, this will be a more doable task.</p>
+<p>Of course I&#39;d love to be proven wrong if somebody thinks this would be easier to do than I expected. 😁</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>Sadly I don&#39;t think I have time to work on this with the dozens of other things on my plate, but I&#39;d be happy to help give pointers to folks if they want to take it on.</p>
+<p>Alternately if you want to fund work on this, feel free to DM me so we can sketch something out. 😁</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

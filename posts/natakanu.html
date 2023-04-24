@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Natakanu</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Peer To Peer (`P2P`) software gives us a new way to exchange data between people, but it's also very technical." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h1 id="natakanu">Natakanu</h1>
+<p>Peer To Peer (<code>P2P</code>) software gives us a new way to exchange data between people, but it&#39;s also very technical.</p>
+<p>One of our goals with the Natakanu project was to make it easier to use to a less technical audience.</p>
+<p>Our use case was an app that would replace centralized services like Google Drive or Dropbox.
+The twist is that this app would work without an third party servers hosting your data, and would be able to work over local networks without internet access.</p>
+<h2 id="the-protocol">The Protocol</h2>
+<p>In order to facilitate the p2p file transfer, we went with the <a href="https://hypercore-protocol.org/#hypercore">Hypercore Protocol</a> and their filesystem abstraction <code>Hyperdrive</code>. (Formerly know as <a href="https://dat.foundation/">Dat</a>)
+What this gives us is the ability to shove some files into a folder, get a hyperlink representing the folder, and see what&#39;s in the folder on another computer by loading it from a peer to peer network.
+Essentially, how it works is that there&#39;s a thing called a Distributed Hash Table which lets people that have a copy of the folder advertise that they have the data, and people looking for the folder find these people and connect to them.
+All that P2P networking is handled by the <a href="https://www.npmjs.com/package/hyperswarm">Hyperswarm</a> module.
+Hyperdrive takes care of making sure that nobody can fake which data is in the folder, and lets peers see updates to the folder right away.
+It also makes it possible to &quot;Mount&quot; drives which adds a folder to one drive, which loads data out of another drive.</p>
+<h2 id="the-data">The Data</h2>
+<p>We take this filesystem abstraction and use for two types of folders: Accounts, and Projects.
+Accounts are a way for a person to group their projects together. They contain a <code>index.json</code> file which has their username, optionally stores some sort of profile picture.
+When people start up the app, they can either create a new account on it, or load an existing one.
+What&#39;s cool is that unlike a lot of other apps, accounts are completely local and don&#39;t need passwords or an internet connection to create.
+Then, we have Projects which are folders that contain all their actual files.
+The projects get added as &quot;mounts&quot; in a person&#39;s account.
+This means that once you get a person&#39;s account URL, you can see what projects they&#39;re sharing and access the files within them.</p>
+<h2 id="discovery">Discovery</h2>
+<p>One challenge in the P2P space, is that URLs for these folders are usually a mess of random numbers and letters and aren&#39;t exactly friendly.
+You usually wouldn&#39;t want to sit there and write it down or dictate a URL to somebody. The alternative is to use some sort of app to send people the link, which will likely not be local-first if you&#39;re not using something like <a href="https://cabal.chat/">Cabal</a>.
+With that in mind, we added a feature which enables you to automatically find other people&#39;s content without needing to explicitly send them the link.
+For that we built the <a href="https://github.com/RangerMauve/dat-gossip">dat-gossip</a> module.
+It broadcasts messages over the hypercore protocol which contain a list of the account URLs in the app.
+From there, anyone with the app will be able to see the accounts of people that are online and load their projects through Hypercore Protocol.</p>
+<h2 id="putting-it-together">Putting it together</h2>
+<p>All together this gives us a flow where you can create some files, tell a friend to go online, and get them to load your files whether you&#39;re sitting on the same wifi, or over the internet.</p>
+<hr>
+<h1 id="reasoning-behind-the-project-french">Reasoning behind the project - French</h1>
+<p>Quand j’ai commencé à travailler comme coordonnateur technique au <a href="http://www.wapikoni.ca/home">Wapikoni</a>, je me suis intéressé aux systèmes informatiques qu’on déployait sur le terrain. Les studios mobiles sont essentiellement équipés de trois stations de montage et d’un ordinateur portable.</p>
+<p>Dans le passé mon collègue Jean-Nicolas avait tenté d’implémenter un serveur par studio, pour centraliser les projets audiovisuels et les rendre accessibles à partir de tous les postes sans avoir brancher-débrancher un disque externe. Tout ça dans le but d’offrir aux participants la possibilité de s’inspirer des projets des autres et aussi dans les cas où la connexion le permettait, consulter ce qui se fait en même temps dans une autre communauté. Créer une collaboration réseau entre les participant.es et ultimement entre les studios là où les infrastructures sont de prime à bord insuffisante pour ce type de déploiement (connexion internet/wi-fi, réseau local, etc.)</p>
+<p>Avec le déplacement constant des roulottes, ce système de serveur s’est avéré compliqué à maintenir. Techniquement nous avions à faire beaucoup de résolutions de problèmes informatiques complexes à distance. Là décision à été prise de retirer les serveurs des studios. Depuis plus de systèmes informatiques de collaboration pour les créations Wapi sur le terrain.</p>
+<p>À l’hiver 2019, je me suis demandé si ce système de serveurs pouvait être remplacé par une autre infrastructure réseau plus adaptée à notre réalité. Mes recherches m’ont emmené à découvrir l’écosystème réseau pair-à-pair. Cette philosophie de développement logiciel est basée sur une approche <a href="http://www.wapikoni.ca/home">local first software</a>. Bâtir prioritairement un fonctionnement local des programmes informatiques. Une voie d’avenir qui m’a semblé très inspirante. Peu d’efforts sont faits en ce sens par les grands joueurs de l’industrie. C’est signe qu’il y a là un filon à même de changer nos paradigmes culturels algorithmiques. Ne serait-ce que de proposer des modèles de données plus organiques et à même de témoigner d’une culture a contrario du <a href="https://environmentalhumanities.org/arch/vol6/6.7.pdf">Capitalocene</a>. Cette approche de développement est nourrie par une communauté plurielle qui a créé des protocoles réseaux et des trousses de développement (SDK) basées sur ceux-ci: dat:// — Hypercore:// pour ne nommer que ceux centraux à mes démarches futures.</p>
+<p>Au fur et à mesure de la documentation épluchée j’ai constaté qu’il s’avérerait inspirant pour la Wapikoni d’explorer elle aussi avec ce type de logiciel. Tout ça dans le but de découvrir si ces outils pourraient répondre aux besoins techniques de son organisation ainsi qu’aux aspirations culturelles des nations et communautés autochtones de son collectif. Quel type de mobilité culturelle est rendu possible dans un environnement virtuel pair-à-pair ? Pour tenter de répondre à cette question, il fallait formuler une idée porteuse pour la communauté technique open source et pour les membres du collectif Wapi.</p>
+<p>C’est comme ça qu’est né l’idée de créer une application desktop peer-to-peer pour le transfert de fichiers. Remplacer essentiellement l’ancienne autorité des serveurs des studios mobiles par un programme capable de transiger d’un ordinateur à l’autre sur un réseau local sans procéder par une centralisation des informations. Cette idée est à l’origine du projet Natakanu : arriver à échanger des fichiers de quelconque nature ou poids, sans connexion internet et sans serveur. Il y avait dans cette idée aussi pour moi le germe d’un effort collaboratif de dé-colonisation du cyberespace.</p>
+<p>Il existe essentiellement déjà des solutions qui remplissent le même objectif — <a href="https://www.resilio.com/individuals/">resilio sync</a> est un exemple parmi d’autres. Ces solutions restent soit payantes, non accessibles à un large public ou techniquement trop avancées pour rejoindre l’usage commun. Une solution open source centrée sur l’accessibilité (du programme et de l’apprentissage de son fonctionnement — interne et externe) s’avère nécessaire. Il y a là possibilité de pousser les réflexions au centre du local first software tout en proposant une solution créative à un problème technique rencontré lors des activités du Wapi en communautés. J’ai aussi réaliser au fil de ce projet que s’attaquer à la création logiciel à priorité locale, force la communauté (celle qui l’a créé tout comme celle qui l’utilise) à s’approprier les primitives culturelles qui font fonctionner le code.</p>
+<p>Je remercie Olivier Trépanier-Desfossés et Sébastien Duval pour toute leur implication au début de ce projet et pour les longues heures passées à démêler tout ça avec moi. J’ai trouvé par la suite en <a href="https://ranger.mauve.moe/">Mauve</a> un compagnon expérimenté et extrêmement impliqué dans cette communauté qui tient depuis la barre du projet. </p>
+<p>Notre feuille de route s’est basée sur un premier livrable: un atelier organique/numérique organisé par <a href="https://www.facebook.com/uhulabosnomades/">Uhu Labos Nomades</a>, le <a href="https://www.concordia.ca/fr/a-propos/engagement-communautaire/bureau.html">centre d’engagement communautaire de l’université Concordia</a> et <a href="https://www.concordia.ca/next-gen/4th-space.html">4TH SPACE</a>. Au cours de cet atelier virtuel, qui s’est déroulé sur la page <a href="https://www.facebook.com/projetnatakanu/">Facebook du projet</a>, Craig Commanda à enseigner une technique de perlage en trois dimensions aux participant.es qui étaient ensuite invités par Stéphane Nepton (co-fondateur Uhu Labos Nomades) à un processus de création photogrammétrique pour transfère de cet objet réel dans le monde virtuel à l’aide de <a href="https://www.3dflow.net/3df-zephyr-photogrammetry-software/">logiciel gratuit</a>. Le <a href="https://github.com/Wapikoni-Technique/Natakanu/releases/tag/v0.0.4">prototype</a> Natakanu a ensuite été lancé pour permettre aux participant.es d’échanger les fichiers de photos de leurs objets ainsi que le résultat du processus photogrammétrie entre eux.</p>
+<p>Je laisse ici le soin à Mauve d’expliquer comment techniquement Natakanu est parvenu à rendre cette tâche possible pour les utilisateur.rices</p>
+<p>Ce projet a été financé dans le cadre de l&#39;Entente sur le développement culturel de Montréal conclue entre la Ville de Montréal et gouvernement du Québec.</p>
+<p>Ariel Beaudoin-Lambert</p>
+<p>Coordonnateur technique <a href="http://www.wapikoni.ca/home">Wapikoni Mobile</a></p>
+<p>Co-Directeur <a href="http://www.comptoirpublic.com/">Comptoir Public</a></p>
+<p>Artiste <a href="http://prism.quebec/">in situ OOO</a></p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

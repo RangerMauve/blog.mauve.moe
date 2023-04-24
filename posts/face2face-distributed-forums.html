@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Face2Face - Distributed Forums</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="One of the killer apps that Dat is missing is a web forum where people can get together and converse without the need for any centralized servers." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<h2 id="face2face-f2f-">Face2Face (f2f)</h2>
+<p>One of the killer apps that Dat is missing is a web forum where people can get together and converse without the need for any centralized servers.</p>
+<p>Think of the early web where you&#39;d have &quot;Topics&quot; with posts and threads that you had to refresh every few minutes.</p>
+<h3 id="why-now-">Why Now?</h3>
+<p>Being fully p2p was hard with Dat since you would need to have some sort of message channel to exchange Dat URLs with other people in your network.</p>
+<p>One of the cool features that have come with the latest <a href="https://github.com/beakerbrowser/beaker/releases/tag/0.8.0-prerelease.7">Beaker 0.8.0 prerelease</a> is the experimental <code>datPeers</code> API.</p>
+<p>When you access a Dat, what happens in the background is that Beaker will search for peers that have the Dat content and connect to them.</p>
+<p>This means that we&#39;re forming networks with other people that are interested in the data you&#39;re looking at.</p>
+<p>The <code>datPeers</code> API gives you the ability to communicate with this network.</p>
+<p>This gives us a way to find peers without having to rely on any centralized service.</p>
+<h3 id="then-what-">Then what?</h3>
+<p>The <code>datPeers</code> API allows you to broadcast some data to every peer you connect to. Say, a Dat URL for the posts you&#39;ve made for your posts.</p>
+<p>That way, you can look for peers that are also looking for your forums and start indexing their Dat URLs while they index your posts.</p>
+<p>This can be extended by having peers write the URLs of others to their own Dat, which will then be indexed by everyone.</p>
+<p>The end result is that everybody will have a list of all other peers&#39; URLs and they&#39;ll all be indexing each others posts.</p>
+<h3 id="cool-how-is-this-a-forum-">Cool, how is this a forum?</h3>
+<p>Now that you have a way to get posts from everyone, you need to have an agreement on what the posts are.</p>
+<p>The easiest approach would be to look at how <a href="https://github.com/beakerbrowser/libfritter">fritter</a> does it.</p>
+<p>People could have a <code>profile.json</code> to describe their accounts, and they could have a <code>/posts</code> directory for all of their posts.</p>
+<p>Similar to how Fritter works, new &quot;threads&quot; in the forum would be posts that don&#39;t have a parent.</p>
+<p>Replies would all link to the parent post.</p>
+<p>The post contents would be written in markdown, and would use the same &quot;mentiones&quot; array as fritter.</p>
+<h3 id="indexing-">Indexing?</h3>
+<p>Duplicating all the contents within indexedDB sounds like it&#39;ll be a bit of a pain.</p>
+<p>I think that it would be safe to instead store an index using the thread root + the timestamp.</p>
+<p>That way you could search for slices of posts for your current view and fetch the actual post contents from the given DatArchive.</p>
+<h3 id="what-about-when-nobody-s-online-">What about when nobody&#39;s online?</h3>
+<p>The cool thing about the <code>datPeers</code> API, is that it can also be used within node.js using <a href="https://github.com/beakerbrowser/dat-node">@beaker/dat-node</a>.</p>
+<p>This it should be easy to set up servers which will automatically crawl and replicate the Dat archives of participants.</p>
+<h3 id="how-will-communities-work-">How will communities work?</h3>
+<p>The idea is that creating a new forum will be as simple as forking the base Dat and sharing the URL with your peers</p>
+<p>The cool thing here is that there&#39;s no single point that people need to connect to.</p>
+<p>Instead, you can talk to people directly, either over the internet, or even over your local network.</p>
+<p>Even if the original creator of the forum archive goes away, the community can still move their data elsewhere.</p>
+<p>Customizing the forums doesn&#39;t require any services, just some CSS and HTML knowledge which could be abstracted for non-technical users.</p>
+<p>Using the same building blocks as Fritter for the data means that posts are more portable and that they could be linked through other viewers like Rotonde.</p>
+<p>Overall, I think this would be a useful tool and a powerful demonstration of distributed web software.</p>
+<hr>
+<p>Let me know what you think on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a> and <a href="dat://fritter.hashbase.io/user/dat://3df8868d5c3420d7acdf72d17129e4569cf83723092314ea6b260d112797d8c8">Fritter</a></p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

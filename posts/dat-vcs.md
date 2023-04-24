@@ -1,0 +1,27 @@
+## Dat-VS (datvs)
+
+- Uses dat for history
+- Can use folders within a dat archive, not just the root
+- Keep hashes of files (compared to their paths) in the root. Stored in `./.datvs/versions`. Used to do efficient merges
+- Operations are "load", "duplicate", "save", "combine",
+- "load" is only used in the cli and it's similar to how `git clone` works.
+	- It takes a dat URL (with optional version and path) and uses that for loading files to a local folder
+	- This is how people load an initial version onto their device
+	- When loading into a filesystem that already has data, it will do a diff to see what needs to be changed
+	- Loaded archives dat metadata is saved to `./.datvs/.dat/{keyname}` to prevent redundant downloading and easy switching
+	- When loading a dat archive one can optionally specify a name for the archive to make it easier to reference it in the future (similar to branch/remote names)
+- "duplicate" is used to create copies of an archive (similar to `git branch`)
+	- You can specify a name (similar to names when using `load`) to make it easier to load
+	- The `.dat` metadata is stored in the same place as loaded archives
+	- After making a duplicate and `loading` a different dat, you can switch back by `loading` it again
+	- You must have `save`d the current dat before making a duplicate
+- "save" is used when you're adding changes to the archive.
+	- It takes an optional "save message"
+	- In pure JS, it will look at the changes since the last save to detect what's different
+	- When used in the CLI, it will attempt to find all the changes in the FS using mtime and hash comparisons
+	- It will update the `./.datvs/versions` file with the message, version, and hashes of files
+- "combine" will attempt to combine two archives together. Similar to `git merge`
+	- You can pass it either a dat URL, or the name of a previously `load`ed or `duplicate`d archive
+	- Files / folders that have the same hash will be untouched
+	- Files with different hashes will be auto-merged by using the same diff algorithms as git, with similar output appearing if there's a conflict
+	- After doing a merge, people must do a `save` after they've finished fixing the merge conflicts

@@ -1,0 +1,25 @@
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" width="512" height="512">
+	<style>
+		text {
+			font-size: 32px;
+			alignment-baseline: middle;
+			text-anchor: middle;
+		}
+		line {
+			stroke: rgba(0,0,0,0.9);
+			stroke-width: 4px;
+		}
+	</style>
+
+	<defs>
+		<g id="node">
+			<line x1="128" y1="128" x2="370" y2="128" />
+			<text x="128" y="128">😃</text>
+		</g>
+	</defs>
+
+	<use transform="rotate(270, 256, 256)" xlink:href="#node" />
+	<use transform="rotate(180, 256, 256)" xlink:href="#node" />
+	<use transform="rotate(90, 256, 256)" xlink:href="#node" />
+	<use transform="rotate(0, 256, 256)" xlink:href="#node" />
+</svg>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IPFS in Agregore</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Agregore - What is it, Why is it.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      text { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+				background: #041727;
+				color: #FFF;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 80vmin;
+        height: 80vmin;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+
+      .icon {
+				width: 2em;
+				height: 2em;
+				transform: translateY(0.5em);
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# IPFS-In Agregore
+
+<small>Press <b>P</b> for speaker notes</small>
+
+
+???
+
+Hi Everyone.
+
+Today I'm going to talk about my love of the web, peer to peer networks, and how I've combined those things into a web-like interface for IPFS.
+
+---
+
+class: center, middle, purplebg
+
+# Mauve <img src="RangerMauve.png" class="icon"/>
+
+## [@RangerMauve](https://twitter.com/RangerMauve/)
+
+### Mauve Software Inc. <img src="mauvesoftwareinc.png" class="icon"/>
+
+???
+
+I'm Mauve, or @RangerMauve.
+
+I do consulting through my company Mauve Software Inc.
+
+And I'm high key obsessed with peer to peer and local first software
+
+---
+
+class: center, middle, ipfsbg
+
+# 🌐💜 Web Good 💜🌐
+
+???
+
+I really love the web.
+
+- Easy to start with HTML and a bit of JS
+- Cross platform, evrything has a browser
+- Content / app distribution
+
+---
+
+class: center, middle, agbg
+
+# 🖥️ 😢 Servers Bad 😢🖥️ 
+
+???
+
+Sadly the web is currently tightly coupled with web servers.
+
+This was better than having no web, but it introduces some problems.
+
+- Needs more expertise to get right
+  - Scaling is hard
+  - Security harder
+  - More code to learn and set up
+- Needs internet
+  - Need internet to author content
+  - Need internet to load content
+  - Hard to get an offline-first flow working
+  - Loading a file betwen two devices requires world-wide round trip
+- Usually need money to keep going
+  - Needs credit card and housing
+- Third party hosting means you don't own your data
+  - Might shut down and take your data / community down
+  - Breaking changes to your site or hosting which you can't revert
+
+---
+
+class: center, middle, ipfsbg
+
+# 🌟🤩 P2P Good 🤩🌟
+
+???
+
+Thankfully, there's something that's been getting popular lately which removes the need for servers.
+
+Thins brings with it certain advantages over regular server-based tech.
+
+### P2P Good
+
+- Stuff works offline-frist
+- Shove some files in a folder and you're good
+- No need for extra code for servers
+- Can work without a third party
+- Internet is an upgrade for more connections
+
+---
+
+class: center, middle, agbg
+
+## 🤔 P2P + Web Good? 🤔
+
+???
+
+Right now the websites that use P2P protocols usually get served from a webserver and have custom javascript APIs or extensions that are required to get anything done.
+
+What would it look like if browsers had protocols like IPFS integrated into their cores the way they do with HTTP?
+
+---
+
+class: middle, agbg
+
+## HTTP Web Is:
+
+- URLs
+- GET / POST / DELETE
+- Load Pages / Media / Scripts
+- `fetch()`
+
+---
+
+class: middle, ipfsbg
+
+## P2P Web Is:
+
+- GET `ipfs://SomeHash` or `ipns://ipfs.io`
+- POST `ipfs:///file.txt` => `ipfs://SomeHash`
+- PUBLISH `ipns://somename/`
+
+---
+
+class: center, middle, agbg
+
+<img src="./icon.svg"/>
+
+# Agregore Browser
+
+???
+
+Although you can use ipfs-fetch in your Node.js or Web based projects, those will be different than having it integrated into the environment itself.
+
+For that you could make use of Agregore which is an electron-based p2p browser.
+
+- Built in Protocols
+- Minimalist design
+- Made to be extended with extensions
+- Multi-Protocol
+
+---
+
+class: center, middle, purplebg
+
+# 🎉 Demo Time 🎉
+
+???
+
+- Open up dev tools (assuming in Agregore Browser)
+- Author a simple HTML page
+- POST into IPFS
+- PUBLISH to IPNS
+- Load URL
+
+---
+
+class: center, middle, agbg
+
+# Finishing Thoughts
+
+???
+
+- Make stuff
+- Make stuff simple
+- Make stuff resilient
+
+---
+
+class: center, middle, purplebg
+
+# 🔥🙇‍ Thank you! 🙇‍🔥
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create();
+
+      slideshow.on("afterShowSlide", s => {
+        const [slide] = document.getElementsByClassName("remark-visible");
+      });
+    };
+    </script>
+  </body>
+</html>

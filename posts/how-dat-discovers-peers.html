@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - How Dat Discovers Peers</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="There are a lot of guides and introductions to Dat that focus on using dat to transfer files, the replication protocol, and how the data is transferred between peers. However, that's just half of the story. A lot of the magic from the dat ecosystem comes from [discovery-swarm](https://github.com/mafintosh/discovery-swarm), the module that's responsible for finding peers to replicate with in the dat network." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<p>There are a lot of guides and introductions to Dat that focus on using dat to transfer files, the replication protocol, and how the data is transferred between peers. However, that&#39;s just half of the story. A lot of the magic from the dat ecosystem comes from <a href="https://github.com/mafintosh/discovery-swarm">discovery-swarm</a>, the module that&#39;s responsible for finding peers to replicate with in the dat network.</p>
+<h2 id="super-high-level">Super High Level</h2>
+<p>discovery-swarm provides an API to <strong>join</strong> networks using a <strong>discovery key</strong>, and then invokes a callback when it finds a peer to connect to.</p>
+<pre><code class="language-javascript">// Taken from the discovery-swarm example
+var swarm = require(&#39;discovery-swarm&#39;)
+
+var sw = swarm()
+
+sw.listen(666)
+sw.join(&#39;cool stuff&#39;) // can be any id/name/hash
+
+sw.on(&#39;connection&#39;, function (connection) {
+  console.log(&#39;found + connected to peer&#39;)
+})</code></pre>
+<p>This seems easy enough, but it feels a little magical. Under the hood, it combines several high level modules to get the job done.</p>
+<h2 id="peer-discovery">Peer discovery</h2>
+<p>While dat-swarm provides a way to join multiple networks and automatically connect to peers, <a href="https://github.com/maxogden/discovery-channel">discovery-channel</a> is the module responsible for actually finding peers for a given key. It&#39;s what advertises the local ip/port to the network and searchs for peer identifiers.</p>
+<h2 id="decentralized-peer-lookup-the-dht">Decentralized peer lookup - The DHT</h2>
+<p>Dat isn&#39;t the only p2p protocol that relies on peer discovery. Back when applications like BitTorrent and eMule were being developed, they relied a lot on &quot;tracker&quot; servers for announcing peers and searching for them. This resulted in a form of centralization which meant that if a tracker server got taken down or otherwise compromised, the p2p network couldn&#39;t function.</p>
+<p>The solution for this problem was to get rid of centralized trackers and replace them with a protocol that would split the discovery information amongst all the peers participating in the network. The particular approach is called a Distributed Hash Table. It&#39;s a key-value store that automatically stores keys on nodes in the network. The most popular algorythm for determening which peers should store which data is called <a href="https://en.wikipedia.org/wiki/Kademlia">Kademlia</a>. I&#39;m not going to go too far into it, but the idea is that each discovery key is sent to nodes whose id is <em>&quot;close&quot;</em> to the key, and peers maintain connections to others that are varying levels of <em>&quot;closeness&quot;</em> to themselves which makes it fast to find the nodes storing keys that you want.</p>
+<p>This functionality is implemented in the <a href="https://github.com/webtorrent/bittorrent-dht">bittorrent-dht</a> module which was originally made for the popular <a href="https://webtorrent.io/">webtorrent</a> project.</p>
+<p>discovery-channel uses this module by publishing it&#39;s IP/Port combination to the discovery key onto the DHT. Since there is no central authority or single point of failure, publishing on the DHT is resistant to censorship and can survive sketchy networks.</p>
+<p>One of the problems with the DHT, is that items in the DHT don&#39;t expire right away, and searching for peers can yield a lot of false-positives. Also, maintining the connection information necessary for staying in the DHT takes up more computational resources. As well, the DHT requires a set of <em>&quot;bootstrap nodes&quot;</em> which are used to find more nodes to start building up your network. These bootstrap nodes are a potential source of failure and DHT clients should attempt to save any nodes they find for later use in order to have a way to bootstrap should the bootstrap nodes go down.</p>
+<h2 id="faster-than-the-dht-dns-and-mdns-">Faster than the DHT - DNS! (and MDNS)</h2>
+<p>The next module, is a two-parter. As I mentioned before, the DHT can yield false positives and requires participating in a network. To make peer lookup faster, discovery-channel makes use of <a href="https://github.com/mafintosh/dns-discovery">dns-discovery</a> to talk to a list of centralized DNS servers to find peers.</p>
+<p>DNS is the technology used to resolve website hostnames like <code>www.example.com</code> to IP addresses. It works by having a network of DNS &quot;servers&quot; that talk to each other about which domains map to which IP addresses. Clients wanting to connect to a website will then issue DNS queries to the server by sending UDP packets asking for a <em>&quot;query&quot;</em>, and getting a result back over the same UDP socket. The query contains a <em>&quot;type&quot;</em> of record, and the <em>&quot;name&quot;</em> to search for.</p>
+<p>discovery-swarm makes use of the <a href="https://github.com/mafintosh/dns-discovery/blob/master/index.js#L392">txt</a> <em>&quot;type&quot;</em> , and generates a fake name by using the discovery key as a subdomain on a configurable domain. <code>txt</code> records are used for encoding freeform data that applications can make use of. For example, you could tell dns-discovery to use the <code>example.local</code> domain, and when searching for the <code>foobar</code> discovery key, it will make DNS queries for <code>foobar.example.local</code>. It tells the DNS server to track it&#39;s own IP/Port by adding the <a href="https://github.com/mafintosh/dns-discovery/blob/master/index.js#L396">additionals</a> attribute to it&#39;s query with some custom data specifing whether it&#39;s announcing itself, looking up a peer, or un-announcing itself. The logic for how it encodes this information is <a href="https://github.com/mafintosh/dns-discovery/blob/master/index.js#L719">here</a>.</p>
+<p>Using DNS is great for when you want speedy responses and to have a way to invalidate stored data (when you&#39;re leaving a network, for example). However, this introduces a point of centralization, and if the DNS servers get taken out, it prevents peers from being able to discover each other.</p>
+<h2 id="working-without-internet-">Working without internet!</h2>
+<p>The internet is great for P2P applications, but sometimes you don&#39;t have the luxery of connecting to any computer in the world, or sometimes the computers you want to connect to are sitting right beside you and don&#39;t need any fancy distributed discovery. dns-discovery supports this scenario by making use of something called <a href="https://en.wikipedia.org/wiki/Multicast_DNS">Multicast DNS</a> to find peers on the local network. It works by sending <em>&quot;multicast UDP packets&quot;</em> to the local network containing what&#39;s essentially a DNS request, which might be picked up by any computers that are listening for it. The computers that are listening on the <em>&quot;name&quot;</em> in the DNS query will then broadcast a DNS response with their local IP/Port which can be used to connect to them. This functionality is implemented in the <a href="https://github.com/mafintosh/multicast-dns">multicast-dns</a> module. dns-discovery starts listening on MDNS requests, and has logic for responding to them <a href="https://github.com/mafintosh/dns-discovery/blob/master/index.js#L149">here</a>.</p>
+<h2 id="how-does-discovery-swarm-put-this-together-">How does discovery-swarm put this together?</h2>
+<p>When you initiate a discovery-swarm instance, you can specify the TCP port you want to listen to, the UDP port for DNS/MDNS queries, the DHT bootstrap nodes to use, the DNS server list, and the fake domain to use for DNS/MDNS discovery. Specifying or not specifying or not specifying these arguments enables and disables parts of the discovery features. Therese some other little knobs to toggle, but that&#39;s the main stuff that matters.</p>
+<p>After specifying the discovery options, you need to start joining networks. The <code>discovery key</code> is modified by being optionall <a href="https://github.com/maxogden/discovery-channel/blob/master/index.js#L104">hashed</a>, and truncated to be only <a href="https://github.com/maxogden/discovery-channel/blob/master/index.js#L105">20 hex characters</a>. The 20 character limit is there to make it fit the Kademlia discovery key limitations.</p>
+<p>It announces itself wherever needed, and starts periodically querying for peer information. Once it finds a peer, it will attempt to establish a connection to it. Peers will likewise attempt to establish connections to it once they discover it.</p>
+<p>At this point, discovery-swarm has a duplex node stream between the two peers. Here is where two things can happen. By default, discovery-swarm will attempt to do a &quot;handshake&quot; between the two peers by exchanging their &quot;ids&quot; that they generated upon initialization. This lets the peers know who they&#39;re connected to and prevents them from opening more than one connection to each other. This can be overrided by providing a custom <code>stream</code> handler in the initialization options which returns an <code>EventEmitter</code> that will emit a <code>handshake</code> event with the peer ID itself.</p>
+<p>From here it will happily run and establish new connections once existing ones close and optionally prevent new ones once it reaches a limit.</p>
+<p>The discovery-swarm instance can be used to join multiple networks, and is able to handle incoming connections from multiple peers.</p>
+<h2 id="how-does-dat-make-use-of-it-">How does Dat make use of it?</h2>
+<p>discovery-swarm has a lot of options, and if they&#39;re not compatible, peers can&#39;t find each other. Luckily the dat project provides a module, <a href="https://github.com/datproject/dat-swarm-defaults">dat-swarm-defaults</a>, which allows different projects in the Dat ecosystem to easily configure discovery so that they can all connect to each other.</p>
+<p>Here&#39;s what it looks like</p>
+<pre><code class="language-javascript">var DAT_DOMAIN = &#39;dat.local&#39;
+var DEFAULT_DISCOVERY = [
+  &#39;discovery1.datprotocol.com&#39;,
+  &#39;discovery2.datprotocol.com&#39;
+]
+var DEFAULT_BOOTSTRAP = [
+  &#39;bootstrap1.datprotocol.com:6881&#39;,
+  &#39;bootstrap2.datprotocol.com:6881&#39;,
+  &#39;bootstrap3.datprotocol.com:6881&#39;,
+  &#39;bootstrap4.datprotocol.com:6881&#39;
+]
+
+var DEFAULT_OPTS = {
+  dns: {server: DEFAULT_DISCOVERY, domain: DAT_DOMAIN},
+  dht: {bootstrap: DEFAULT_BOOTSTRAP}
+}</code></pre>
+<p>Beaker takes these defaults, and ads some more <a href="https://github.com/beakerbrowser/beaker-core/blob/master/dat/library.js#L111">options</a></p>
+<pre><code class="language-javascript">discoverySwarm(swarmDefaults({
+    id: networkId,
+    hash: false,
+    utp: true,
+    tcp: true,
+    dht: false,
+    stream: createReplicationStream
+  }))</code></pre>
+<p>As you can see from the code snippit, beaker is disabling the hashing and the DHT! This means that when you&#39;re advertising discovery keys, you can just take the first 20 hex characters, and not worry about any of the rest of the processing. This also means that the DHT isn&#39;t being used for peer discovery, so the only source of peers is DNS and MDNS, which in most cases will mean only DNS is used to find peers over the internet.</p>
+<p>The <code>createReplicationStream</code> argument is creating a replication stream for <a href="https://github.com/mafintosh/hyperdrive">hyperdrive</a> instances, which is the module used to replicate dat archives. The dat replication protocol contains a handshake, so the discovery swarm handshake isn&#39;t being used.</p>
+<h2 id="steps-for-a-mvp-discovery-swarm">Steps for a MVP discovery swarm</h2>
+<p>Hopefully, this article has shown you the main pieces of discovery-swarm and can help you create your own implementation in other environments.</p>
+<p>The minimal amount needed is to use the DNS discovery, and pipe connections into the hypercore protocol to replicate hyperdrives.</p>
+<p>I&#39;ve started work on <a href="https://github.com/RangerMauve/discovery-swarm-stream">a module</a> that will allow browsers to make use of a discovery-swarm proxy over a websocket. This will allow applications to find peers and connect to them (almost) directly and allow people to experiment with p2p features outside of beaker, and experiment with cutting edge stuff like hyperdb even within beaker.</p>
+<p>Hopefully this has been informative, feel free to hit me up <a href="dat://fritter.hashbase.io/user/dat://3df8868d5c3420d7acdf72d17129e4569cf83723092314ea6b260d112797d8c8">on fritter</a>, or <a href="https://mobile.twitter.com/RangerMauve">twitter</a> if you have any questions or want to brainstorm more about bringing discovery to other platforms.</p>
+<ul>
+<li>RangerMauve</li>
+</ul>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>

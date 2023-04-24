@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<title>Mauve's Blog - Dat in Browsers without a gateway</title>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Here's a stream of thoughts about how one could make an alternative to dat-gateway using a single page application with service workers." />
+
+<style>
+  @import url("/style.css");
+
+  /* Import the syntax highlighting theme*/
+  @import url("/monokai.css");
+</style>
+
+<h1>
+  <a class="rm-title" href="/">
+    Mauve's Blog
+  </a>
+</h1>
+
+<main>
+
+<p>Here&#39;s a stream of thoughts about how one could make an alternative to dat-gateway using a single page application with service workers.</p>
+<h2 id="concerns-about-the-dat-gateway">Concerns about the dat-gateway</h2>
+<p>Having the dat-gateway serve files is a potential security issue. It should be possible to allow the browser to replicate with the swarm without ever revealing th contents of the data to a thir party server.</p>
+<p>As well, replicating a hyperdrive via WS makes it hard to experiment with different data types like raw hypercore or hyperdb (and the cool stuff that cabal does with auto-auth).</p>
+<h2 id="what-to-do-about-it">What to do about it</h2>
+<h3 id="gateway">Gateway</h3>
+<p>The gateway should just give access to the discovery-swarm. The same API as the swarm, will be provided by sending messages over a websocket to a gateway. The gateway will only be able to infer data that a MITM could catch which is really only discovery keys. This way the actual contents are still safe.</p>
+<h3 id="spa-pwa-">SPA (PWA?)</h3>
+<p>In addition to a gateway, there should be a single page application which is used as the entry point to the dat ecosystem. It will have a URL box for dat urls, register a protocol handler, and register the service worker that will be used to serve the files.</p>
+<h3 id="service-workers-">Service Workers!!</h3>
+<p>The service worker will be the main guts of the application in that it will be the mechanism for serving content to the browser and injecting the polyfill. When it gets set up, it will intercept all HTTP traffic for the current domain for everything in the <code>/dat/:key/**</code> path.</p>
+<p>When it gets requests for data:</p>
+<ul>
+<li>it will set up a hyperdrive</li>
+<li>have it store its data in IndexedDB (for caching) (Maybe use RAM instead?)</li>
+<li>set up a replication with the swarm</li>
+<li>Wait a bit for the metadata to sync</li>
+<li>Generate a response with the file content</li>
+</ul>
+<h3 id="polyfill">Polyfill</h3>
+<p>The polyfill will be the bit that makes the client-side work. The existing version of dat-polyfill was enough to get fritter to work, so it should be adaptable for other applications.</p>
+<p>The polyfill consists of a few parts:</p>
+<h3 id="url-rewriter">URL Rewriter</h3>
+<p>As mentioned before, all <code>dat://:key</code> urls will need to be redirected to the <code>/dat/:key</code>. This is needed because service workers can only intercept HTTP traffic. The dat-polyfill was already doing this to rewrite URLs to point at the gateway, so it should be easy to adapt it to point locally.</p>
+<h3 id="local-storage-shim">Local Storage shim</h3>
+<p>A big issue that the gateway addressed was cross-origin resource sharing. Before the dat-gateway got redirection, all sites were served from the same origin, and thus shared the same local storage. This should be accounted for by rewriting the globals for storage to prefix the current dat key to all keys / DB names in order to prevent sites from knowing about each others data. This isn&#39;t super secure, but it should be enough to whet people&#39;s whistles.</p>
+<h3 id="datarchive-polyfill">DatArchive polyfill</h3>
+<p>The DatArchive polyfill will need to be reworked in order to support the new gateway. The replication is going to be a bit more challenging since it will need to manage multiple replication streams with the swarm. Otherwise it could remain exactly the same, which will probably be good enough to run complex applications like fritter.</p>
+
+
+</main>
+
+<footer>
+  Copyright RangerMauve.
+  You can contact me on <a href="https://mobile.twitter.com/RangerMauve">Twitter</a>
+</footer>
+
+<script src="/highlight.pack.js"></script>
+<script src="/index.js"></script>
