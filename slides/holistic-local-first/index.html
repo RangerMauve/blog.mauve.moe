@@ -30,6 +30,18 @@
       }
       .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
 
+      .remark-notes {
+        font-size: 12px;
+      }
+
+      .remark-slide-container {
+        background:  #111;
+      }
+
+      .remark-slide-scaler {
+        box-shadow: none;
+      }
+
       .datbg {
         background: #2aca4b;
         color: #fff;
@@ -154,7 +166,7 @@ where we have the software itself
 
 paired with infrastructure that follows similar principles
 
-all led by communities that collaborate together in the same way that the software does.
+all led by communities that collaborate together using bottom-up principles.
 
 ---
 
@@ -167,11 +179,19 @@ class: center, middle, agbg
 ???
 
 So, there's a few bits that fit together for this vision to work.
+
 There's the Agregore Browser,
+
 Peer to Peer Protocols,
+
 Peer to Peer Databases,
+
 Community Mesh Networks,
+
 Web Archviing,
+
+Static site publishing,
+
 and Cooperative Governance.
 
 Before we get too overwhelmed lets break it down piece by piece.
@@ -192,8 +212,7 @@ Think of these as alternatives to the HTTP based web that we see in our browsers
 
 Instead of needing to send all your data to a third party (or to run a server yourself in the cloud), you can keep it on your device and connect directly to others to give them a copy.
 
-One of the ways that you can get started on messing with these protocols is the new Distributed Press API which makes it easy to publish static assets accross several protocols at once.
-You can read up on how these protocols work and what the tradeoffs are between them on the Hypha Coop Dripline blog.
+What's important is that this can reduce the barrier to entry to getting content out by being able to self-publish without needing to rely on an online host or a "professional grade" internet connection.
 
 ---
 
@@ -254,11 +273,6 @@ This is what the new IPLD Prolly Tree spec is used for and we're actively workin
 
 This is also where we should be looking more at standards for linked data so that more information can be interoperable without everybody having incompatible datasets in siloed apps.
 
-The thing that changes with this new approach is that developers can start thinking of data in a similar way to how they'd work with it in a centralized database, but now it can all be loaded on the fly from the network and get cached locally or merged with other authors determenistically.
-
-Longer term I'm looking to explore using these primitves with the Linked Data specs from the W3C.
-
-Specifically I think there's a lot of opportunity to combine these p2p ecosystems with linked data ecosystems like ActivityPub and the fediverse, where we can create bridges between the two worlds and reuse as much as possible between them.
 
 ---
 
@@ -323,11 +337,13 @@ Another avenue for getting content into peer to peer protocols and into local me
 
 This is what the Distributed Press project does.
 
-It's a server that you can run on a machine which embeds peer to peer protocols and a custom DNS server and it enables groups to publish content accros several peer to peer protocols by sending over a tarball with their site data.
+It's a server which you can send a tar archive of your static site to which will the publish it to several peer to peer protocols at once.
 
-What's great is that this is an easy bridge for groups that are already publishing their content to content delivery networks or something like Github Pages.
+It also has a built in DNS server for resolving websites using the DNSLink spec.
 
-All you need to make your static site peer to peer is to add a step where you send your data to Distributed Press, and to wire up a DNSLink subdomain to point at it's custom DNS server.
+This is a bridge for existing groups which have static sites on the HTTP web, and might want an easy way to go peer to peer.
+
+All they need to do is add an extra step to their publish workflows, and point their DNSLink domain at Distributed Press.
 
 This also fits into community networks in that they can set up local DNS servers and use distributed press to publish and disemminate content with nice looking URLs instead of having to figure out a way to copy public keys around.
 
