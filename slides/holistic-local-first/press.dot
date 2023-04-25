@@ -1,0 +1,32 @@
+digraph {
+  labelloc=t
+  rankdir=TD
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [color="#2de56e"]
+
+  p2p [label="Peer to Peer\nProtocols"]
+  press [label="Distributed Press"]
+  web [label="The Web"]
+  static [label="Static Websites"]
+  sutty [label="Sutty CMS"]
+  dns [label="Local DNS"]
+
+  press -> p2p
+  press -> web
+
+  static -> press
+  sutty -> press
+
+  press -> dns
+}

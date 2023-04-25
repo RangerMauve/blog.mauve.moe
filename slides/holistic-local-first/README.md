@@ -53,9 +53,14 @@ digraph {
   db [label="Peer To Peer\nDatabases"]
   apps [label="Local-First\nWeb Apps"]
   gov [label="Cooperative\nGovernance"]
+  press [label="Distributed"]
+  web [label="The Web"]
 
   p2p -> agregore
   agregore -> p2p
+
+  press -> p2p
+  web -> press
 
   p2p -> db
   apps -> db
@@ -89,9 +94,9 @@ This reduces the need to depend on always-online cloud services which usually ge
 
 ```dot
 digraph {
-  label="Holisitic Local-First Software - P2P"
+  label="Holisitic Local-First Software"
   labelloc=t
-  rankdir=RL
+  rankdir=TD
   bgcolor="#111"
   fontname="system-ui"
   fontcolor="#F2F2F2"
@@ -106,22 +111,40 @@ digraph {
   ]
   edge [color="#2de56e"]
 
-  p2p [label="Peer to Peer\nProtocols"]
   agregore [
     label="Agregore\nBrowser"
     color="#2de56e"
   ]
   mesh [label="Community\nMesh Networks"]
+  p2p [label="Peer to Peer\nProtocols"]
   archive [label="Web\nArchives"]
   db [label="Peer To Peer\nDatabases"]
+  apps [label="Local-First\nWeb Apps"]
+  gov [label="Cooperative\nGovernance"]
+  press [label="Distributed Press"]
+  web [label="The Web"]
 
-  p2p -> agregore
   agregore -> p2p
 
+  press -> p2p
+  press -> web
+
   p2p -> db
+  apps -> db
+  archive -> db
+
+  agregore -> apps
+
+  # archive -> agregore
+  archive -> web
+  agregore -> archive
   archive -> p2p
 
   mesh -> p2p
+  agregore -> mesh
+
+  mesh -> gov
+  archive -> gov
 }
 ```
 

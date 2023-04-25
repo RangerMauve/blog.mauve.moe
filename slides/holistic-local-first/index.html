@@ -73,7 +73,7 @@
       }
       img {
         width: 100%;
-        height: 70vmin;
+        height: 50vh;
         object-fit: contain;
         text-align: center;
       }
@@ -140,7 +140,7 @@ class: center, middle, agbg
 
 ## What is it?
 
-`Local-First Software` + `Infrastructure` + `Community`
+`Local-First` (`Software` + `Infrastructure` + `Community`)
 
 ???
 
@@ -254,6 +254,12 @@ This is what the new IPLD Prolly Tree spec is used for and we're actively workin
 
 This is also where we should be looking more at standards for linked data so that more information can be interoperable without everybody having incompatible datasets in siloed apps.
 
+The thing that changes with this new approach is that developers can start thinking of data in a similar way to how they'd work with it in a centralized database, but now it can all be loaded on the fly from the network and get cached locally or merged with other authors determenistically.
+
+Longer term I'm looking to explore using these primitves with the Linked Data specs from the W3C.
+
+Specifically I think there's a lot of opportunity to combine these p2p ecosystems with linked data ecosystems like ActivityPub and the fediverse, where we can create bridges between the two worlds and reuse as much as possible between them.
+
 ---
 
 class: center, middle, agbg
@@ -302,6 +308,30 @@ so that resources within archives can be agressively deduplicated at the p2p pro
 
 This is also were cooperatively run search indexes could come in handy so that groups could pool information together
 and search through it without needing to rely on Google's cloud infrastructure and with the search results being available for offline use.
+
+---
+
+class: center, middle, agbg
+
+## Distributed.Press
+
+![Distributed press relates to p2p protocols and the web, sutty CMS relates to distributed press, as well as static websites](./press.svg)
+
+???
+
+Another avenue for getting content into peer to peer protocols and into local mesh is to have authors add it as a step to their existing workflows.
+
+This is what the Distributed Press project does.
+
+It's a server that you can run on a machine which embeds peer to peer protocols and a custom DNS server and it enables groups to publish content accros several peer to peer protocols by sending over a tarball with their site data.
+
+What's great is that this is an easy bridge for groups that are already publishing their content to content delivery networks or something like Github Pages.
+
+All you need to make your static site peer to peer is to add a step where you send your data to Distributed Press, and to wire up a DNSLink subdomain to point at it's custom DNS server.
+
+This also fits into community networks in that they can set up local DNS servers and use distributed press to publish and disemminate content with nice looking URLs instead of having to figure out a way to copy public keys around.
+
+Distributed Press has also been working with Sutty which is a content management system which uses jekyll themes to generate static sites and has built in Distributed Press support for those that want to use graphical interfaces to author their data instead of editing raw site data or setting up publishing pipelines themselves.
 
 ---
 
