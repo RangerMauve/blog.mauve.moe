@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>P2P Spatial Indexes</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="This talk goes over how you can create spatial indexes using peer to peer databases.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: 'Fira Code', system-ui; }
+      text { font-family: 'Fira Code', 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Fira Code', 'Ubuntu Mono'; }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg, .remark-slides-area {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #041727;
+        color: #FFF;
+      }
+      .omibg {
+				background: #7A71F6;
+				color: white;
+      }
+      .ipldbg {
+        background: #1D74F2;
+        color: white;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        width: 90vw;
+        height: 70vh;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+        font-weight: bold;
+        padding: 0.25em;
+      }
+      pre {
+        display: inline-block;
+      }
+
+      .agbg code {
+        background: var(--ag-color-purple);
+        color: var(--ag-color-white);
+      }
+
+      .ipldbg code {
+        border: 1px solid white;
+      }
+
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      ul {
+				display: inline-block;
+				text-align: left;
+      }
+      li {
+        margin: 0.75em;
+        font-size: 1.25em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, agbg
+
+# P2P Spatial Indexes
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+???
+
+Hey folks! Thanks for coming out.
+
+My name is Mauve, my pronouns are they/it and
+
+Today I'm going to be talking about peer to peer spatial indexes
+
+???
+
+---
+
+class: center, middle, agbg
+
+## Geospatial data
+
+![Globe with longitude and latitude lines marked on it in a grid](./latlon.jpg)
+
+???
+
+- Focusing on geospatial
+- Represented as lat/long on globe
+- GPS uses
+- techniques also work on any 2d projection
+
+---
+
+class: center, middle, agbg
+
+## 2D Spatial Partitioning
+
+![Box with points in it, split into 4 quadrants, quadrants with lots of items get further subdivided](./quadtree.png)
+
+???
+
+- Computer graphics use 2d x/y grid
+- Quadtrees can help subdivide space
+- Space split into 4 quadrants
+- Quadrants with more data get subdivided
+- Can find what's nearby efficiently
+- Stored as a tree in memory
+- Needs to get rebalanced
+
+---
+
+class: center, middle, agbg
+
+## Quad Keys
+
+![WOrld split into 4 quadrants, with further subdivides. Each quadrant has an ID from 00, 01, 10, 11. Each further depth the key increases](./quadkeys.jpg)
+
+???
+
+- Quad keys from Bing Maps
+- Similar to quadtrees
+- Crates a unique ID for each quadrant and subdivision
+- Used for storing their tiles
+- Keys can be arbitrary "depth" of resolutuion
+
+---
+
+class: center, middle, agbg
+
+## Key ordering
+
+- `00,01,10 => ID1`
+- `00,01,11 => ID2`
+- `00,10,00 => ID3`
+- `01,00,00 => ID4`
+
+`Search(00...) => [ID1, ID2, ID3]`
+`Search(0001) => [ID1, ID2]`
+
+???
+
+- Ordered keys
+- most significant part of ID first
+- Prefix search to get quadrant data
+
+---
+
+class: center, middle, agbg
+
+## Ordered Key-Value Stores
+
+```
+put(key, value)
+get(key) => value
+search(prefix) => Iterator(key, value)
+```
+
+(LevelDB, Redis, Memcached, B+ tree indexes)
+
+???
+
+- Ordered Key-Value stores
+- Useful for range queries
+- Foundation of database storage engines
+- Used to create indexes
+
+---
+
+class: center, middle, agbg
+
+## Prolly Trees
+
+![Tree structure with IDs at node, values at the tip, keys are sorted](./prolly-tree-structure.png)
+
+???
+
+- Similar to B+ trees
+- Keys-value pairs stored in leaves
+
+---
+
+class: center, middle, agbg
+
+## Benefits:
+
+- Local-first
+- Verifiable
+- Mergable
+
+???
+
+---
+
+class: center, middle, agbg
+
+
+## Tile Storage
+
+- Replacement to centralized tile storage
+- Custom levels of detail
+
+???
+
+
+---
+
+class: center, middle, agbg
+
+## Object Storage
+
+- Store GLTFs
+- Load from p2p indexes
+- Virtual world compositing
+
+???
+
+---
+
+class: center, middle, agbg
+
+## Community Indexes
+
+- Combine between members
+- Collaborative
+- Overlays for maps
+- Share with larger groups
+
+???
+
+---
+
+class: center, middle, agbg
+
+## Let's build!
+
+- [Matrix Channel #p2p-deebees:mauve.moe](https://matrix.to/#/#p2p-deebees:mauve.moe)
+
+???
+
+Check out the matrix channel
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+    </script>
+  </body>
+</html>
