@@ -6,7 +6,7 @@ This post will look at the new [distributed.press Social Inbox](https://github.c
 
 Before getting into the details of have the inbox works and how it relates to distributed press, we should talk a little bit about what ActivityPub is and why we are using it.
 The best way to think about it is that it's like email but for social data.
-Instead of everybody having and count on 1 website and everybody posting all of their data on that website, people can have accountant on different websites and talk to each other by sending messages to each other's inboxes.
+Instead of everybody having and count on 1 website and everybody posting all of their data on that website, people can have accounts on different websites and talk to each other by sending messages to each other's inboxes.
 What's cool is that there's already a bunch of web sites and communities that are making use of this standard.
 Software like [Mastodon](https://joinmastodon.org/), [Pixelfed](https://pixelfed.org/), and [Lemmy](https://join-lemmy.org/) offer interfaces that are familiar to folks from other social media sites like Twitter, Instagram, and Reddit.
 However unlike their corporate counterparts anybody can set up an instance of these web sites and users on any of these instances can follow each other and comment on each other's posts.
@@ -27,8 +27,60 @@ We published this on Github at [staticpub.mauve.moe](https://github.com/RangerMa
 If you want to have as minimal a set up as possible you can clone this repository and change the URLs to match your own domain and start adding posts using whatever method you prefer.
 What was important is to have a valid actor file which is how other people can load information about who you are and discover posts that you made.
 You will also need to create a WebFinger file which we will get into in a bit.
+
+```json
+{
+  "subject": "acct:mauve@staticpub.mauve.moe",
+  "aliases": [
+  ],
+  "links": [
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "https://staticpub.mauve.moe/about.html"
+    },
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://staticpub.mauve.moe/about.jsonld"
+    }
+  ]
+}
+```
+
 Finally you will need to represent all of your posts using JSON files in the [ActivityPub "notes" format](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note).
+
+```json
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "id": "https://staticpub.mauve.moe/helloworld.jsonld",
+    "type": "Note",
+    "summary": null,
+    "published": "2023-06-29T17:29:45Z",
+    "url": "https://staticpub.mauve.moe/helloworld",
+    "attributedTo": "https://staticpub.mauve.moe/about.jsonld",
+    "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+    ],
+    "cc": [],
+    "sensitive": false,
+    "content": "Hello World!",
+    "contentMap": {
+        "en": "Hello World!"
+    },
+    "attachment": [],
+    "tag": [],
+    "replies":  "https://staticpub.mauve.moe/helloworld-replies.jsonld"
+}
+```
+
 You will also need to add a link tag to the html version of your posts with the the "rel" property being set to "alternate" and the typeset to something like "application/activity+json" and the "href" property pointing to a full your route to the JSON version of your post.
+
+```html
+<link rel="alternate" type="application/activity+json"
+      href="https://staticpub.mauve.moe/helloworld.jsonld" />
+```
+
 With this in place whenever somebody tries to look up your post on mastodon it will automatically resolve it to the ActivityPub version and present it within the app with options to boost your post or follow your account for updates.
 
 One thing to note however is that instances won't be able to follow you if all you have is your static versions of your site.
@@ -43,10 +95,11 @@ It does just enough for you to be able to receive follow requests and replies, t
 
 After setting up your static website with the appropriate ActivityPub JSON files you will need to generate a key pair which will serve as a means to authenticate any http requests.
 This is used for the [HTTP Signatures specification](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-08) which is used by ActivityPub to verify that anything sent to an inbox is actually coming from the expected actor.
-Whenever you want to send an http request, you will need to 1st calculate a [digest header](https://docs.joinmastodon.org/spec/security/#digest) based on the body of the request, and then take some of the request headers and [sign them with your public key](https://docs.joinmastodon.org/spec/security/#http-sign).
+Whenever you want to send an http request, you will need to 1st calculate a [digest header](https://docs.joinmastodon.org/spec/security/#digest) based on the body of the request, and then take some of the request headers (including the digest) and [sign them with your public key](https://docs.joinmastodon.org/spec/security/#http-sign).
 
 We use this in the in box server to verify that requests are coming in from specific userswithout needing to have them create accounts with login credentials or set up any custom authentication schemes.
 In order to register an inbox, you must 1st send a post request to `/v1/:actor/` with your public and private key pair and information about where your actor file is.
+We check this against the global blocklist in order to block domains that the instance might not want to host.
 Everywhere in the API where we have an actor, we make use of WebFinger style short hands using the `@username@domain` syntax that is common in the fediverse for tagging accounts in posts.
 
 Once you've created the account you can now modify your actor object took link to the inbox at `/v1/:actor/inbox`.
@@ -104,4 +157,4 @@ You can also make use of their plugin directly if that's more up your alley, by 
 Now that we have the initial version of the inbox ready will start integrating it with Hypha specific web sites and start working on the next set of milestones.
 The big things that we want to focus on is how to make discoverability of blogs easier and how we can transition more ActivityPub clients to make use of the peer to peer published versions of people sites instead of needing to depend on http for everything.
 
-If you're curious to get involved send us an email at `hello [at] distributed.press` or open an issue on our Github repositories.
+If you're curious to get involved send us an email at `hello [at] distributed.press` or open an issue on our [Github repositories](https://github.com/hyphacoop/social.distributed.press/).
