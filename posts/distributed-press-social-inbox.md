@@ -91,7 +91,7 @@ Whenever you want to send an http request, you will need to first calculate a [d
 
 We use this flow in the inbox server to verify that requests are coming in from specific users without needing to have them create accounts with login credentials or set up any custom authentication schemes. In order to register an inbox, you must first send a post request to `/v1/:actor/` with your public and private key pair and information about where your actor file is.
 We check this against the global blocklist in order to block domains that the instance might not want to host.
-Everywhere in the API where we have an actor, we make use of WebFinger style short hands using the `@username@domain` syntax that is common in the fediverse for tagging accounts in posts.
+Everywhere in the API where we have an actor, we make use of WebFinger style shorthands using the `@username@domain` syntax that is common in the Fediverse for tagging accounts in posts.
 
 Once you've created the account you can now modify your actor object took link to the inbox at `/v1/:actor/inbox`.
 For example `https://social.distributed.press/v1/@mauve@staticpub.mauve.moe/inbox` is what we link to in the static pub example.
