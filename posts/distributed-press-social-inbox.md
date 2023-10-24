@@ -101,9 +101,7 @@ The outbox will then look at your followers list and forward the activity to all
 
 ### Moderation
 
-The goal of the Social Inbox is to make it easy for folks to add social interactions to their statically published websites.
-And sadly a lot of social interactions on the open internet can be unpleasant when folks get exposed to trolls or just plainly don't get along.
-To ease the amount of damage from drive by posting, we've added some moderation features to the inbox for Allow Lists and Block Lists.
+The goal of the Social Inbox is to make it easy for folks to add social interactions to their statically published websites. But sadly, a lot of social interactions on the open internet can be unpleasant when folks get exposed to trolls or bad actors. To ease the amount of damage from drive by posting, we've added some moderation features to the inbox for Allow Lists and Block Lists.
 
 By default any incoming Activities will get queued up in your `GET /v1/:actor/inbox` endpoint which can be looked at and accepted or deleted.
 However to speed things up you can automate the process with the `/v1/:actor/blocklist` and `/v1/:actor/allowlist` endpoints.
