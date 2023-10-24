@@ -21,7 +21,7 @@ Most of the data that servers access is actually representable as static JSON fi
 Our 1st goal was to create an example of repository of static files published via distributed press that could be loaded from software such as mastodon without needing any extra servers.
 We published this on Github at [staticpub.mauve.moe](https://github.com/RangerMauve/staticpub.mauve.moe/).
 If you want to have as minimal a set up as possible you can clone this repository and change the URLs to match your own domain and start adding posts using whatever method you prefer.
-What was important is to have a valid actor file which is how other people can load information about who you are and discover posts that you made.
+It is also important to have a valid actor file, which is how other people can load information about who you are and discover posts that you made.
 You will also need to create a WebFinger file which we will get into in a bit.
 
 ```json
