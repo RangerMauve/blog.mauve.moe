@@ -105,7 +105,7 @@ The goal of the Social Inbox is to make it easy for folks to add social interact
 
 By default any incoming Activities will get queued up in your `GET /v1/:actor/inbox` endpoint which can be looked at and accepted or deleted.
 However to speed things up you can automate the process with the `/v1/:actor/blocklist` and `/v1/:actor/allowlist` endpoints.
-You can `GET / POST / DELETE` newline separated username patterns in order to block/allow specific users and instances.
+You can `GET / POST / DELETE` newline separated lists of usernames in order to block/allow specific users and instances.
 
 For example if you trust everyone on `social.mauve.moe` you can add `@*@social.mauve.moe` to your allow list.
 Similarly if you've had trouble with `@mauve@social.mauve.moe` and don't want to bother seeing any of their inflammatory replies, you can add `@mauve@social.mauve.moe` to your block list.
