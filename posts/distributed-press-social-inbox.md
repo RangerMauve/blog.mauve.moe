@@ -115,10 +115,7 @@ On top of the individual moderation techniques we also have instance-wide Allow 
 This can make it easier for communities to work together so that individuals don't have the responsibility of moderating everything themselves if they don't want to.
 For example, an administrator can choose to allow all traffic by default except for any instances that were specifically blocked by setting `@*@*` in the allow list.
 
-If you check [the source code](https://github.com/hyphacoop/social.distributed.press/blob/347f9d59f07bce936a0eee2b61865602fd62af3d/src/server/moderation.ts#L16) for moderation logic you'll see that we prioritize the choices of actors over instance admins.
-When considering incoming traffic week 1st check to see if the user because inside the actor allow list, then we check if they are in the actor block list.
-Then we check if they are an admin or if they're in the global block list or global allow list.
-Finally if an actor is not in any of these lists then they will be added to your inbox queue to be manually processed.
+If you check [the source code](https://github.com/hyphacoop/social.distributed.press/blob/347f9d59f07bce936a0eee2b61865602fd62af3d/src/server/moderation.ts#L16) for moderation logic you'll see that we prioritize the choices of actors over instance admins. When considering incoming traffic we first check to see if the user is on the actor allow list, then we check if they are on the actor block list. Lastly, we check if they are an admin or if they're in the global block list or global allow list. If an actor is not on any of these lists then they will be added to your inbox queue to be manually processed.
 
 For our deployment scripts we've also added the option to specify a blocklist in the [mastodon blocklist format](https://fedi.tips/importing-ready-made-server-blocklists-on-mastodon/) when setting up an instance with Ansible.
 We looked around at some of the options and have settled initially on the [garden fence blocklist](https://github.com/gardenfence/blocklist/blob/main/gardenfence-mastodon.csv) which covers some of the instances that have the most trouble and illegal or hateful content.
