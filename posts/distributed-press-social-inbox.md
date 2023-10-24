@@ -113,7 +113,7 @@ These endpoints streamline personal moderation choices for each user of the Inbo
 
 On top of the individual moderation techniques we also have instance-wide Allow Lists and Block Lists at `/v1/allowlist` and  `/v1/blocklist,` which enable administrators of an instance to preemptively block or allow incoming messages from known communities.
 This can make it easier for communities to work together so that individuals don't have the responsibility of moderating everything themselves if they don't want to.
-For example, an administrator can choose to allow all trafficked by default except for any instances that were specifically blocked by setting `@*@*` in the allow list.
+For example, an administrator can choose to allow all traffic by default except for any instances that were specifically blocked by setting `@*@*` in the allow list.
 
 If you check [the source code](https://github.com/hyphacoop/social.distributed.press/blob/347f9d59f07bce936a0eee2b61865602fd62af3d/src/server/moderation.ts#L16) for moderation logic you'll see that we prioritize the choices of actors over instance admins.
 When considering incoming traffic week 1st check to see if the user because inside the actor allow list, then we check if they are in the actor block list.
