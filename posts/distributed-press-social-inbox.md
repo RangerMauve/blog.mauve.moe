@@ -4,7 +4,7 @@ This post will look at the new [distributed.press Social Inbox](https://github.c
 
 ## What is ActivityPub?
 
-Before getting into the details of have the inbox works and how it relates to distributed press, we should talk a little bit about what ActivityPub is and why we are using it.
+Before getting into the details of how the inbox works and how it relates to Distributed Press, we should talk a little bit about what ActivityPub is and why we are using it.
 The best way to think about it is that it's like email but for social data.
 Instead of everybody having and count on 1 website and everybody posting all of their data on that website, people can have accounts on different websites and talk to each other by sending messages to each other's inboxes.
 What's cool is that there's already a bunch of web sites and communities that are making use of this standard.
