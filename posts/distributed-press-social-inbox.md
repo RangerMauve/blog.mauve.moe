@@ -83,7 +83,7 @@ In order to be able to follow somebody, an instance needs to be able to send an 
 ## How The Inbox Works
 
 This brings us to the new Distributed Press Social Inbox.
-It does just enough for you to be able to receive follow requests and replies, to send out new posts to followers, and download your follower list and replies back onto your static website.
+Its features include receiving follow requests and replies,  sending out new posts to followers, and downloading your follower list and replies back onto your static website.
 
 After setting up your static website with the appropriate ActivityPub JSON files you will need to generate a key pair which will serve as a means to authenticate any http requests.
 This is used for the [HTTP Signatures specification](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-08) which is used by ActivityPub to verify that anything sent to an inbox is actually coming from the expected actor.
