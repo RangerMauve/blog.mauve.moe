@@ -13,8 +13,7 @@ At the core of this are the ActivityPub and ActivityStreams standards that dicta
 
 ## How does that work with P2P Publishing?
 
-Given how many people are already using these standards it was very appealing as a target for web sites and blogs published using distributed press.
-Thanks to a generous grant from the [Filecoin Foundation for the Decentralized Web](https://www.ffdweb.org/) we got to make it easier for folks publishing their web sites to get comments and to make their posts available to anybody that's already on the federated web powered by ActivityPub (AKA The Fediverse).
+Given how many people are already using these standards, they were very appealing as a target for websites and blogs published using Distributed Press. Thanks to a generous grant from the [Filecoin Foundation for the Decentralized Web](https://www.ffdweb.org/) we made it easier for folks publishing their websites via Distributed Press to receive comments and to make their posts available to anybody that's already on the federated web powered by ActivityPub (AKA The Fediverse).
 
 One thing we wanted to focus on was to put as much "authority" into the publish website and as little as possible into any sort of centralized server.
 what's cool is that ActivityPub is actually well set for this use case.
