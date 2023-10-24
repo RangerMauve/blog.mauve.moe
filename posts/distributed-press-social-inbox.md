@@ -10,7 +10,7 @@ What's cool is that there's already a bunch of web sites and communities that ar
 Software like [Mastodon](https://joinmastodon.org/), [Pixelfed](https://pixelfed.org/), and [Lemmy](https://join-lemmy.org/) offer interfaces that are familiar to folks from other social media sites like Twitter, Instagram, and Reddit.
 However unlike their corporate counterparts anybody can set up an instance of these web sites and users on any of these instances can follow each other and comment on each other's posts.
 
-At the core of this is the ActivityPub and ActivityStreams standards which dictate how servers and clients should talk to each other in a way where posts and accounts can be visible to apps regardless of how it will be displayed to users.
+At the core of this are the ActivityPub and ActivityStreams standards that dictate how servers and clients should talk to each other so posts and accounts are visible to apps regardless of how they will be displayed to users.
 
 ## How does that work with P2P Publishing?
 
