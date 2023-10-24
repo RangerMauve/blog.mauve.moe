@@ -42,7 +42,7 @@ You will also need to create a WebFinger file which we will get into in a bit.
 }
 ```
 
-Finally you will need to represent all of your posts using JSON files in the [ActivityPub "notes" format](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note).
+You will need to represent all of your posts using JSON files in the [ActivityPub "notes" format](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note).
 
 ```json
 {
