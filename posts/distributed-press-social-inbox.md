@@ -75,7 +75,7 @@ Finally, you will also need to add a link tag to the html version of your posts 
       href="https://staticpub.mauve.moe/helloworld.jsonld" />
 ```
 
-With this in place whenever somebody tries to look up your post on mastodon it will automatically resolve it to the ActivityPub version and present it within the app with options to boost your post or follow your account for updates.
+With this in place whenever somebody tries to look up your Distributed Press-published post on Mastodon, it will automatically resolve it to the ActivityPub version and present it within the app with options to boost your post or follow your account for updates.
 
 One thing to note however is that instances won't be able to follow you if all you have is your static versions of your site.
 In order to be able to follow somebody, an instance needs to be able to send an activity to request a follow to that actor's inbox and for that actor to send them a follow accept or reject for the server to know that it was successful (or not). Unfortunately for fans of decentralized tooling, this flow requires a server and can't be done with purely statically published web sites. The good news is that we've created a minimal ActivityPub inbox server specifically for this use case.
