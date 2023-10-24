@@ -93,10 +93,8 @@ We use this flow in the inbox server to verify that requests are coming in from 
 We check this against the global blocklist in order to block domains that the instance might not want to host.
 Everywhere in the API where we have an actor, we make use of WebFinger style shorthands using the `@username@domain` syntax that is common in the Fediverse for tagging accounts in posts.
 
-Once you've created the account you can now modify your actor object took link to the inbox at `/v1/:actor/inbox`.
-For example `https://social.distributed.press/v1/@mauve@staticpub.mauve.moe/inbox` is what we link to in the static pub example.
-from here you can sit back and wait for people interacting with your blog to send you replies or follow requests.
-If you have moderation set to accept all follow requests you can sit back even more while the inbox server automatically sends response activities.
+Once you've created the account you can now modify your actor object tool link to the inbox at `/v1/:actor/inbox`.
+For example `https://social.distributed.press/v1/@mauve@staticpub.mauve.moe/inbox` is what we link to in the static pub example. Now, you can sit back and wait for people interacting with your blog to send you replies or follow requests. If you have moderation set to accept all follow requests, it's even easier as the inbox server automatically sends response activities.
 
 Once you've created a new post you should create an "Activity" that references it and after uploading it to your site, you should send a POST request to your outbox at `/v1/:actor/outbox`.
 The outbox will then look at your followers list and forward the activity to all of their inboxes so that they can see your new post in their timeline.
