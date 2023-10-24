@@ -139,6 +139,6 @@ You can also make use of their plugin directly if that's more up your alley, but
 ## Next Steps
 
 Now that we have the initial version of the inbox ready, we will start integrating it with Hypha's websites and start working on the next set of milestones.
-The big things that we want to focus on is how to make discoverability of blogs easier and how we can transition more ActivityPub clients to make use of the peer to peer published versions of people sites instead of needing to depend on http for everything.
+The big things that we want to focus on is how to make discoverability of blogs easier and how we can transition more ActivityPub clients to make use of the peer to peer published versions of people's sites instead of needing to depend on http for everything.
 
 If you're curious to get involved send us an email at `hello [at] distributed.press` or open an issue on our [Github repositories](https://github.com/hyphacoop/social.distributed.press/).
