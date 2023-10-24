@@ -142,3 +142,7 @@ Now that we have the initial version of the inbox ready, we will start integrati
 The big things that we want to focus on is how to make discoverability of blogs easier and how we can transition more ActivityPub clients to make use of the peer to peer published versions of people's sites instead of needing to depend on http for everything.
 
 If you're curious to get involved send us an email at `hello [at] distributed.press` or open an issue on our [Github repositories](https://github.com/hyphacoop/social.distributed.press/).
+
+---
+
+Last updated October 2023
