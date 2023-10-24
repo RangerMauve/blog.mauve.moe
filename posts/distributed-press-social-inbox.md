@@ -111,7 +111,7 @@ For example if you trust everyone on `social.mauve.moe` you can add `@*@social.m
 Similarly if you've had trouble with `@mauve@social.mauve.moe` and don't want to bother seeing any of their inflammatory replies, you can add `@mauve@social.mauve.moe` to your block list.
 These endpoints streamline personal moderation choices for each user of the Inbox.
 
-On top of the individual moderation techniques we also have instance wide allow lists and block lists at `/v1/allowlist` and  `/v1/blocklist` which enable administrators of in instance to preemptively block or allow incoming messages from communities they're already aware of.
+On top of the individual moderation techniques we also have instance-wide Allow Lists and Block Lists at `/v1/allowlist` and  `/v1/blocklist,` which enable administrators of an instance to preemptively block or allow incoming messages from known communities.
 This can make it easier for communities to work together so that individuals don't have the responsibility of moderating everything themselves if they don't want to.
 For example, an administrator can choose to allow all trafficked by default except for any instances that were specifically blocked by setting `@*@*` in the allow list.
 
