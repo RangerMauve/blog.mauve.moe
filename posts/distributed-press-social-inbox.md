@@ -6,8 +6,7 @@ This post will look at the new [distributed.press Social Inbox](https://github.c
 
 Before getting into the details of how the inbox works and how it relates to Distributed Press, we should talk a little bit about what ActivityPub is and why we are using it.
 ActivityPub is like email, but for social data. Instead of people having an account on one website and posting all of their data on that website, they can have accounts on different websites and talk to each other by sending messages to each other's inboxes.
-What's cool is that there's already a bunch of web sites and communities that are making use of this standard.
-Software like [Mastodon](https://joinmastodon.org/), [Pixelfed](https://pixelfed.org/), and [Lemmy](https://join-lemmy.org/) offer interfaces that are familiar to folks from other social media sites like Twitter, Instagram, and Reddit.
+What's cool is that there's already a bunch of web sites and communities that are making use of this standard. Software like [Mastodon](https://joinmastodon.org/), [Pixelfed](https://pixelfed.org/), and [Lemmy](https://join-lemmy.org/) offer interfaces that are familiar to folks from other social media sites like Twitter, Instagram, and Reddit, respectively.
 However unlike their corporate counterparts anybody can set up an instance of these web sites and users on any of these instances can follow each other and comment on each other's posts.
 
 At the core of this are the ActivityPub and ActivityStreams standards that dictate how servers and clients should talk to each other so posts and accounts are visible to apps regardless of how they will be displayed to users.
