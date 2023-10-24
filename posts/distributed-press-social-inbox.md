@@ -120,7 +120,7 @@ If you check [the source code](https://github.com/hyphacoop/social.distributed.p
 For our deployment scripts we've also added the option to specify a blocklist in the [Mastodon blocklist format](https://fedi.tips/importing-ready-made-server-blocklists-on-mastodon/) when setting up an instance with Ansible.
 We looked around at some of the options and have settled initially on the [garden fence blocklist](https://github.com/gardenfence/blocklist/blob/main/gardenfence-mastodon.csv) which covers some of the instances that have the most trouble and illegal or hateful content.
 As with all our moderation features this is opt in and you can choose to use it or bring your own list.
-We're also looking at other efforts in the space like "the bad place" which has a larger community working on APIs for moderating at scale.
+We're also looking at other efforts in the space like [The Bad Space](https://thebad.space/) which has a larger community working on APIs for moderating at scale.
 
 ### Hooks
 
