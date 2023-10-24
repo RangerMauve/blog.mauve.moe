@@ -126,7 +126,7 @@ We're also looking at other efforts in the space like [The Bad Space](https://th
 
 Since publishers' needs vary greatly on how they actually generate the static files needed for their web sites, and how they might want to integrate replies and followers, we've integrated a robust system of [web hooks](https://en.wikipedia.org/wiki/Webhook).
 You can use the various `/v1/:actor/hooks/:hook/` endpoints to register hooks which should be invoked whenever a new moderation item is queued, whenever an activity gets approved, or whenever an activity gets rejected.
-you can set this up to invoke Github actions or whatever other system you want to notify.
+You can set this up to invoke Github actions or whatever other system you want to notify.
 This can be useful for triggering new builds up your website that pull responses into your site content or to notify a moderator to look at replies that need to be acted on.
 Having web hooks also means that less logic sits inside your inbox server and more can be plugged into places that you already have.
 
