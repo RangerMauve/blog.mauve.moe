@@ -68,7 +68,7 @@ You will need to represent all of your posts using JSON files in the [ActivityPu
 }
 ```
 
-You will also need to add a link tag to the html version of your posts with the the "rel" property being set to "alternate" and the typeset to something like "application/activity+json" and the "href" property pointing to a full your route to the JSON version of your post.
+Finally, you will also need to add a link tag to the html version of your posts with the the "rel" property being set to "alternate," the typeset to something like "application/activity+json" and the "href" property pointing to your route to the JSON version of your post.
 
 ```html
 <link rel="alternate" type="application/activity+json"
