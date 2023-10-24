@@ -142,7 +142,7 @@ Since publishers can have a huge variety and how they actually generate the stat
 You can use the various `/v1/:actor/hooks/:hook/` endpoints to register hooks which should be invoked whenever a new moderation item is queued, whenever an activity gets approved, or whenever an activity gets rejected.
 you can set this up to invoke Github actions or whatever other system you want to notify.
 This can be useful for triggering new builds up your website that pull responses into your site content or to notify a moderator to look at replies that need to be acted on.
-having web hooks also means that less logic sits inside your inbox server and more can be plugged into places that you already have.
+Having web hooks also means that less logic sits inside your inbox server and more can be plugged into places that you already have.
 
 ## Sutty
 
