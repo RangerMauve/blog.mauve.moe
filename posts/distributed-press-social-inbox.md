@@ -15,8 +15,7 @@ At the core of this are the ActivityPub and ActivityStreams standards that dicta
 
 Given how many people are already using these standards, they were very appealing as a target for websites and blogs published using Distributed Press. Thanks to a generous grant from the [Filecoin Foundation for the Decentralized Web](https://www.ffdweb.org/) we made it easier for folks publishing their websites via Distributed Press to receive comments and to make their posts available to anybody that's already on the federated web powered by ActivityPub (AKA The Fediverse).
 
-One thing we wanted to focus on was to put as much "authority" into the publish website and as little as possible into any sort of centralized server.
-what's cool is that ActivityPub is actually well set for this use case.
+A key focus was to put as much "authority" into the published website and as little as possible into any sort of centralized server and what's cool is that ActivityPub is actually well set for this use case.
 Most of the data that servers access is actually representable as static JSON files.
 
 Our 1st goal was to create an example of repository of static files published via distributed press that could be loaded from software such as mastodon without needing any extra servers.
