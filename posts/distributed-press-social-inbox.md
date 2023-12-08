@@ -132,7 +132,7 @@ Having web hooks also means that less logic sits inside your inbox server and mo
 
 ## Sutty
 
-For folks that aren't interested in doing a bunch of coding themselves and want to focus on getting content out for people to see, you can now use the Distributed Press integration in the [Sutty CMD](https://panel.sutty.nl/).
+For folks that aren't interested in doing a bunch of coding themselves and want to focus on getting content out for people to see, you can now use the Distributed Press integration in the [Sutty CMS](https://panel.sutty.nl/).
 They have developed a [jekyll plugin](https://0xacab.org/sutty/jekyll/jekyll-activitypub) into some of their templates which automatically generates the necessary ActivityPub data and interacts with a configured social inbox to receive followers and to send out new posts to them.
 You can also make use of their plugin directly if that's more up your alley, but the out of the box functionality will be the easiest way to make use of these tools.
 
