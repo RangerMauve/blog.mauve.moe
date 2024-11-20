@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>LLMs in the User Agent</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description"
+    content="User Agents have the opportunity to enable users to have more control over LLM Enabled Apps. This talk goes over why it's important and how it could look.">
+
+  <style>
+    :root {
+      --ag-color-purple: #6e2de5;
+      --ag-color-black: #111;
+      --ag-color-white: #F2F2F2;
+      --ag-color-green: #2de56e;
+    }
+
+    body {
+      font-family: 'Fira Code', system-ui;
+    }
+
+    text {
+      font-family: 'Fira Code', 'Droid Serif', Arial !important;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: normal;
+    }
+
+    .agbg h1,
+    .agbg h2,
+    .agbg h3 {
+      font-weight: bold;
+      color: var(--ag-color-purple);
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      font-family: 'Fira Code', 'Ubuntu Mono';
+    }
+
+    .remark-notes {
+      font-size: 12px;
+    }
+
+    .remark-slide-container {
+      background: #111;
+    }
+
+    .remark-slide-scaler {
+      box-shadow: none;
+    }
+
+    .datbg {
+      background: #2aca4b;
+      color: #fff;
+    }
+
+    .beakerbg {
+      background: #5743ff;
+      color: #fff;
+    }
+
+    .purplebg {
+      background: var(--ag-color-purple);
+      color: #fff;
+    }
+
+    .agbg {
+      background: var(--ag-color-black);
+      color: var(--ag-color-white);
+    }
+
+    .ipfsbg {
+      background: #041727;
+      color: #FFF;
+    }
+
+    .omibg {
+      background: #7A71F6;
+      color: white;
+    }
+
+    .ipldbg {
+      background: #1D74F2;
+      color: white;
+    }
+
+    .bgimage {
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .bgimage h1 {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.5em;
+    }
+
+    .eye {
+      background-image: url('/RangerMauve.svg');
+    }
+
+    img {
+      width: 100%;
+      height: 50vh;
+      object-fit: contain;
+      text-align: center;
+    }
+
+    code {
+      text-align: left;
+      font-weight: bold;
+      padding: 0.25em;
+    }
+
+    pre {
+      display: inline-block;
+    }
+
+    .agbg code {
+      background: var(--ag-color-purple);
+      color: var(--ag-color-white);
+    }
+
+    .ipldbg code {
+      border: 1px solid white;
+    }
+
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+
+    .remark-container {
+      background: #FAFAFA;
+    }
+
+    ul {
+      display: inline-block;
+      text-align: left;
+    }
+
+    li {
+      margin: 0.75em;
+      font-size: 1.25em;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="source">
+
+class: center, middle, agbg
+
+# LLMs in the User Agent
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+<small><a href="https://ranger.mauve.moe">By Mauve Signweaver</a></small>
+
+???
+
+Thanks for coming out!
+My name is Mauve,
+my pronouns are they/it,
+I'm a decentralized software consultant,
+and today I'm going to be talking an idea I have for user-controlled LLM APIs for web applications.
+
+---
+
+class: center, middle, agbg
+
+![Diagram showing how cloud based LLMs link up](./cloud.svg)
+
+---
+
+class: center, middle, agbg
+
+## Tradeoffs - Cloud
+
+- ✅ No need for GPU setup
+- ✅ Huge and capable models
+- ❌ Usage spikes = cost spikes
+- ❌ LLM owners see all your data
+
+---
+
+class: center, middle, agbg
+
+## Tradeoffs - Local
+
+- ❌ Need to use GPU/CPU/RAM
+- ❌ Less capable small models
+- ✅ No deployment costs
+- ✅ All data stays local
+
+---
+
+class: center, middle, agbg
+
+## ✨ User Agency ✨
+
+**User Agents** should provide applications with powerful APIs while enabling user agency and choice.
+
+---
+
+class: center, middle, agbg
+
+## Web LLM APIs
+
+```javascript
+const {role, content} = await window.llm.chat({
+messages: [
+{role: 'system', content: 'You are a friendly AI'},
+{role: 'user', content: 'What is your favorite thing?'}
+]
+})
+```
+
+---
+
+class: center, middle, agbg
+
+## User Configurable
+
+```javascript
+{
+"llm": {
+"enabled": true,
+"baseURL": "http://127.0.0.1:11434/v1/",
+"apiKey": "ollama",
+"model": "qwen2.5-coder"
+}
+}
+```
+
+---
+
+class: center, middle, agbg
+
+## Use cases
+
+- Offline chatbots
+- LLM-enabled workflows
+- Local translation / rewording
+- LLM-Enabled Web extensions
+
+---
+
+class: center, middle, agbg
+
+## Models
+
+- qwen2.5-coder
+- phi3.5
+- hermes3
+
+---
+
+class: center, middle, agbg
+
+## Sizes
+
+- `1B` usually gibberish
+- `3B` okay for text transform / writing
+- `7B` okay for code generation / logic
+- `70b` generally useful, needs beefy hardware
+
+---
+
+class: center, middle, agbg
+
+## Let's Build Together
+
+- [contact@mauve.moe](mailto:contact@mauve.moe)
+- Github: [@RangerMauve](https://github.com/RangerMauve/)
+
+???
+
+So that's the gist of it.
+Next steps are to make it a reality, and for that we need to start working together.
+Specicifically we need to figure out how to fund all this work, who's interested in building and deploying this stuff,
+and how we can make it accessible to people to build on top of.
+
+If this is up your alley, send me an email or come hop into one of the chats linked to at the bottom of the Agregore
+website.
+
+    </textarea>
+  <script src="./remark-latest.min.js"></script>
+  <script>
+    window.onload = function () {
+      var slideshow = remark.create({
+        ratio: '1:1'
+      });
+    };
+  </script>
+</body>
+
+</html>
