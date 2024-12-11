@@ -6,9 +6,11 @@ Last Updated Dec 2024 by [Mauve Signweaver](//ranger.mauve.moe)
 
 ## How they work
 
-Prolly Trees, invented by Aaron Boodman [^3] and used in the Noms database, are a type of Merkle Tree [^4] used to store ordered sets. It has similarities to B+ Trees in that the set of values is split among "leaf nodes" in a tree, with the main difference beening that where a leaf node starts and ends (the chunk boundry) being determined by randomness from a cryptographic hash function. The benefit of this approach is that the shape of the tree is independant of the order in which keys were added to it. Random read/write operations are O(log<sub>k</sub>n) where `k` is the average chunk size.
+Prolly Trees, invented by Aaron Boodman [^3] and used in the Noms database, are a type of Merkle Tree [^4] used to store ordered sets. It has similarities to B+ Trees [^5] in that the set of values is split among "leaf nodes" in a tree, with the main difference beening that where a leaf node starts and ends (the chunk boundry) being determined by randomness from a cryptographic hash function. The benefit of this approach is that the shape of the tree is independant of the order in which keys were added to it. Random read/write operations are O(log<sub>k</sub>n) where `k` is the average chunk size.
 
-To determine these boundaries, the individual entries are hashed and then the resulting value is inspected to see how many `0` bits exist at the end. If there are enough consecutive `0` bits, then there must be a "chunk boundary", and any subsequent entries should be added to a new leaf node. Assuming a uniform distribution in the hash function's output, this allows to determine the probability that en entry has a certain number of bits. One can then configure the number of `0` bits your application desires called the Chunking Factor. There are other variations on how to calculate the hash (such as using a rolling hash), but this is the general approach.
+To determine these boundaries, the individual entries are hashed and then the resulting value is inspected to see how many `0` bits exist at the end. If there are enough consecutive `0` bits, then there must be a "chunk boundry", and any subsequent entries should be added to a new leaf node. Assuming a uniform distribution in the hash function's output (which is true for cryptographically viable hash functions like the default in IPLD Prolly Trees [^15] - sha2-256), this allows one to determine the probability that an entry causes a chunk boundry given the number of bits used using the formula ½<sup>bits</sup>. One can then configure the number of `0` bits your application desires called the Chunking Factor. The larger your chunking factor, the larger your chunks will be.
+
+There are other variations on how to calculate the hash with different tradeoffs. A Rolling Hash [^16] (such as in Noms) can be used to help guard against malicious items being inserted that force chunk boundries and speed up hashing of the raw data, with the tradeoff that updating a chunk requires re-calcuating this rolling hash. This can be useful if your data is already stored in a binary file format which you are traversing as you build the prolly tree.
 
 ## Merging and Diffing
 
@@ -16,7 +18,7 @@ Since Prolly Trees are deterministic based on their content, if two trees have t
 
 ## IPLD Variant
 
-The IPLD Prolly Tree [^6] variant of this makes use of the Inter-Planetary Linked Data ecosystem to encode data and support flexibility in hash functions and data encodings. IPLD supports encoding different hash functions and encodings (such as cbor, json, etc). Having flexebility in the content addressed layer and IPLD having implementations in different programming languages allows for rapid prototyping and experimenting at the application layer. To account for different prolly trees having different configuration options (chunking factor, hash function, data codec), the root of an IPLD Prolly Tree contains a strict pointing to this configuration as well as the root tree node. This enables quickly comparing whether two trees are compatible for merging / diffing. Data in IPLD is stored in the IPFS ecosystem which includes projects like Filecoin which enable long term archival of datasets using decentralized storage networks.
+The IPLD Prolly Tree [^6] variant of this makes use of the Inter-Planetary Linked Data ecosystem to encode data and support flexibility in hash functions and data encodings. IPLD supports encoding different hash functions and encodings (such as cbor, json, etc). Having flexebility in the content addressed layer and IPLD having implementations in different programming languages allows for rapid prototyping and experimenting at the application layer. To account for different prolly trees having different configuration options (chunking factor, hash function, data codec), the root of an IPLD Prolly Tree contains a struct pointing to this configuration as well as the root tree node. By default we suggest using sha2-256 for hashing and the dag-cbor encoding. This enables quickly comparing whether two trees are compatible for merging / diffing. Data in IPLD is stored in the IPFS ecosystem which includes projects like Filecoin which enable long term archival of datasets using decentralized storage networks.
 
 ## Room for Improvements
 
@@ -34,7 +36,7 @@ There's also room to figure out improvements around resolving conflicts in dupli
 
 ## Alternatives
 
-Merkle Search Trees[^2] are a popular alternative to Prolly Trees which come with a different set of tradeoffs. Unlike Prolly trees, items in the keyspace exist not only in leaf nodes but are evenly distributed accross "layers" in the tree. This means that sequential reads need to traverse "up and down" the tree to add/remove keys which can make logic for construction more complex compared to the "bottom up" approach possible with prolly trees. The benefit of this approach is that fewer nodes in the tree may need to be "re stitched" as chunk boundries change. For Prolly Trees you may (extremely rarely) result in an extra merge or split at every layer of the tree starting from the leaf. According to the paper, in the MST you will only get at most one of these merges or splits within one layer of the tree. This can be important if you want to maximize cache reuse.
+Merkle Search Trees[^2] are a popular alternative to Prolly Trees which come with a different set of tradeoffs. In the wild, they are the data structure behind Bluesky's Data Repositories [^14] Unlike Prolly trees, items in the keyspace exist not only in leaf nodes but are evenly distributed accross "layers" in the tree. This means that sequential reads need to traverse "up and down" the tree to add/remove keys which can make logic for construction more complex compared to the "bottom up" approach possible with prolly trees. The benefit of this approach is that fewer nodes in the tree may need to be "re stitched" as chunk boundries change. For Prolly Trees you may (extremely rarely) result in an extra merge or split at every layer of the tree starting from the leaf. According to the paper, in the MST you will only get at most one of these merges or splits within one layer of the tree. This can be important if you want to maximize cache reuse. MSTs are more appealing when you want to have fewer rebalance steps in your tree, and prolly trees are useful for sequential reads / writes.
 
 ## Value To Decentralized Ecosystem
 
@@ -49,7 +51,7 @@ This report goes over some of the considerations and future development avenues 
 [^1]: IPLD Prolly Tree Spec [link](https://github.com/ipld/ipld/blob/776b537e0d16dc0341f1bec13ee79bd05a0dfb9e/specs/advanced-data-layouts/prollytree/spec.md)
 [^2]: Merkle Search Trees: Efficient State-Based CRDTs in
 Open Networks [link](https://inria.hal.science/hal-02303490/document)
-[^3]: Noms Technical Overview by AAron Boodman [link](https://github.com/attic-labs/noms/blob/master/doc/intro.md#basics)
+[^3]: Noms Technical Overview by Aaron Boodman [link](https://github.com/attic-labs/noms/blob/master/doc/intro.md#basics)
 [^4]: Merkle Trees [link](https://en.wikipedia.org/wiki/Merkle_tree)
 [^5]: B+ Trees [link](https://en.wikipedia.org/wiki/B%2B_tree)
 [^6]: IPLD Prolly Tree Spec [link](https://github.com/ipld/ipld/blob/776b537e0d16dc0341f1bec13ee79bd05a0dfb9e/specs/advanced-data-layouts/prollytree/spec.md)
@@ -60,3 +62,7 @@ Open Networks [link](https://inria.hal.science/hal-02303490/document)
 [^11]: Graphsync Protocol - IPFS [link](https://ipld.io/specs/transport/graphsync/)
 [^12]: Delta State Replicated Data Types [link](https://arxiv.org/abs/1603.01529)
 [^13]: Prolly Tree Oracle [link](https://github.com/KenCloud-Tech/prolly-tree-oracle/blob/main/README.md)
+[^14]: AT Proto Data Repos [link](https://atproto.com/guides/data-repos#data-layout)
+[^15]: Default Hash/Codec for IPLD Prolly Trees [link](https://github.com/KenCloud-Tech/go-ipld-prolly-trees/blob/main/pkg/tree/types.go#L30)
+[^16]: Rolling Hash - Wikipedia [link](https://en.wikipedia.org/wiki/Rolling_hash)
+[^`7]: go-ipld-prolly-tree default chunk config [link](https://github.com/KenCloud-Tech/go-ipld-prolly-trees/blob/main/pkg/tree/node_config.go#L63)
