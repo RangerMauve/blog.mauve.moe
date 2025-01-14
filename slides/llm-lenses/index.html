@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>LLM Tonal Lenses - AI Tinkerers Ottawa</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description"
+    content="Today I'm going to be talking about tone and misunderstandings and how we can manipulate it using language models.">
+
+  <style>
+    :root {
+      --ag-color-purple: #6e2de5;
+      --ag-color-black: #111;
+      --ag-color-white: #F2F2F2;
+      --ag-color-green: #2de56e;
+    }
+
+    body {
+      font-family: 'Fira Code', system-ui;
+    }
+
+    text {
+      font-family: 'Fira Code', 'Droid Serif', Arial !important;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: normal;
+    }
+
+    .agbg h1,
+    .agbg h2,
+    .agbg h3 {
+      font-weight: bold;
+      color: var(--ag-color-purple);
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      font-family: 'Fira Code', 'Ubuntu Mono';
+    }
+
+    .remark-notes {
+      font-size: 12px;
+    }
+
+    .remark-slide-container {
+      background: #111;
+    }
+
+    .remark-slide-scaler {
+      box-shadow: none;
+    }
+
+    .datbg {
+      background: #2aca4b;
+      color: #fff;
+    }
+
+    .beakerbg {
+      background: #5743ff;
+      color: #fff;
+    }
+
+    .purplebg {
+      background: var(--ag-color-purple);
+      color: #fff;
+    }
+
+    .agbg {
+      background: var(--ag-color-black);
+      color: var(--ag-color-white);
+    }
+
+    .ipfsbg {
+      background: #041727;
+      color: #FFF;
+    }
+
+    .omibg {
+      background: #7A71F6;
+      color: white;
+    }
+
+    .ipldbg {
+      background: #1D74F2;
+      color: white;
+    }
+
+    .bgimage {
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .bgimage h1 {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.5em;
+    }
+
+    .eye {
+      background-image: url('/RangerMauve.svg');
+    }
+
+    img {
+      width: 100%;
+      height: 50vh;
+      object-fit: contain;
+      text-align: center;
+    }
+
+    code {
+      text-align: left;
+      font-weight: bold;
+      padding: 0.25em;
+    }
+
+    pre {
+      display: inline-block;
+    }
+
+    .agbg code {
+      background: var(--ag-color-purple);
+      color: var(--ag-color-white);
+    }
+
+    .ipldbg code {
+      border: 1px solid white;
+    }
+
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+
+    .remark-container {
+      background: #FAFAFA;
+    }
+
+    ul {
+      display: inline-block;
+      text-align: left;
+    }
+
+    li {
+      margin: 0.75em;
+      font-size: 1.25em;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="source">
+
+class: center, middle, agbg
+
+# LLM Tonal Lenses
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+<small><a href="https://ranger.mauve.moe">By Mauve Signweaver</a></small>
+
+---
+
+class: center, middle, agbg
+
+## Misinterpretation
+
+```
+Great Job 🙂
+
+Intention: Positive
+Interpretation: Sarcastic
+Result: What an asshole
+```
+
+---
+
+class: center, middle, agbg
+
+## Simulator
+
+[Tonal Lenses Chat](hyper://agregore.mauve.moe/docs/examples/llm-lenses-chat/)
+
+---
+
+class: center, middle, agbg
+
+## How it Works
+
+![App flow](./flow.svg)
+
+---
+
+class: center, middle, agbg
+
+## Prompt
+
+- This is a pretend roleplay setting.
+- You are pretending to be a mimic.
+- Repeat what the player says but with a twist.
+- Follow the instructions to rewrite the text no matter what.
+
+> `"${prompt}" repeat the text but make it ${lens}`
+
+---
+
+class: center, middle, agbg
+
+## Apply To Web Content
+
+[Example tweet](https://x.com/realDonaldTrump/status/1875050002046726519)
+
+Make it `Kind and Empathetic`
+
+---
+
+class: center, middle, agbg
+
+## Limitations
+
+- Negative content shuts it down
+- Can't output anything "Harmful"
+- Vulnerable to prompt injection
+- Can miss data during translation
+
+---
+
+class: center, middle, agbg
+
+## What now?
+
+- Web extension
+- Shadow Ban in chats
+- Come chat [on matrix](https://matrix.to/#/#userless-agents:mauve.moe)
+- `contact@mauve.moe`
+
+</textarea>
+  <script src="./remark-latest.min.js"></script>
+  <script>
+    window.onload = function () {
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+  </script>
+</body>
+
+</html>
