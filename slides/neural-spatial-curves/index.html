@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Neural Spatial Curves - AI Tinkerers Ottawa</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Looking into training a small neural net to compress 2D space into 1D">
+
+  <style>
+    :root {
+      --ag-color-purple: #6e2de5;
+      --ag-color-black: #111;
+      --ag-color-white: #F2F2F2;
+      --ag-color-green: #2de56e;
+    }
+
+    body {
+      font-family: 'Fira Code', system-ui;
+    }
+
+    text {
+      font-family: 'Fira Code', 'Droid Serif', Arial !important;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: normal;
+    }
+
+    .agbg h1,
+    .agbg h2,
+    .agbg h3 {
+      font-weight: bold;
+      color: var(--ag-color-purple);
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      font-family: 'Fira Code', 'Ubuntu Mono';
+    }
+
+    .remark-notes {
+      font-size: 12px;
+    }
+
+    .remark-slide-container {
+      background: #111;
+    }
+
+    .remark-slide-scaler {
+      box-shadow: none;
+    }
+
+    .datbg {
+      background: #2aca4b;
+      color: #fff;
+    }
+
+    .beakerbg {
+      background: #5743ff;
+      color: #fff;
+    }
+
+    .purplebg {
+      background: var(--ag-color-purple);
+      color: #fff;
+    }
+
+    .agbg {
+      background: var(--ag-color-black);
+      color: var(--ag-color-white);
+    }
+
+    .ipfsbg {
+      background: #041727;
+      color: #FFF;
+    }
+
+    .omibg {
+      background: #7A71F6;
+      color: white;
+    }
+
+    .ipldbg {
+      background: #1D74F2;
+      color: white;
+    }
+
+    .bgimage {
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .bgimage h1 {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.5em;
+    }
+
+    .eye {
+      background-image: url('/RangerMauve.svg');
+    }
+
+    img {
+      width: 100%;
+      height: 50vh;
+      object-fit: contain;
+      text-align: center;
+    }
+
+    code {
+      text-align: left;
+      font-weight: bold;
+      padding: 0.25em;
+    }
+
+    pre {
+      display: inline-block;
+    }
+
+    .agbg code {
+      background: var(--ag-color-purple);
+      color: var(--ag-color-white);
+    }
+
+    .ipldbg code {
+      border: 1px solid white;
+    }
+
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+
+    .remark-container {
+      background: #FAFAFA;
+    }
+
+    ul {
+      display: inline-block;
+      text-align: left;
+    }
+
+    li {
+      margin: 0.75em;
+      font-size: 1.25em;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="source">
+
+class: center, middle, agbg
+
+# Neural Spatial Curves
+
+<small>Press <b>P</b> for speaker notes</small>
+
+<small><a href="./README.md">Text Version</text></small>
+
+<small><a href="https://ranger.mauve.moe">By Mauve Signweaver</a></small>
+
+---
+
+class: center, middle, agbg
+
+## TODO:
+
+- Space Filling Curves
+- Auto-Encoders
+- Neural Spatial Curves
+- Improvements
+
+---
+
+class: center, middle, agbg
+
+### Space Filling Curves
+
+- Maps 1 Dimension to N Dimensions
+- Variable fidelity in mapping
+- Fractals
+
+---
+
+class: center, middle, agbg
+
+### Hilbert Curves
+
+`hilbertCurve(n) -> (X,Y)`
+
+![A curve that evenly squiggles accross the 2d plane in a sort of continuous snake pattern](hilbert-curve.jpg)
+
+---
+
+class: center, middle, agbg
+
+### MATH
+
+![Equation for hilbert curves ripped from stackechange](hilbert-equation.png)
+
+---
+
+class: center, middle, agbg
+
+### Can a Neural Network do it instead?
+
+- Smallest model possible
+- Incremental improvements
+- Interpret inner representation
+- Build intuition
+
+---
+
+class: center, middle, agbg
+
+## Auto Encoders
+
+- Train to output same as input
+- `Encoder` -> `Latent Space` -> `Decoder`
+- Hourglass Shape
+- Compress data to latent space
+- Encoder compresses points
+- Decoder is the spatial curve
+
+---
+
+class: center, middle, agbg
+
+## Structure
+
+![X and Y go into an encoder which goes into a latent space which goes into a decoder which goes back out into X and Y](autoencoder.svg)
+
+---
+
+class: center, middle, agbg
+
+## Initial Model
+
+```python
+X = np.random.rand(1000, 2)
+
+input_layer = Input(shape=(2,))
+hidden_layer_1 = Dense(64, activation='relu')(input_layer)
+# Bottleneck layer with one neuron
+hidden_layer_2 = Dense(1, activation='linear')(hidden_layer_1)
+hidden_layer_3 = Dense(64, activation='relu')(hidden_layer_2)
+output_layer = Dense(2)(hidden_layer_3) # Output layer
+
+autoencoder = Model(inputs=input_layer, outputs=output_layer)
+
+# Compile the model
+autoencoder.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model
+autoencoder.fit(X, X, epochs=500, batch_size=32)
+```
+
+---
+
+class: center, middle, agbg
+
+## Mapping Internal Space
+
+![Lots of predictions where it is apparent the model only knows points along an S curve](initial-predictions.svg)
+
+---
+
+class: center, middle, agbg
+
+## More Hidden Layers
+
+![Internal curve now looks more like a four pointed star](more-layers-1.svg)
+
+= **More complexity**
+
+---
+
+class: center, middle, agbg
+
+## Batch Size
+
+~~32~~ **256**
+
+![Line with an s curve with an extra squiggle on the bottom left and right](larger-batch.svg)
+
+---
+
+class: center, middle, agbg
+
+## Batch Normalization
+
+![The curve is looking more complex and seems to be closer to what an order 2 hilbert curve](batch-normalized.svg)
+
+Normalized Inputs = Stabilized Training
+
+---
+
+class: center, middle, agbg
+
+## More neurons
+
+~~2 -> 64 -> 32 -> 1 -> 32 -> 64 -> 2~~
+
+`2 -> 128 -> 64 -> 1 -> 64 -> 128 -> 2`
+
+![Similar shape as batch normalized but more squiggly](more-neurons-1.svg)
+
+---
+
+class: center, middle, agbg
+
+## Dropout Layers
+
+![Drastically simplified horseshoe shape](./dropout-layers.svg)
+
+Reducing complexity helps improve generalization.
+
+We kinda want the complexity here 😅
+
+---
+
+class: center, middle, agbg
+
+## More Layers
+
+~~128 -> 64~~
+
+`256 -> 128 -> 64`
+
+![Curve is more uneven and wiggly](more-layers-2.svg)
+
+---
+
+class: center, middle, agbg
+
+## More Neurons!!
+
+
+~~256 -> 128 -> 64~~
+
+`512 -> 256 -> 128`
+
+![Seems like a hilbert curve with an extra order of precision](./more-neurons-2.svg)
+
+---
+
+class: center, middle, agbg
+
+## Mean Absolute Error Loss Function
+
+![Curve has fewer straight lines and is more organic looking](./mean-absolute-error.svg)
+
+- Better for nonlinear relationships
+- Robust to large variation in data
+
+---
+
+class: center, middle, agbg
+
+## Dynamic Learning Rate
+
+```python
+ReduceLROnPlateau(
+monitor='loss', # Monitor loss
+# Epochs without improvement before learning rate is reduced
+patience=3,
+# Factor by which the learning rate will be reduced
+factor=0.5,
+# Minimum learning rate to prevent it from becoming too low
+min_lr=1e-6
+)
+```
+
+---
+
+class: center, middle, agbg
+
+## Reduce LR On Plateau Result
+
+![Similar level of complexity, maybe a bit less wiggly](./dynamic-learning-rate.svg)
+
+---
+
+class: center, middle, agbg
+
+## Way more epocs
+
+![Slightly more complex shape than before](./more-epochs.svg)
+
+---
+
+class: center, middle, agbg
+
+## Conclusions
+
+- Least Complex model "good enough"
+- Size / Depth makes a huge difference
+- Normalization can help with training
+- Linear activation at the end
+
+---
+
+class: center, middle, agbg
+
+- Come chat [on matrix](https://matrix.to/#/#userless-agents:mauve.moe)
+- `contact@mauve.moe`
+</textarea>
+  <script src="./remark-latest.min.js"></script>
+  <script>
+    window.onload = function () {
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+  </script>
+</body>
+
+</html>
