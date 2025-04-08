@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Stat of Local AI - Awana Digital</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description"
+    content="Here's an overview of where AI is and what opportunities we have to leverage the hype">
+
+  <style>
+    :root {
+      --ag-color-purple: #6e2de5;
+      --ag-color-black: #111;
+      --ag-color-white: #F2F2F2;
+      --ag-color-green: #2de56e;
+    }
+
+    body {
+      font-family: 'Fira Code', system-ui;
+    }
+
+    text {
+      font-family: 'Fira Code', 'Droid Serif', Arial !important;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: normal;
+    }
+
+    .agbg h1,
+    .agbg h2,
+    .agbg h3 {
+      font-weight: bold;
+      color: var(--ag-color-purple);
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      font-family: 'Fira Code', 'Ubuntu Mono';
+    }
+
+    .remark-notes {
+      font-size: 12px;
+    }
+
+    .remark-slide-container {
+      background: #111;
+    }
+
+    .remark-slide-scaler {
+      box-shadow: none;
+    }
+
+    .datbg {
+      background: #2aca4b;
+      color: #fff;
+    }
+
+    .beakerbg {
+      background: #5743ff;
+      color: #fff;
+    }
+
+    .purplebg {
+      background: var(--ag-color-purple);
+      color: #fff;
+    }
+
+    .awabg {
+      background: #741b47;
+      color: white;
+    }
+
+    .agbg {
+      background: var(--ag-color-black);
+      color: var(--ag-color-white);
+    }
+
+    .ipfsbg {
+      background: #041727;
+      color: #FFF;
+    }
+
+    .omibg {
+      background: #7A71F6;
+      color: white;
+    }
+
+    .ipldbg {
+      background: #1D74F2;
+      color: white;
+    }
+
+    .bgimage {
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .bgimage h1 {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.5em;
+    }
+
+    .eye {
+      background-image: url('/RangerMauve.svg');
+    }
+
+    img {
+      width: 100%;
+      height: 100vh;
+      object-fit: contain;
+      text-align: center;
+    }
+
+    code {
+      text-align: left;
+      font-weight: bold;
+      padding: 0.25em;
+    }
+
+    pre {
+      display: inline-block;
+    }
+
+    .agbg code {
+      background: var(--ag-color-purple);
+      color: var(--ag-color-white);
+    }
+
+    .ipldbg code {
+      border: 1px solid white;
+    }
+
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+
+    .remark-container {
+      background: #FAFAFA;
+    }
+
+    ul {
+      display: inline-block;
+      text-align: left;
+    }
+
+    li {
+      margin: 0.75em;
+      font-size: 1.25em;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="source">
+
+class: center, middle, awabg
+
+# State of Local AI
+
+### Made for Awana Digital
+
+---
+
+class: middle, awabg
+
+## Overview
+
+- Local LLM tools / models
+- Speech To Text
+- Model Context Protocol
+- Viability
+
+---
+
+class: middle, awabg
+
+## Local LLMs - tools
+
+- [ollama](https://ollama.com/) - command line / server
+- [LM Studio](https://lmstudio.ai/) - graphical app
+- [Open Web UI](https://github.com/open-webui/open-webui) - Graphical chat app
+
+---
+
+class: middle, awabg
+
+## Quantization
+
+- 32bits -> 4 bits
+- Smaller size, same neurons
+- Faster inference
+- Needed for consumer hardware
+
+---
+
+class: middle, awabg
+
+## Local Models - Sizes
+
+- 14B - Smarter, focus longer  `~9 GB`
+- 7B/8B - Can follow instructions `~5 GB`
+- 3B - Text transforms, confused fast, `~2 GB`
+- 1.5B and down - Very fast, only simple instructions, `~1GB`
+
+---
+
+class: middle, awabg
+
+## Model flavors:
+
+- Qwen: Multilingual, from China, my fave
+- Llama: Facebook, better at larger sizes
+- Gemma: From Google, small models made for phones
+- Phi: Microsoft, likely built into windows soon
+- Hermes: Fine tuned on corpo models, more "creative"
+- Dolphin: Fine tuned, aim to be "uncensored"
+
+---
+
+class: middle, awabg
+
+## What can LLMs do?
+
+- Summarize text
+- Decide based on criteria
+- Write code / Prose
+- "Tool calling" -> Call APIs
+- "Thinking" -> e.g. [DeepSeek](https://arxiv.org/abs/2501.12948)
+
+---
+
+class: middle, awabg
+
+## Fine tuning / Other languages
+
+- Qwen is decent with cross-language
+- 3B models can be tuned reasonably on consumer hardware
+- Models train on trillions of tokens
+- Foundation models cost millions of dollars to train
+- Hard to find that much labelled data for indigenous langs
+- [Te Reo Māori](https://news.microsoft.com/en-nz/2024/05/28/how-generative-ai-is-transforming-te-reo-maori-translation/)
+
+---
+
+class: middle, awabg
+
+## Speech To Text
+
+- [OpenAI Whisper](https://github.com/openai/whisper)
+- Small: Needs 2GB RAM, could run locally realtime
+- Medium: ~5GB RAM, hard to do realtime
+- Large: ~10 GB, high accuracy, needs dedicated hardware
+
+[source](https://github.com/openai/whisper/discussions/5#discussioncomment-3703959)
+
+---
+
+class: middle, awabg
+
+![](./language-datasets.svg)
+
+---
+
+class: middle, awabg
+
+## Limitations:
+
+- Need lots of high quality labelled audio
+- Training can be expensive
+- Running inference along LLMs needs more hardware
+
+[training](https://github.com/openai/whisper/discussions/64)
+
+---
+
+class: middle, awabg
+
+## Model Context Protocol
+
+- New [standard](https://modelcontextprotocol.io/introduction) for defining tool calls for LLM frontends
+- Run a local server and add tools to it
+- LLM automatically chooses how to use tools
+- E.g. used to control blender, local files, etc
+- Could Comapeo data be available as a tool?
+
+---
+
+class: middle, awabg
+
+## So What?
+
+- Grants going out for building on this stuff
+- Could help interface with tech without needing to be a dev
+- Small / offline models capable enough for basic tasks
+
+
+</textarea>
+  <script src="./remark-latest.min.js"></script>
+  <script>
+    window.onload = function () {
+      var slideshow = remark.create({
+        ratio: '16:9'
+      });
+    };
+  </script>
+</body>
+
+</html>
