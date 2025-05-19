@@ -1,5 +1,43 @@
 # Cool Links to Neat Stuff
 
+## 2025/05/19
+
+- [Scrappy app maker](https://pontus.granstrom.me/scrappy/). They made a tool for drag and drop UIs for "small apps". It'd be cool to do something similar with Agregore.
+
+## 2025/05/14
+
+- [oniux tor isolation](https://blog.torproject.org/introducing-oniux-tor-isolation-using-linux-namespaces/). Runs linux processes in isolated contexts to make sure all their networking is running through tor
+
+## 2025/05/12
+
+- [LLM codgen workflow](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/) pro tips for making LLM based code generation work. Maybe I can steal some ideas for Agregore
+
+## 2025/05/05
+
+- [Notes from the local AI talk I did in feb](https://agora.exo.cat/t/ia-de-km-0/371/2), part of it is in Spanish.
+- [~dozens bookmarks](gemini://tilde.town/~dozens/bookmarks.gmi), useful for finding gemlogs and capsuls. E.g. here's a [search engine](gemini://tlgs.one/search?agregore) I found through them.
+
+## 2025/04/24
+
+- [yazi - command line file browser](https://github.com/sxyazi/yazi), seems pretty fast! I've been tired of messing with GUI based editors so this will be a nice change of pace.
+- [ai predictions for 2027](https://ai-2027.com/). A sort of speculative fiction about where AI might be going. Could be cool to revisit over the years (Assuming we're alive still).
+
+## 2025/04/17
+
+- [omnisvg, vector image gneration model](https://omnisvg.github.io/). I love SVG and prefer vectors to rastors whenever possible, it'd be cool to make a lil app with it some day.
+
+## 2025/04/15
+
+- [sqlite + telegram = ai assistant](https://www.geoffreylitt.com/2025/04/12/how-i-made-a-useful-ai-assistant-with-one-sqlite-table-and-a-handful-of-cron-jobs). Inspiring for getting my Mind Goblin assistant to finally have a memory and maybe connecting that memory to the network.
+
+## 2025/04/09
+
+- [dolthub prolly tree vector index](https://www.dolthub.com/blog/2024-10-08-how-to-build-a-vector-index-with-prolly-trees/), I've literally been wanting to do this for over a year but haven't had time to sit down and do it so it's great to see somebody beat me to it! Their approach requires rebalancing which IMO isn't ideal.
+
+## 2025/04/08
+
+- [olmo2 model](https://allenai.org/blog/olmo2), fully open with the training data, weights, and recipe.
+
 ## 2025/04/03
 
 - [Stop syncing everything](https://sqlsync.dev/posts/stop-syncing-everything/) post about the value of sparse replication
