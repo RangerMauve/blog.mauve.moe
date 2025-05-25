@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agregore</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Agregore - What is it, Why is it.">
+
+    <style>
+      :root {
+         --ag-color-purple: #6e2de5;
+         --ag-color-black: #111;
+         --ag-color-white: #F2F2F2;
+         --ag-color-green: #2de56e;
+      }
+
+      body { font-family: system-ui; }
+      texttt { font-family: 'Droid Serif', Arial !important; }
+
+      h1, h2, h3 {
+        //font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .agbg h1, .agbg  h2, .agbg h3 {
+        font-weight: bold;
+        color: var(--ag-color-purple);
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-slide-scaler {
+        box-shadow: none;
+      }
+      .remark-slide-container {
+        background: var(--ag-color-black);
+      }
+      .remark-slide-content {
+        vertical-align: middle;
+        text-align: center;
+      }
+
+
+      li {
+        font-size: 2em;
+      }
+
+      .datbg {
+        background: #2aca4b;
+        color: #fff;
+      }
+      .beakerbg {
+        background: #5743ff;
+        color: #fff;
+      }
+      .purplebg {
+        background: var(--ag-color-purple);
+        color: #fff;
+      }
+      .agbg {
+        background: var(--ag-color-black);
+        color: var(--ag-color-white);
+      }
+      .ipfsbg {
+        background: #e5e7eb;
+      }
+
+      .bgimage {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .bgimage h1 {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5em;
+      }
+      .eye {
+        background-image: url('/RangerMauve.svg');
+      }
+      img {
+        height: 50vh;
+        max-width: 80vw;
+        object-fit: contain;
+        text-align: center;
+      }
+      code {
+        text-align: left;
+      }
+      a:link, a:visited { color: inherit; }
+
+      .remark-container {
+        background: #FAFAFA;
+      }
+
+      /* For mermaid stuff */
+      .mermaid .actor {
+        stroke: none !important;
+      }
+      .mermaid rect.actor {
+        fill: #2aca4b !important;
+      }
+
+      .mermaid text.actor {
+        fill: #FFF !important;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: agbg
+
+<img src="./icon.svg"/>
+
+### 5 Years Of Agregore
+
+<small>Press <b>P</b> for speaker notes</small>
+
+???
+
+Hi friends, thank you for coming out and thanks for having me.
+
+---
+
+class: agbg
+
+## State Of Software
+
+- Cloud Hosting Bills
+- Always-online
+- Build Systems, Frontend/Backend
+- App Stores Gatekeeping
+
+???
+
+I've been working on software since the 2010s and over time I noticed that the way we make software leads to some inevitable friction to actually getting into people's hands.
+I think one of the first issues is that making something today means committing to paying for infrastructure indefinitely, else your users data and any community you facilitate gets destroyed regardless of its utility.
+It also leads to systems that need to be always online and connected and lead to any sort of downtime or user connectivity issues catastrophic.
+Making software is also complex with separation between backend developers needing to make these massive systems scaleable and front end developers needing to bridge the gap with user interfaces accross different platforms.
+If you want people to actually use your tech you generally need to deal with registering a business and deployment system with every app store you want to be available on which is a huge time sink on top of everything else.
+
+---
+
+class: agbg
+
+## Leads to:
+
+- Expensive and Complex
+- Profit over Usability
+- Filter what may exist
+- Easy target (censoring, hacking, etc.)
+
+???
+
+These factors work together to keep software expensive and complex to create,
+To force creators to focus on profit over usability and utility,
+And generally filter what may exist and for how long.
+The centralized nature of these systems also means that any data your users have becomes your liability.
+As a creator you need to respond to censorship from corporate copyright takedowns, to laws regulating how to treat data, and the more successful you become the more of a target you become for hacking and spammers looking to profit from abusing your users trust.
+
+---
+
+class: agbg
+
+## "The Dream"
+
+- No infra
+- No builds
+- Self-publishing
+
+???
+
+I think the state of thing sucks and I have a dream of changing the default dynamics to a point where getting started means you don't need to deal with any infrastructure costs, not need to deal with build systems if you don't want to and can easily self publish and distribute your software without having to jump through a bunch of hoops.
+
+---
+
+class: agbg
+
+![Screenshot of Agregore browser on the welcome screen](./agscreen.png)
+
+???
+
+This is the dream that's been guiding my work on Agregore the past five years
+and I wanted to go over a timeline of how this dream has shaped
+the decisions I made for shaping the browser over time.
+
+---
+
+class: beakerbg
+
+### June 2018
+
+
+![Screenshot of beakerbrowser.com from Feb 2019](./beakerscreen.png)
+
+???
+
+This dream was sparked way before I started working on peer to peer software with the work of Paul Frazee and Tara Vancil on the Beaker Browser.
+When I first came accross this project it honestly blew my mind that a browser could be a tool for creation in and of itself outside of consuming software made by third parties.
+In June 2018 I did my first presentation about the Peer to Peer Web at a local meetup in my hometown of Ottawa, Canada.
+
+---
+
+class: agbg
+
+### May 2019
+
+![Screenshot of Mauve presenting at DTN 2019](./dtnscreen.png)
+
+???
+
+As much as I loved Beaker, I kept seeing people not wanting to install another web browser and asking about reusing the tech in regular browsers.
+This led me to look at how we can get peer to peer web APIs into browsers through gateways and websocket proxies combined with browser to browser WebRTC connections.
+In May 2019 I did my first international presentation here in berlin about what I then called Dat Web.
+The idea was that with a single JavaScript dependency you could polyfill some of the functionality of Beaker in your web app over any modern web browser.
+Sadly I hit limitations of the web shortly after. Without native protocol handlers we couldn't use peer to peer URLs everywhere, and the polyfilled DatArchive API was able to create archives but it couldn't share them accross origins due to how they were isolated by browsers.
+
+---
+
+class: agbg
+
+### March 2020
+
+![Animation of browsing through the natakanu app](./natakanu-demo.gif)
+
+???
+
+In March 2020 I started working for Wapikoni Mobile on an app called Natakanu.
+The idea was that they'd be travelling around to indigenous communities in Canada showing and making media and when they'd be outside of network coverage all of their internet based tools would stop working.
+So we started working on a simple peer to peer file transfer app that would automatically find local devices and enable sharing datasets in collaborative folders.
+As part of this I learned how easy it was to add custom protocol handlers to Electron and to use them to serve files, I even managed to reuse some code from my web polyfilling project to get HTTP methods and headers.
+This sparked my curiosity to try making a browser.
+
+---
+
+
+### June 2020
+
+![Screenshot of DWeb Browser. Links to Mauve's blog and the Dat Foundation blog](./dwebbrowserscreen.png)
+
+???
+
+A few months later in june I did the first prerelease of my new project the "Dweb Browser"
+A couple days later I renamed it to Agregore after brainstorming with my friends for something a bit more unique.
+A few days after that I got my first contribution to the project thanks to Metanomial from that Dat community that added context menus.
+Right from the get go I wanted the project to be out in the open with room for folks to contribute small improvements without needing to get lost in build systems or put behind a CLA.
+
+---
+
+class: agbg
+
+### July 2020
+
+![JavaScript code snippet, using the fetch API to PUT the text "Hello World" to an IPFS URL](./putscreen.png)
+
+???
+
+In July I released a version with what I think is my foundational concept for how to treat protocol handlers.
+Instead of treating peer to peer URLs as something you can only GET from, I added the ability to use other verbs like PUT to write data back into them.
+This gave me a separate track from Beaker's custom JS APIs where any context that could interact with URLs to GET data can now write back with streaming `fetch` calls.
+Adding new protocols also seemed more obvious, instead of emulating the specific SDKs I could abstract everything behind the HTTP metaphore.
+
+---
+
+class: agbg
+
+### August 2020
+
+![Screenshot of gemtext markup language documentation](./geminiscreen.png)
+
+???
+
+The next month brought a new protocol, gemini which is kind of like a simplified web.
+It's not exactly peer to peer but the protocol and markup language was drastically more straightforward than anything I'd seen before and it felt like a perfect addition.
+At the same time I finally added a built in ad blocking extension.
+This was the first example of customizing agregore with extension APIs which I still believe is essential for giving more control to users.
+It also improved the security and usability of the browser since advertisements are often vectors for malware and in general ruin the web experience for everyone.
+
+---
+
+class: ipfsbg
+
+### October 2020
+
+![IPFS logo with the tagline "A Universe of Uses"](./ipfsscreen.png)
+
+???
+
+In October I landed support for the second peer to peer protocol: IPFS.
+Protocol Labs has been a huge help in progressing the dweb movement and it was an obvious next choice.
+Beaker had actually supported IPFS in the past but had removed it to get tighter integration with Dat.
+
+---
+
+class: ipfsbg
+
+### April 2021
+
+![BitTorrent logo](./bittorrent.png)
+
+???
+
+A while later I added support for BitTorrent.
+This is probably the most succesfull protocol in use right now.
+People all over the world are using it to share large files like Linux ISOs and creative commons licensed Big Buck Bunny renders.
+With this addition all torrents now became websites that you can open and browse like any other site.
+It also meant that people could publish sites using existing torrent infrastructure.
+
+---
+
+### April 2021
+
+![QR Code for the Agregore browser](./agregoreqr.png)
+
+???
+
+So, if you want decentralized identifiers you need to either make them secure or human meaningful.
+In my opinion security is non negotiable so you basically have to either use a hash or a public key to identify data.
+This absolutely sucks for trying to share a link when you're standing next to each other.
+To make it easier I added a QR code generating extension which can share the current page or scan a code from your camera to open a page.
+I use it to this day when I do demos on local networks.
+
+---
+
+class: agbg
+
+### May 2022
+
+![Screenshot of Agregore Mobile with IPNS page](./agmobile.png)
+
+???
+
+Thanks to a grant from the Filecoin Foundation we got to create what I think is the first mobile web browser with native peer to peer protocol support with a local node.
+This was an important milestone because most casual users of technology these days are using some sort of mobile OS so supporting Android opened the door for a lot more people to try it out.
+Sadly due to time and buget constraints we were only able to add IPFS and it's been a lot harder to iterate on compared to Electron.
+Regardless this was a great accomplishment and I daily drive it to this day on all my Android devices.
+
+---
+
+class: agbg
+
+### January 2023
+
+![Screenshot of tutorials section from the Agregore docs](./tutorials.png)
+
+???
+
+Besides the browser itself, I really loved the documentation that Beaker Browser had.
+In 2023 thanks to another grant from the Filecoin Foundation we got to catch up a bit with a series of example applications and tutorials and some added documentation.
+This meant that people just learning about Agregore could now experiment with drag and drop uploads and learn how to code their own app.
+
+---
+
+class: ipfsbg
+
+### April 2023
+
+![Distributed Press Logo](./logo-distributedpress.svg)
+
+???
+
+In April of that year thanks to a grant from FFDW we released a new version of Distributed Press, a tool for publishing static websites to different peer to peer protocols.
+Agregore was nice for tinkering with apps and loading content, but it wasn't obvious how website authors could add peer to peer publishing to their sites.
+With DP it was now easier than ever. Outside of the main DP instance run by Hypha I started my own to publish Agregore related sites and to dogfood the tool.
+
+---
+
+class: agbg
+
+### September 2024
+
+![Screenshot of llm.completion API in Agregore](./llmapi.png)
+
+???
+
+AI and large language models have been exploding in popularity the past few years and in September 2024 I started experimenting with local models to see if they could be useful to develop apps.
+Depending on search engines and large documentation sets can be hard to get at when fully offline.
+These days you can get models in just a few billion parameters to spit out runnable code without needing to boil the ocean.
+A couple months later I did my first AI presentation showing my App Generator which would take a prompt and generate a single page appliction which would then be published to a peer to peer website.
+Longer term I'm hoping to teach the generator how to use Agregore's fetch APIs so we can generate peer to peer web apps.
+
+---
+
+class: agbg
+
+### May 2025
+
+![DWeb Scratchpad app with its default contents](./scratchpad.png)
+
+???
+
+Most recently I've been spending time on the editing tools.
+I've released a new editor that's loosely based on the features of JSFiddle and CodePen.
+The idea is you can take any page that's just some inline styles, HTML, and a JS Script tag, and decompose it into these three text boxes with a preview.
+This tool also works seamlessly on Agregore mobile too.
+In fact I recently opened the tool within itself in order to edit it to better fit my screen, and now I have a customized version published entirely from my phone.
+The idea is that apps that follow this convention become more hackable and remixable, and if somebody has an idea for an improvement they can quickly tinker with it offline without needing to download and install complex developer tools.
+
+---
+
+class: agbg
+
+[ASoTNetworks](https://github.com/ASoTNetworks) [AnaFukelman](https://github.com/AnaFukelman) [Arskan17](https://github.com/Arskan17) [DeltaF1](https://github.com/DeltaF1) [KyGost](https://github.com/KyGost) [Madrets](https://github.com/Madrets) [Vexon2000](https://github.com/Vexon2000) [akhileshthite](https://github.com/akhileshthite) [almereyda](https://github.com/almereyda) [autonome](https://github.com/autonome) [av8ta](https://github.com/av8ta) [benhylau](https://github.com/benhylau) [brechtcs](https://github.com/brechtcs) [canadaduane](https://github.com/canadaduane) [capriceesmas](https://github.com/capriceesmas) [cerrussell](https://github.com/cerrussell) [cinnamon-bun](https://github.com/cinnamon-bun) [dirkcuys](https://github.com/dirkcuys) [ducksandgoats](https://github.com/ducksandgoats) [fauno](https://github.com/fauno) [gardenappl](https://github.com/gardenappl) [jackyzha0](https://github.com/jackyzha0) [jolindroth](https://github.com/jolindroth) [josephmolina256](https://github.com/josephmolina256) [lidel](https://github.com/lidel) [maisutton](https://github.com/maisutton) [makew0rld](https://github.com/makew0rld) [metanomial](https://github.com/metanomial) [reggi](https://github.com/reggi) [resession](https://github.com/resession) [rex4539](https://github.com/rex4539) [sudocurse](https://github.com/sudocurse) [techie177](https://github.com/techie177) [todrobbins](https://github.com/todrobbins) [tripledoublev](https://github.com/tripledoublev) [unmellow](https://github.com/unmellow) [writerly03](https://github.com/writerly03)
+
+???
+
+I also wanted to give a quick shoutout to all these folks that helped contribute to the project.
+Y'all are amazing people.
+
+---
+
+class: agbg
+
+Future:
+
+- `hyper://` on Mobile
+- Better AI appgen
+- P2P extension collections
+
+???
+
+So! That's the journey so far. Right now the big thing I'm working on is a new release of Agregore Mobile with a newer chrome version and a new protocol handler based on the pears ecosystem.
+I'm also tinkering with the app generator with the goal of making it reliable enough to run with a local model on a phone and to conform with the format that the scratchpad can work with
+Finally I'm collaborating with my colleague Aklishesh who works on the peersky browser to have an interoperable standard for us to publish browser extensions over peer to peer protocols.
+
+---
+
+class: agbg
+
+# Off-Grid Software Kits
+
+???
+
+At the end of all this I hope we can have off grid software kits that let us not only consume but also create information without needing to deal with the constraints of centralized tech.
+
+---
+
+class: purplebg
+
+## 🔥 🙇‍ Thank you! 🙇‍ 🔥
+
+- agregore.mauve.moe
+- @RangerMauve - GitHub
+- @mauve@mastodon.mauve.moe
+- @mauve.moe - Bluesky
+- @mauve:mauve.moe - Matrix
+- https://ranger.mauve.moe
+
+    </textarea>
+    <script src="./remark-latest.min.js"></script>
+    <script>
+    window.onload = function(){
+      var slideshow = remark.create();
+    };
+    </script>
+  </body>
+</html>

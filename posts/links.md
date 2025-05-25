@@ -1,8 +1,17 @@
 # Cool Links to Neat Stuff
 
+## 2025/05/23
+
+- [the copilot delusion](https://deplet.ing/the-copilot-delusion/). some more ramblings about the risk of depending on LLM code generation
+
+## 2025/05/21
+
+- [gtoolkit - browse code with grsphs](https://gtoolkit.com/). I've idly considered making a code editor that treats code as a traverseable graph. This seems to go one step further and link between text and graph views with multiple tabs. It's customized with smalltalk which I've been wanting to learn. Overall seems like it'd useful for inspo if not to actually use.
+
 ## 2025/05/19
 
 - [Scrappy app maker](https://pontus.granstrom.me/scrappy/). They made a tool for drag and drop UIs for "small apps". It'd be cool to do something similar with Agregore.
+- [benui - why I refuse AI](https://benui.ca/why-i-refuse-ai/). Good summary of some of the issues with relying on LLMs for coding. I feel some of the same convictions.
 
 ## 2025/05/14
 
