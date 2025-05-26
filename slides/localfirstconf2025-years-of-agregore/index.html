@@ -129,16 +129,16 @@ class: agbg
 
 - Cloud Hosting Bills
 - Always-online
-- Build Systems, Frontend/Backend
+- Backend/Frontend
 - App Stores Gatekeeping
 
 ???
 
-I've been working on software since the 2010s and over time I noticed that the way we make software leads to some inevitable friction to actually getting into people's hands.
-I think one of the first issues is that making something today means committing to paying for infrastructure indefinitely, else your users data and any community you facilitate gets destroyed regardless of its utility.
-It also leads to systems that need to be always online and connected and lead to any sort of downtime or user connectivity issues catastrophic.
-Making software is also complex with separation between backend developers needing to make these massive systems scaleable and front end developers needing to bridge the gap with user interfaces accross different platforms.
-If you want people to actually use your tech you generally need to deal with registering a business and deployment system with every app store you want to be available on which is a huge time sink on top of everything else.
+I've noticed some common points of friction for getting software into users hands.
+First of all making something today means committing to paying for infrastructure indefinitely, else your users data and connections get destroyed.
+Systems and users need to be always online, with any downtime or connectivity issues being catastrophic.
+Making software is complex with separation between backend developers making massive systems scaleable and front end developers making user interfaces accross different platforms.
+For people to actually use your tech you need to register a business and use a different deployment system with every app store you want to be available on.
 
 ---
 
@@ -154,10 +154,10 @@ class: agbg
 ???
 
 These factors work together to keep software expensive and complex to create,
-To force creators to focus on profit over usability and utility,
-And generally filter what may exist and for how long.
-The centralized nature of these systems also means that any data your users have becomes your liability.
-As a creator you need to respond to censorship from corporate copyright takedowns, to laws regulating how to treat data, and the more successful you become the more of a target you become for hacking and spammers looking to profit from abusing your users trust.
+It forces creators to focus on profit over usability and utility,
+It determines what may exist and for how long.
+As well, any data your users have becomes your liability.
+As an operator you're required to facilitate censorship, copyright takedowns, and to follow laws regulating how to treat data in any country you wish to operate within. The more successful you become the more of a target you become for hacking and exploitation.
 
 ---
 
@@ -171,7 +171,7 @@ class: agbg
 
 ???
 
-I think the state of thing sucks and I have a dream of changing the default dynamics to a point where getting started means you don't need to deal with any infrastructure costs, not need to deal with build systems if you don't want to and can easily self publish and distribute your software without having to jump through a bunch of hoops.
+I think the state of things sucks and I have a dream of changing it so that creating something means you don't need to deal with any infrastructure costs, no build systems if you don't want them, and can self publish and distribute your software without having to jump through a bunch of hoops.
 
 ---
 
@@ -181,9 +181,7 @@ class: agbg
 
 ???
 
-This is the dream that's been guiding my work on Agregore the past five years
-and I wanted to go over a timeline of how this dream has shaped
-the decisions I made for shaping the browser over time.
+This is the dream that's been guiding my work on Agregore the past five years and I wanted to go over a timeline of how this dream has shaped the project over this time.
 
 ---
 
@@ -196,9 +194,9 @@ class: beakerbg
 
 ???
 
-This dream was sparked way before I started working on peer to peer software with the work of Paul Frazee and Tara Vancil on the Beaker Browser.
-When I first came accross this project it honestly blew my mind that a browser could be a tool for creation in and of itself outside of consuming software made by third parties.
-In June 2018 I did my first presentation about the Peer to Peer Web at a local meetup in my hometown of Ottawa, Canada.
+This dream was sparked way before I started working on peer to peer software thanks to the work of Paul Frazee and Tara Vancil on the Beaker Browser.
+When I came accross this project it blew my mind that a browser could be a tool for creation in and of itself without needing to depend on cloud infrastructure.
+So in June of 2018 I did my first presentation about the Peer to Peer Web at a local meetup in my hometown of Ottawa, Canada.
 
 ---
 
@@ -210,11 +208,11 @@ class: agbg
 
 ???
 
-As much as I loved Beaker, I kept seeing people not wanting to install another web browser and asking about reusing the tech in regular browsers.
-This led me to look at how we can get peer to peer web APIs into browsers through gateways and websocket proxies combined with browser to browser WebRTC connections.
-In May 2019 I did my first international presentation here in berlin about what I then called Dat Web.
-The idea was that with a single JavaScript dependency you could polyfill some of the functionality of Beaker in your web app over any modern web browser.
-Sadly I hit limitations of the web shortly after. Without native protocol handlers we couldn't use peer to peer URLs everywhere, and the polyfilled DatArchive API was able to create archives but it couldn't share them accross origins due to how they were isolated by browsers.
+Sadly people didn't seem to want to install another browser and expected this stuff to work in regular chrome or firefox.
+This led me to look at how we could get peer to peer web APIs into browsers through gateways and websocket proxies combined with browser to browser WebRTC connections.
+In May 2019 I did my first international presentation here in Berlin about what I then called Dat Web.
+The idea was that with a single JavaScript dependency you could polyfill some of the functionality of Beaker in your web app in a regular browser.
+Sadly I hit limitations due to the way the web worked. Without native protocol handlers we couldn't use peer to peer URLs everywhere, and although Beaker's polyfilled DatArchive API was able to create archives, it couldn't share them accross origins or find peers without the internet.
 
 ---
 
@@ -227,10 +225,10 @@ class: agbg
 ???
 
 In March 2020 I started working for Wapikoni Mobile on an app called Natakanu.
-The idea was that they'd be travelling around to indigenous communities in Canada showing and making media and when they'd be outside of network coverage all of their internet based tools would stop working.
-So we started working on a simple peer to peer file transfer app that would automatically find local devices and enable sharing datasets in collaborative folders.
-As part of this I learned how easy it was to add custom protocol handlers to Electron and to use them to serve files, I even managed to reuse some code from my web polyfilling project to get HTTP methods and headers.
-This sparked my curiosity to try making a browser.
+They'd be travelling around to indigenous communities in Canada showcasing and making media and wanted a tool to share files when the internet was inaccessible.
+So we built a peer to peer file transfer app that would automatically find devices on the local network or over the internet.
+As part of this I learned how easy it was to add custom protocol handlers to Electron and to use them to serve files, I even managed to reuse some code from my web polyfilling project to get HTTP methods and headers wired up.
+This sparked my curiosity to try making a browser of my own.
 
 ---
 
@@ -241,8 +239,8 @@ This sparked my curiosity to try making a browser.
 
 ???
 
-A few months later in june I did the first prerelease of my new project the "Dweb Browser"
-A couple days later I renamed it to Agregore after brainstorming with my friends for something a bit more unique.
+A few months later I did the first release of the "Dweb Browser".
+And a couple days later I renamed it to Agregore after brainstorming with my friends for something a bit more unique.
 A few days after that I got my first contribution to the project thanks to Metanomial from that Dat community that added context menus.
 Right from the get go I wanted the project to be out in the open with room for folks to contribute small improvements without needing to get lost in build systems or put behind a CLA.
 
@@ -256,10 +254,10 @@ class: agbg
 
 ???
 
-In July I released a version with what I think is my foundational concept for how to treat protocol handlers.
+In July I released a version with my foundational concept for how to treat protocol handlers on the web.
 Instead of treating peer to peer URLs as something you can only GET from, I added the ability to use other verbs like PUT to write data back into them.
-This gave me a separate track from Beaker's custom JS APIs where any context that could interact with URLs to GET data can now write back with streaming `fetch` calls.
-Adding new protocols also seemed more obvious, instead of emulating the specific SDKs I could abstract everything behind the HTTP metaphore.
+Instead of needing custom JavaScript APIs injected into every context, code could use the standard `fetch` API for making requests.
+Adding new protocols was now more obvious, instead of emulating specific SDKs I could abstract everything behind the HTTP metaphore.
 
 ---
 
@@ -272,10 +270,9 @@ class: agbg
 ???
 
 The next month brought a new protocol, gemini which is kind of like a simplified web.
-It's not exactly peer to peer but the protocol and markup language was drastically more straightforward than anything I'd seen before and it felt like a perfect addition.
-At the same time I finally added a built in ad blocking extension.
-This was the first example of customizing agregore with extension APIs which I still believe is essential for giving more control to users.
-It also improved the security and usability of the browser since advertisements are often vectors for malware and in general ruin the web experience for everyone.
+It uses TLS connections with minimal request formatting and a minimal markup language for page content.
+It's not exactly peer to peer but the protocol and markup language was felt like a perfect addition.
+I also added an ad blocker extension to show that the browser could be extended outside of electron builds and to make the web a more pleasant place to browse.
 
 ---
 
@@ -290,6 +287,7 @@ class: ipfsbg
 In October I landed support for the second peer to peer protocol: IPFS.
 Protocol Labs has been a huge help in progressing the dweb movement and it was an obvious next choice.
 Beaker had actually supported IPFS in the past but had removed it to get tighter integration with Dat.
+The HTTP metaphor carried over between both protocols and meant we could resolve content that was already available from the IPFS ecosystem.
 
 ---
 
@@ -302,10 +300,10 @@ class: ipfsbg
 ???
 
 A while later I added support for BitTorrent.
-This is probably the most succesfull protocol in use right now.
+I'd say it's the most succesfull peer to peer protocol in use right now.
 People all over the world are using it to share large files like Linux ISOs and creative commons licensed Big Buck Bunny renders.
-With this addition all torrents now became websites that you can open and browse like any other site.
-It also meant that people could publish sites using existing torrent infrastructure.
+With this addition all torrents now became websites that you can open and browse.
+It also meant that people could publish peer to peer sites using existing torrent infrastructure.
 
 ---
 
@@ -317,9 +315,9 @@ It also meant that people could publish sites using existing torrent infrastruct
 
 So, if you want decentralized identifiers you need to either make them secure or human meaningful.
 In my opinion security is non negotiable so you basically have to either use a hash or a public key to identify data.
-This absolutely sucks for trying to share a link when you're standing next to each other.
-To make it easier I added a QR code generating extension which can share the current page or scan a code from your camera to open a page.
-I use it to this day when I do demos on local networks.
+This absolutely sucks for trying to share a link when you're standing right next to each other since hostnames can be 64 characters long.
+To make it easier I added a QR code generating extension which can share the current page or scan a code to open a page.
+I use it to this day when I do demos on local networks so people can quickly load each others creations.
 
 ---
 
@@ -331,9 +329,9 @@ class: agbg
 
 ???
 
-Thanks to a grant from the Filecoin Foundation we got to create what I think is the first mobile web browser with native peer to peer protocol support with a local node.
+In May 2022 thanks to a grant from the Filecoin Foundation we got to create what to my knowledge is the first mobile web browser with native peer to peer protocol support with a local node.
 This was an important milestone because most casual users of technology these days are using some sort of mobile OS so supporting Android opened the door for a lot more people to try it out.
-Sadly due to time and buget constraints we were only able to add IPFS and it's been a lot harder to iterate on compared to Electron.
+Sadly due to time and buget constraints we were only able to add IPFS and it's been a lot harder to iterate on compared to the Electron version.
 Regardless this was a great accomplishment and I daily drive it to this day on all my Android devices.
 
 ---
@@ -347,8 +345,8 @@ class: agbg
 ???
 
 Besides the browser itself, I really loved the documentation that Beaker Browser had.
-In 2023 thanks to another grant from the Filecoin Foundation we got to catch up a bit with a series of example applications and tutorials and some added documentation.
-This meant that people just learning about Agregore could now experiment with drag and drop uploads and learn how to code their own app.
+In 2023 thanks to another grant from the Filecoin Foundation we got to catch up a bit with a series of example applications and tutorials for making them.
+Now newcomers to Agregore can experiment with drag and drop uploads and learn how to code their own apps.
 
 ---
 
@@ -362,7 +360,9 @@ class: ipfsbg
 
 In April of that year thanks to a grant from FFDW we released a new version of Distributed Press, a tool for publishing static websites to different peer to peer protocols.
 Agregore was nice for tinkering with apps and loading content, but it wasn't obvious how website authors could add peer to peer publishing to their sites.
-With DP it was now easier than ever. Outside of the main DP instance run by Hypha I started my own to publish Agregore related sites and to dogfood the tool.
+Distributed Press makes it easy thanks to it's Github actions and CLI utilities.
+It acts as the publishing side to Agregore's reader side.
+Outside of the main instance run by Hypha I started my own to publish Agregore related sites and to dogfood the tool.
 
 ---
 
@@ -374,11 +374,12 @@ class: agbg
 
 ???
 
-AI and large language models have been exploding in popularity the past few years and in September 2024 I started experimenting with local models to see if they could be useful to develop apps.
-Depending on search engines and large documentation sets can be hard to get at when fully offline.
-These days you can get models in just a few billion parameters to spit out runnable code without needing to boil the ocean.
+AI and large language models have been exploding in popularity the past few years and in September 2024 I started experimenting with local models to see if they could be useful to develop apps offline.
+Depending on search engines and documentation sites can be hard to get at when fully offline.
+These days you can get 7B models to spit out runnable code without needing to boil the ocean or own a powerful GPU rig.
+I exposed a new API for web apps to use language model inference while keeping model control in the hands of the users.
 A couple months later I did my first AI presentation showing my App Generator which would take a prompt and generate a single page appliction which would then be published to a peer to peer website.
-Longer term I'm hoping to teach the generator how to use Agregore's fetch APIs so we can generate peer to peer web apps.
+Longer term I'm hoping to teach the generator how to use Agregore's fetch APIs so we can generate peer to peer web apps too.
 
 ---
 
@@ -390,12 +391,13 @@ class: agbg
 
 ???
 
-Most recently I've been spending time on the editing tools.
-I've released a new editor that's loosely based on the features of JSFiddle and CodePen.
-The idea is you can take any page that's just some inline styles, HTML, and a JS Script tag, and decompose it into these three text boxes with a preview.
-This tool also works seamlessly on Agregore mobile too.
-In fact I recently opened the tool within itself in order to edit it to better fit my screen, and now I have a customized version published entirely from my phone.
-The idea is that apps that follow this convention become more hackable and remixable, and if somebody has an idea for an improvement they can quickly tinker with it offline without needing to download and install complex developer tools.
+Most recently I've been spending time on authoring tools.
+I've released a new editor that's loosely based on JSFiddle and CodePen.
+IT takes some HTML, CSS, and JavaScript and composes it into a single file to be published to peer to peer websites.
+It can also take a published site and decomposes it to let you edit and republish them.
+What's cools is this tool works seamlessly on mobile too.
+In fact I recently edited the tool within itself in to better fit my phone screen, and now I have a customized version published entirely from my phone.
+Apps that follow this convention become more hackable and remixable. If somebody has an idea for an improvement they can quickly tinker with it offline without needing to download and install complex developer tools.
 
 ---
 
@@ -405,14 +407,14 @@ class: agbg
 
 ???
 
-I also wanted to give a quick shoutout to all these folks that helped contribute to the project.
+I also wanted to give a quick shoutout to all these folks that helped contribute to the project on GitHub
 Y'all are amazing people.
 
 ---
 
 class: agbg
 
-Future:
+### Future:
 
 - `hyper://` on Mobile
 - Better AI appgen
@@ -420,9 +422,9 @@ Future:
 
 ???
 
-So! That's the journey so far. Right now the big thing I'm working on is a new release of Agregore Mobile with a newer chrome version and a new protocol handler based on the pears ecosystem.
-I'm also tinkering with the app generator with the goal of making it reliable enough to run with a local model on a phone and to conform with the format that the scratchpad can work with
-Finally I'm collaborating with my colleague Aklishesh who works on the peersky browser to have an interoperable standard for us to publish browser extensions over peer to peer protocols.
+So! That's the journey so far. The big thing I'm working on now is a new release of Agregore Mobile with a new protocol handler based on the pears ecosystem.
+I'm also tinkering with the app generator with the goal of making it reliable enough to run with a local model on a phone and to conform with the format that the scratchpad can work with.
+I'm also collaborating with my colleague Aklishesh who works on the peersky browser to have an interoperable standard for us to publish browser extensions over peer to peer protocols.
 
 ---
 
@@ -432,7 +434,7 @@ class: agbg
 
 ???
 
-At the end of all this I hope we can have off grid software kits that let us not only consume but also create information without needing to deal with the constraints of centralized tech.
+At the end of all this I hope we can skip expensive cloud first software and instead have off grid software kits that let us not only consume but also create information technology without needing to deal with the constraints of centralized tech.
 
 ---
 
