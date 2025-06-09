@@ -1,5 +1,13 @@
 # Cool Links to Neat Stuff
 
+## 2025/06/09
+
+- [cursed knowledge](https://immich.app/cursed-knowledge/). Fun collection of how tech can behave weirdly. Could be useful to avoid issues in the future!
+
+## 2025/06/02
+
+- [easytier p2p VPN](https://easytier.cn/en/). Been wanting an easy way to route betweeb my devices. This could be it! Gotta read the source first to see how it works.
+
 ## 2025/05/23
 
 - [the copilot delusion](https://deplet.ing/the-copilot-delusion/). some more ramblings about the risk of depending on LLM code generation
