@@ -1,5 +1,18 @@
 # Cool Links to Neat Stuff
 
+## 2025/06/18
+
+- [End-to-end encryption using WebCrypto APIs and Diffie-Hellman Key Exchange](https://www.keithbartholomew.com/blog/posts/2024-01-22-webcrypto-diffie-hellman/). Excellent post about how to use the web crypto API to do public key cryptography stuff.
+
+## 2025/06/12
+
+- [SQISign](https://sqisign.org/) a post-quantum cryptographic signing scheme.
+- [App-pocalypse now](https://blog.codinghorror.com/app-pocalypse-now/), a rant about how apps suck pretty much.
+
+## 2025/06/11
+
+- [Datomic pro](https://jepsen.io/analyses/datomic-pro-1.0.7075). Great overview of the Datomic graph database. I'm a huge fan of their approach and this is a pretty comprehensive overview.
+
 ## 2025/06/09
 
 - [cursed knowledge](https://immich.app/cursed-knowledge/). Fun collection of how tech can behave weirdly. Could be useful to avoid issues in the future!
