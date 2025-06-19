@@ -1,0 +1,33 @@
+digraph {
+  label="ActivityPub Protocol"
+  labelloc=t
+  rankdir=LR
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+  client[label="Publisher"];
+  client2[label="Follower"];
+  instance[label="Instance Outbox"];
+  instance2[label="Instance Inbox"];
+
+  client -> instance[label="Send Note"];
+  instance -> instance2[label="Publish Activity"];
+  instance2 -> client2[label="Read Inbox"];
+
+  {rank = same; instance; instance2;}
+}

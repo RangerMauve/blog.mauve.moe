@@ -1,0 +1,33 @@
+digraph {
+  rankdir=TD
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  sep="1.5"
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+  c[label="☁️🖥️☁️"]
+
+  n1[label="👁️👄👁️"]
+  n2[label="👁️👄👁️"]
+  n3[label="👁️👄👁️"]
+  n4[label="👁️👄👁️"]
+
+  n1 -> c
+  n2 -> c
+  n3 -> c
+  n4 -> c
+}

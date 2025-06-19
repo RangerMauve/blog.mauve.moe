@@ -1,0 +1,44 @@
+digraph {
+  label="Decentralized"
+  labelloc=t
+  rankdir=TD
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+  c1[label="☁️🖥️ ☁️ "]
+  c2[label="☁️🖥️ ☁️ "]
+  c3[label="☁️🖥️ ☁️ "]
+
+  n1[label="👁️👄 👁️ "]
+  n2[label="👁️👄 👁️ "]
+  n3[label="👁️👄 👁️ "]
+  n4[label="👁️👄 👁️ "]
+
+  n1 -> c1
+  n2 -> c2
+  n2 -> c3
+  n3 -> c3
+  n4 -> c3
+  n4 -> c2
+
+  n1 -> n2
+
+  c1 -> c2
+  c3 -> c2
+  c1 -> c3
+}

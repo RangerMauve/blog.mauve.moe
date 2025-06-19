@@ -1,0 +1,32 @@
+digraph {
+  label="Nostr Protocol"
+  labelloc=t
+  rankdir=LR
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+
+  client[label="Publisher"];
+  client2[label="Follower"];
+  relay1[label="Relay 1"];
+  relay2[label="Relay 2"];
+
+  client -> relay1;
+  client -> relay2[label="Send Event"];
+  relay2 -> client2[label="Fetch Event"];
+}

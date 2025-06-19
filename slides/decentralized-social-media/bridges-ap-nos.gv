@@ -1,0 +1,28 @@
+digraph {
+  label="Mostr.pub 🌉"
+  labelloc=t
+  rankdir=LR
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+  AP[label="ActivityPub"]
+  NOS[label="Nostr"]
+
+  AP -> NOS[label="🤝"];
+  NOS -> AP;
+}

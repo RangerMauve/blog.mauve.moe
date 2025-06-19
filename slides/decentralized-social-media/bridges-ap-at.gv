@@ -1,0 +1,28 @@
+digraph {
+  label="Brid.gy 🌉"
+  labelloc=t
+  rankdir=LR
+  bgcolor="#11111"
+  fontname="system-ui"
+  fontcolor="#F2F2F2"
+  pad=0.5
+  node [
+    shape=rect
+    style="filled,rounded"
+    fillcolor="#6e2de5"
+    fontcolor="#F2F2F2"
+    fontname="System-UI"
+    width=2
+  ]
+  edge [
+    color="#2de56e"
+    fontcolor="#6e2de5"
+    fontname="System-UI"
+  ]
+
+  AT[label="AT Protocol"]
+  AP[label="ActivityPub"]
+
+  AT -> AP[label="🤝"];
+  AP -> AT;
+}
