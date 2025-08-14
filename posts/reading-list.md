@@ -1107,6 +1107,12 @@ Here's a bunch of books that I haven't read yet, but are on my TODO list.
 
 ---
 
+## Thought as a System - David Bohm
+[link](https://openlibrary.org/books/OL1434797M/Thought_as_a_system)
+Status: **TODO*
+
+Book about cognition, recommended by cyborg support
+
 ## The Silent Patient - Alex Michaelides
 [Link](https://www.goodreads.com/book/show/40097951-the-silent-patient)
 Status: **TODO**

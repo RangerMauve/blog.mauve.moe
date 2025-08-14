@@ -1,5 +1,58 @@
 # Cool Links to Neat Stuff
 
+## 2025/08/14
+
+- [Stochastic Code Monkey Theorem](https://www.stephendiehl.com/posts/ai_for_coding/), another take on AI focused on code generation. a bit more nuanced than "AI bad forever" but also clear on where there is utility to be had.
+
+## 2025/08/07
+
+- [HTML is dead long live HTML](https://acko.net/blog/html-is-dead-long-live-html/). Another post about everything wrong with HTML/CSS dev and some ideas for remaking the DOM from first principles.
+
+## 2025/08/06
+
+- [Hackerpager](https://www.hackerpager.net/). Kinda like a flipper zero but for LoRa / meshtastic
+
+## 2025/08/04
+
+- [Serializable Transactions in P2P Databases](https://joelgustafson.com/posts/2025-07-21/serializable-transactions-for-peer-to-peer-databases). a novel design for serializable database transactions in multi-writer eventually-consistent environments
+
+## 2025/07/21
+
+- [TCP in UDP](https://blog.mptcp.dev/2025/07/14/TCP-in-UDP.html). Method to bypass censorship by hiding TCP inside UDP streams
+- [parakeet-tdt-0.6b-v2](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2) an LLM based speech recognition model. Apparently comparable in performance to models 4x its size.
+- [Unbounded Browser Extension](https://unbounded.lantern.io/). Uses QUIC to route people's traffic through your browser to help circumvent internet traffic censorship accross the world.
+
+## 2025/07/15
+
+- [Secure Minions](https://ollama.com/blog/secureminions). Neat setup where local models talk to remote models using secure enclaves.
+
+## 2025/07/14
+
+- [Cost of health optimization](https://www.precisionnutrition.com/the-cost-of-health-optimization). Great article about how investing in basic health improvements can have a drastic effect compared to aiming for very expensive "advanced" optimizations.
+
+## 2025/07/10
+
+- [Programming Sucks](https://www.stilldrinking.org/programming-sucks), a fun post about all the pain involved in getting computers to do anything for a living.
+- [smollm3](https://huggingface.co/blog/smollm3), 3b model that's competitive with Qwen3:4b. Cool thing is that it is fully open. Writeup talks about how they improved perf.
+- [Running Ollama on AMD iGPU](https://blog.machinezoo.com/Running_Ollama_on_AMD_iGPU), I've had a lot of issues with this on my GPD WIN 4 so I'll see if this guide can help with that.
+
+## 2025/07/09
+
+- [Mu Language Model](https://blogs.windows.com/windowsexperience/2025/06/23/introducing-mu-language-model-and-how-it-enabled-the-agent-in-windows-settings/). Great writeup about how M$ optimized a tiny 500M model to run on their hardware accelerated computers with support for function calling.
+
+## 2025/07/05
+
+- [Memory blocks](https://www.letta.com/blog/memory-blocks). Good article for strategies around LLM memory creation and retrieval. One neat idea was to give it a rewritable prompt.
+- [Project Discovery - Nuclei](https://docs.projectdiscovery.io/tools/nuclei/mass-scanning-cli). Framework for detecting vulnerabilities.
+
+## 2025/06/24
+
+- [Reinforcement Learning Teachers of Test Time Scaling](https://sakana.ai/rlt/). A new approach for training "teacher models" that distill knowledge down to smaller "student models" which results in smart small models.
+
+## 2025/06/19
+
+- [Homomorphically encrypted CRDTs](https://jakelazaroff.com/words/homomorphically-encrypted-crdts/). Great writeup about practical uses of homomorphic encryption in Rust.
+
 ## 2025/06/18
 
 - [End-to-end encryption using WebCrypto APIs and Diffie-Hellman Key Exchange](https://www.keithbartholomew.com/blog/posts/2024-01-22-webcrypto-diffie-hellman/). Excellent post about how to use the web crypto API to do public key cryptography stuff.
