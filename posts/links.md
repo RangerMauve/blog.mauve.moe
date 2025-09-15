@@ -1,5 +1,13 @@
 # Cool Links to Neat Stuff
 
+## 2025/09/15
+
+- [Vapeserver](https://bogdanthegeek.github.io/blog/projects/vapeserver/), webserver hosted on a disposable vape.
+
+## 2025/09/01
+
+- [Chartwell ligature charts](https://www.vectrotype.com/chartwell). Absolutely amazing use of font ligatures to render charts from basic text!
+
 ## 2025/08/14
 
 - [Stochastic Code Monkey Theorem](https://www.stephendiehl.com/posts/ai_for_coding/), another take on AI focused on code generation. a bit more nuanced than "AI bad forever" but also clear on where there is utility to be had.
