@@ -1,5 +1,15 @@
 # Cool Links to Neat Stuff
 
+## 2025/10/22
+
+- [glassworm malware](https://www.koi.ai/blog/glassworm-first-self-propagating-worm-using-invisible-code-hits-openvsx-marketplace) it uses webrtc, bit torrent DHT, and blockchain smart contracts to distribute commands and payloads which is really neat.
+
+## 2025/10/21
+
+- [Cyberdoof](https://www.cyberdoof.com/guides/how-to-doof), kinda like mozilla hubs but voxel based
+- [Edge AI using the Rockchip NPU](https://tristanpenman.com/blog/posts/2025/07/20/edge-ai-using-the-rockchip-npu/). I've been considering migrating to the Khadas Edge 2 as my portal machine so this is appealing.
+- [Why today's humanoids won't learn dexterity](https://rodneybrooks.com/why-todays-humanoids-wont-learn-dexterity/). Talks about how current training data and robot designs are lacking tactile feedback needed for dexterity.
+
 ## 2025/09/15
 
 - [Vapeserver](https://bogdanthegeek.github.io/blog/projects/vapeserver/), webserver hosted on a disposable vape.
