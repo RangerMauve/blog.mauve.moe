@@ -1,5 +1,47 @@
 # Cool Links to Neat Stuff
 
+## 2026/01/22
+
+- [Loro CRDT](https://halecraft.org/loro-extended-or-why-i-get-excited-about-crdts/) another neat Rust based CRDT library for the web. Seems to have all the bells and whistles.
+
+## 2025/12/29
+
+- [Making long term memories in minutes](https://pmc.ncbi.nlm.nih.gov/articles/PMC3782739/). Article about ways to memorize information more effectively.
+
+## 2025/12/16
+
+- [Guide to Post Quantum Cryptography](https://keymaterial.net/2025/12/13/a-very-unscientific-guide-to-the-security-of-various-pqc-algorithms/). Goes over attacks on existing crypto systems with quantum computers, and what post quantum algos are being worked on to counter this risk.
+
+## 2025/12/09
+
+- [Distributed Clocks and CRDTS](https://adamwulf.me/2021/05/distributed-clocks-and-crdts/). Great overview of the types of logcical clocks you can use to determine orders of events in distributed systems.
+
+## 2025/12/02
+
+- [Explanations, not Algorithms](https://aartaka.me/explanations.html). Neat opinion piece about how programmers should use plain language to explain algorithms to make them easier to pass along and explain.
+
+## 2025/11/25
+
+- [Inducing smells with ultrasound](https://writetobrain.com/olfactory). These folks aimed an ultrasound projector at peoples olfactory bulbs and induced scent perception. They propose to use this as an input to the brain which is neat.
+
+## 2025/11/25
+
+- [Beyond standard LLMs](https://magazine.sebastianraschka.com/p/beyond-standard-llms). Looks at different LLM architectures outside of transformers. Like text diffusion models.
+- [Notion alternative in Rust](https://imedadel.com/outcrop/). Cool writeup about a custom knowledgebase tool they wrote in Rust and the librariest they used.
+
+## 2025/11/06
+
+- [Your URL is your state](https://alfy.blog/2025/10/31/your-url-is-your-state.html). Great overview of how to make good URLs for web applications. Especially relevant for Agregore apps since there's no backend.
+- [Oblivious HTTP](https://en.wikipedia.org/wiki/Oblivious_HTTP). A spec for using proxy servers to make HTTP requests without exposing your IP address to the server.
+
+## 2025/11/05
+
+- [P2P Quic](https://seemann.io/posts/2024-10-26---p2p-quic/). Talks about hole punching in the context of QUIC connections. IMO we need more QUIC based traffic on the net to better hide traffic to look like HTTP3.
+
+## 2025/11/03
+
+- [Volitional control of individual neurons in the human brain](https://pmc.ncbi.nlm.nih.gov/articles/PMC8719845/). I've been into BCIs for a long time and seeing that folks can modulate individual neuron fire rate at will is exciting to me.
+
 ## 2025/10/22
 
 - [glassworm malware](https://www.koi.ai/blog/glassworm-first-self-propagating-worm-using-invisible-code-hits-openvsx-marketplace) it uses webrtc, bit torrent DHT, and blockchain smart contracts to distribute commands and payloads which is really neat.
