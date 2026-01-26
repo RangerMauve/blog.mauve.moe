@@ -2,6 +2,10 @@
 
 ## 2026/01/22
 
+- [Universal Animation Library](https://quaternius.com/packs/universalanimationlibrary2.html), could be cool if I end up making a 3D game in Godot.
+
+## 2026/01/22
+
 - [Loro CRDT](https://halecraft.org/loro-extended-or-why-i-get-excited-about-crdts/) another neat Rust based CRDT library for the web. Seems to have all the bells and whistles.
 
 ## 2025/12/29
