@@ -6,6 +6,10 @@ html, body {
   line-height: 1.618em;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 a {
   color: #2de56e;
   text-decoration: none;
@@ -13,6 +17,10 @@ a {
 
 a:visited {
   color: rgb(165, 24, 201);
+}
+
+img, audio, video, iframe {
+  width: 100%;
 }
 
 code {
