@@ -295,7 +295,7 @@ class: agbg
 Nostr (Notes and Other Stuff Transmitted by Relays) takes a different approach from the other two by prioritizing the client and making servers more simple.
 Clients create cryptographic keypairs which they use to sign individual Events.
 Events can be things like an update to your profile information, or a social media post, or whatever else.
-Nostr keeps a registry of Noster Improvement Proposals which define kinds of events that clients may support.
+Nostr keeps a registry of Nostr Improvement Proposals which define kinds of events that clients may support.
 These events can be sent to any Nostr relay and other clients can then fetch events of specific kinds or made by specific people.
 Any client can use any set of relays so long as they agree on the format of the messages being sent.
 The ecosystem also has a strong focus on cryptocurrency payments using the bitcoin lightning network, aka Zaps, to tip people or pay for services on marketplaces.
@@ -431,7 +431,7 @@ class: agbg
 
 Ownership of data is also an important consideration.
 In Activitypub your identity is tied to a particular actor URL on a specific server.
-You can migrate your idtentity and keep your followers but it still ends up being a new identity.
+You can migrate your identity and keep your followers but it still ends up being a new identity.
 AT is similar in that your PDS owns your identity due to having control over your cryptographic keys.
 You can migrate to a new PDS and efficiently copy all your data, but this will lead to a new keypair being created.
 In both these cases if you have a custom DNS domain for your account it doesn't matter as much if you change where the underlying data lives so long as your followers see the update.
@@ -457,7 +457,7 @@ Most instances use some sort of block list to avoid totally unmoderated servers 
 On top of that there's hashtags used to help admins learn about the current "meta" of who is more or less strict.
 In AT protocol your appview shows you just the content it indexes.
 Past that, blocklists are a first class feature that users can follow and share with each other.
-Moderation in Nostr seems to mostly be focused on removing spammers from relays or illegal content.
+Moderation in Nostr seems to mostly be focused on removing illegal content or spammers from relays.
 The comunity in general is focused on maximizing freedom of speech so you're less likely to see hate speech taken down and would need to deal with it at the client level.
 Lastly I wanted to mention roost.tools which is a platform for off the shelf AI powered moderation that folks can integrate into their servers without needing to invest in full time staff.
 AI moderation can be problematic with false positives especially for stuff like LGBTQ specific language, but it can be better than having absolutely nothing and good enough if your requirements align with the model.
@@ -539,7 +539,7 @@ So! That was a lot to cover.
 Hopefully you now have a feeling for what decentralized social media is, and how the protocols behind it work.
 I think the first thing you could do is join one of these networks and try them out.
 Given we're tech people in Ottawa I'd suggest checking out ottawa.place and chatting more about it using the Ottawa hashtag.
-And next time you plan to build a new app that uses social featurs, I hope you can consider building on an open foundation so that instead of silos locking others out we can have more communities building each other up.
+And next time you plan to build a new app that uses social features, I hope you can consider building on an open foundation so that instead of silos locking others out we can have more communities building each other up.
 
 ---
 
