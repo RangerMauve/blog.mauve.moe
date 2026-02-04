@@ -25,7 +25,7 @@ Most social media platforms you use are owned by a single company. This company 
 - User choice
 - It's like email
 
-Decentralized social media works by getting rid of the single owner and spreading the ownership accross a network. These platforms implement open protocols for servers to use to talk to each other between different implementations. So long as each server has enough overlap, they can transfer data between each other and present it to the user in a cohesive format. The result of this is user choice where they can choose the server and the type of implementation that suits them while still being able to interact with folks that have their own preferred servers. If this sounds like a lot, this is pretty much how email works. You register with a provider, and it figures out how to interact with other providers.
+Decentralized social media works by getting rid of the single owner and spreading the ownership across a network. These platforms implement open protocols for servers to use to talk to each other between different implementations. So long as each server has enough overlap, they can transfer data between each other and present it to the user in a cohesive format. The result of this is user choice where they can choose the server and the type of implementation that suits them while still being able to interact with folks that have their own preferred servers. If this sounds like a lot, this is pretty much how email works. You register with a provider, and it figures out how to interact with other providers.
 
 ![A bunch of faces and several clouds, all looking at each other in a mess](../images/dsm/decentralized.svg)
 
@@ -94,7 +94,7 @@ There's a load of other apps out there so I'd encourage you search around.
 - Relays
 - Zaps
 
-[Nostr](https://nostr.com/) (Notes and Other Stuff Transmitted by Relays) takes a different approach from the other two by prioritizing the client and making servers more simple. Clients create cryptographic key pairs which they use to sign individual `Events`. [Events](https://github.com/nostr-protocol/nips/blob/master/01.md#events-and-signatures) can be things like an update to your profile information, or a social media post, or whatever else. Nostr keeps a registry of [Noster Improvement Possibilities](https://github.com/nostr-protocol/nips/tree/master) which define kinds of events that clients may support. These events can be sent to any Nostr relay and other clients can then fetch events of specific kinds or made by specific people. Any client can use any set of relays so long as they agree on the format of the messages being sent. The ecosystem also has a strong focus on cryptocurrency payments using the [bitcoin lightning network](https://en.wikipedia.org/wiki/Lightning_Network), aka [Zaps](https://nostr.how/en/zaps), to tip people or pay for services on marketplaces.
+[Nostr](https://nostr.com/) (Notes and Other Stuff Transmitted by Relays) takes a different approach from the other two by prioritizing the client and making servers more simple. Clients create cryptographic key pairs which they use to sign individual `Events`. [Events](https://github.com/nostr-protocol/nips/blob/master/01.md#events-and-signatures) can be things like an update to your profile information, or a social media post, or whatever else. Nostr keeps a registry of [Nostr Improvement Possibilities](https://github.com/nostr-protocol/nips/tree/master) which define kinds of events that clients may support. These events can be sent to any Nostr relay and other clients can then fetch events of specific kinds or made by specific people. Any client can use any set of relays so long as they agree on the format of the messages being sent. The ecosystem also has a strong focus on cryptocurrency payments using the [bitcoin lightning network](https://en.wikipedia.org/wiki/Lightning_Network), aka [Zaps](https://nostr.how/en/zaps), to tip people or pay for services on marketplaces.
 
 #### Implementations
 
@@ -155,7 +155,7 @@ In the centralized use case you usually have a central point of failure. If Goog
 
 In ActivityPub you get a bit more resilience in that other people's instances might go down, but once they're up again you'll resume synchronizing with them. Your main issue is that once your instance goes down, you personally can't participate anymore unless you make an account somewhere else.
 
-AT protocol is a bit more complicated in that you have several different points of failure. If the firehose goes down none of the app views will see new posts but should have their existing ones. If an app view goes down others will still work and you'd still be able to pull from people's PDSs. If your PDS goes down you can't post but if someone else's goes down you can still see everything else.h
+AT protocol is a bit more complicated in that you have several different points of failure. If the firehose goes down none of the app views will see new posts but should have their existing ones. If an app view goes down others will still work and you'd still be able to pull from people's PDSs. If your PDS goes down you can't post but if someone else's goes down you can still see everything else.
 
 Nostr has the most resilient model in that you can use as many relays as you want and if some of them go down you'd be fine so long as you can find more.
 
@@ -167,7 +167,7 @@ Nostr has the most resilient model in that you can use as many relays as you wan
 
 Ownership of data is also an important consideration.
 
-In Activitypub your identity is tied to a particular actor URL on a specific server. You can migrate your idtentity and keep your followers but it still ends up being a new identity.
+In Activitypub your identity is tied to a particular actor URL on a specific server. You can migrate your identity and keep your followers but it still ends up being a new identity.
 
 AT is similar in that your PDS owns your identity due to having control over your cryptographic keys. You can migrate to a new PDS and efficiently copy all your data, but this will lead to a new keypair being created.
 
@@ -188,7 +188,7 @@ On top of that ActivityPub gives instance moderators the ability to moderate con
 
 In AT protocol your appview shows you just the content it indexes. Past that, [blocklists](https://bsky.social/about/blog/03-12-2024-stackable-moderation) are a first class feature that users can follow and share with each other. Since bluesky holds the bulk of the users on the network and owns the firehose, their moderation approach has a strong effect on the network as a whole.
 
-Moderation in Nostr seems to mostly be focused on removing spammers from relays or illegal content. The comunity in general is focused on maximizing freedom of speech so you're less likely to see hate speech taken down and would need to deal with it at the client level.
+Moderation in Nostr seems to mostly be focused on removing illegal content or spammers from relays. The comunity in general is focused on maximizing freedom of speech so you're less likely to see hate speech taken down and would need to deal with it at the client level.
 
 Lastly I wanted to mention roost.tools which is a platform for off the shelf AI powered moderation that folks can integrate into their servers without needing to invest in full time staff. AI moderation can be problematic with false positives especially for keywords related to LGBTQ specific language, but it can be better than having absolutely nothing and good enough if your requirements align with the model.
 
@@ -218,7 +218,7 @@ Since all of these protocols are open at the core there's an ecosystem of bridge
 
 ![AP and AT shaking hands](../images/dsm/bridges-ap-at.svg)
 
-One of the more recent and in my opinion most useful ones is the [brid.gy](https://brid.gy/) bridge between ActivityPub and Bluesky. ActivityPub accounts can follow the bidge from their side and have an AT Protocol account created which mirrors all their posts. BlueSky users can do the same from their side to have an ActivityPub account created for any ActivityPub instance to interact with. The author of this tool took great care to ensure user consent on both sides so that people that don't explicitly want to be bridged won't be.
+One of the more recent and in my opinion most useful ones is the [brid.gy](https://brid.gy/) bridge between ActivityPub and Bluesky. ActivityPub accounts can follow the bridge from their side and have an AT Protocol account created which mirrors all their posts. BlueSky users can do the same from their side to have an ActivityPub account created for any ActivityPub instance to interact with. The author of this tool took great care to ensure user consent on both sides so that people that don't explicitly want to be bridged won't be.
 
 ### Mostr
 
@@ -228,7 +228,7 @@ An older bridge is [Mostr](https://mostr.pub/). It acts as a Nostr relay and an 
 
 ### 🤷 So what? 🫨
 
-So! That was a lot to cover. Hopefully you now have a feeling for what decentralized social media is, and how the protocols behind it work. I think the first thing you could do is join one of these networks and try them out. And next time you plan to build a new app that uses social featurs, I hope you can consider building on an open foundation so that instead of silos locking others out we can have more communities building each other up.
+So! That was a lot to cover. Hopefully you now have a feeling for what decentralized social media is, and how the protocols behind it work. I think the first thing you could do is join one of these networks and try them out. And next time you plan to build a new app that uses social features, I hope you can consider building on an open foundation so that instead of silos locking others out we can have more communities building each other up.
 
 ## Thank you!
 
