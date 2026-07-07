@@ -1,5 +1,40 @@
 # Cool Links to Neat Stuff
 
+## 2026/07/07
+
+- [PhotoGIMP](https://github.com/Diolinux/PhotoGIMP). A set of configs for making GIMP look and behave like photoshop.
+
+## 2026/06/29
+
+- [Artificial Intelligence, History, and Blindness: Lessons and Musings](https://mosen.org/ai/), blind coder's thoughts on AI, blind users are better equipped for vibe coding than seeing coders.
+
+## 2026/04/08
+
+- [Quantum computing timelines](https://words.filippo.io/crqc-timeline/). Seems experts are saying we need to have post quantum crypto in place within 3 years if we want to be safe.
+
+## 2026/03/03
+
+- [Speak That](https://github.com/mitchib1440/SpeakThat), useful for reading out my notifications. Feels more cyborg to have a constant data stream. >:)
+
+## 2026/02/19
+
+- [ZUNA: BCI Foundation Model Advancing Towards Thought-to-Text](https://www.zyphra.com/post/zuna), might be useful for my EEG computer control exploration
+
+## 2026/02/17
+
+- [Blocking Web Scrapers with Fail2Ban + Nginx](https://dev.to/ajitkumar/blocking-web-scrapers-with-fail2ban-nginx-production-guide-e67), been meaning to harden my sites against scrapers.
+
+## 2026/02/16
+
+- [modern-css](https://modern-css.com/?baseline=newly), website with a bunch of useful CSS tricks that use modern features.
+
+## 2026/02/04
+
+- [An exploration of Wi-Fi Aware for Bitchat](https://hackmd.io/@grjte/bitchat-wifi-aware), I wasn't "aware" of Wifi Aware's progress until this spelled it out. It's like Apple's wifi p2p stack but standardized.
+- [An approximate implementation guide for cross-platform p2p networking using Wi-Fi Aware](https://hackmd.io/@grjte/cross-platform-wifi-aware), follow up to the previous post with concrete implementation steps
+- [Cross-Platform P2P Wi-Fi: How the EU Killed AWDL](https://www.ditto.com/blog/cross-platform-p2p-wi-fi-how-the-eu-killed-awdl), a post from Ditto on the history of Wifi aware and Apple adoption
+- [The difference in five modes in the AES encryption algorithm](https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm/), I haven't looked into this before and decided it was time to learn since I was reviewing the cryptography in [MeshCore](https://github.com/meshcore-dev/MeshCore/blob/10067ada182e8fccd61406bb6c2e036c33d92e09/src/Utils.cpp#L44) and noticed it was lacking.
+
 ## 2026/01/22
 
 - [Universal Animation Library](https://quaternius.com/packs/universalanimationlibrary2.html), could be cool if I end up making a 3D game in Godot.
