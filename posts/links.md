@@ -1,5 +1,9 @@
 # Cool Links to Neat Stuff
 
+## 2026/07/14
+
+- [Defenders are embracing prompt injection attacks](https://arstechnica.com/security/2026/07/now-defenders-are-embracing-the-prompt-injection-too/). Seems that putting prompt injections that trigger refusal behavior beside any secrets will cause LLMs to be unable to exfiltrate your data.
+
 ## 2026/07/07
 
 - [PhotoGIMP](https://github.com/Diolinux/PhotoGIMP). A set of configs for making GIMP look and behave like photoshop.
