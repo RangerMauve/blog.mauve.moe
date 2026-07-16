@@ -142,27 +142,16 @@ Back end developers are used to relying on databases for storing and sorting thr
 
 ---
 
-### Relational Databases
+### Relational Databases 📂
 
 Diagram: SVG table with generic user data
 
-<table>
-  <thead>
-    <tr>
-      <th>id</th>
-      <th>name</th>
-      <th>email</th>
-      <th>age</th>
-      <th>role</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>Alice</td><td>alice@example.com</td><td>30</td><td>admin</td></tr>
-    <tr><td>2</td><td>Bob</td><td>bob@example.com</td><td>25</td><td>user</td></tr>
-    <tr><td>3</td><td>Carol</td><td>carol@example.com</td><td>28</td><td>user</td></tr>
-    <tr><td>4</td><td>Dave</td><td>dave@example.com</td><td>35</td><td>moderator</td></tr>
-  </tbody>
-</table>
+| id | name  | email               | age | role      |
+|----|-------|---------------------|-----|-----------|
+| 1  | Alice | alice@example.com   | 30  | admin     |
+| 2  | Bob   | bob@example.com     | 25  | user      |
+| 3  | Carol | carol@example.com   | 28  | user      |
+| 4  | Dave  | dave@example.com    | 35  | moderator |
 
 (e.g. MySQL, Postgres)
 
@@ -173,7 +162,7 @@ Before you can store data you need to figure out it's shape and how different ro
 
 ---
 
-#### Migrations
+#### Migrations ➡️
 
 Diagram: SQL statement adding a new varchar `sin` field to the users table with the default set to "existing"
 
@@ -187,44 +176,15 @@ If you want to add a new field to your data, you need to update the schema and o
 
 ---
 
-#### Disk format
+#### Disk format 📀
 
 Diagram: color coded hex for three rows of hex numbers with four repeating colors for colums.
 
-<table>
-  <thead>
-    <tr>
-      <th>offset</th>
-      <th>col 0</th>
-      <th>col 1</th>
-      <th>col 2</th>
-      <th>col 3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0x00</td>
-      <td>41 6C 69 63 65 00 30 FF</td>
-      <td>42 6F 62 00 00 19 FF 00</td>
-      <td>43 61 72 6F 6C 00 1C FF</td>
-      <td>44 61 76 65 00 23 FF 00</td>
-    </tr>
-    <tr>
-      <td>0x20</td>
-      <td>65 78 69 73 74 69 6E 67</td>
-      <td>75 73 65 72 00 00 00 FF</td>
-      <td>6D 6F 64 00 00 00 FF 00</td>
-      <td>61 64 6D 69 6E 00 FF 00</td>
-    </tr>
-    <tr>
-      <td>0x40</td>
-      <td>00 00 00 00 FF FF FF FF</td>
-      <td>41 6C 69 63 65 00 30 FF</td>
-      <td>42 6F 62 00 00 19 FF 00</td>
-      <td>00 00 00 00 FF FF FF FF</td>
-    </tr>
-  </tbody>
-</table>
+| offset | col 0                   | col 1                   | col 2                   | col 3                   |
+|--------|-------------------------|-------------------------|-------------------------|-------------------------|
+| 0x00   | `41 6C 69 63 65 00 30 FF` | `42 6F 62 00 00 19 FF 00` | `43 61 72 6F 6C 00 1C FF` | `44 61 76 65 00 23 FF 00` |
+| 0x20   | `65 78 69 73 74 69 6E 67` | `75 73 65 72 00 00 00 FF` | `6D 6F 64 00 00 00 FF 00` | `61 64 6D 69 6E 00 FF 00` |
+| 0x40   | `00 00 00 00 FF FF FF FF` | `41 6C 69 63 65 00 30 FF` | `42 6F 62 00 00 19 FF 00` | `00 00 00 00 FF FF FF FF` |
 
 ???
 
@@ -234,20 +194,16 @@ There's a load of nuance here so bear with me if you're an expert on database in
 
 ---
 
-### Document Stores
+### Document Stores 📄
 
 Diagram: List of JSON objects of users, different fields exist in each. Each has an ID
 
-<dl>
-  <dt>_id: doc1</dt>
-  <dd>{ "name": "Alice", "email": "alice@example.com", "age": 30, "role": "admin" }</dd>
-  <dt>_id: doc2</dt>
-  <dd>{ "name": "Bob", "email": "bob@example.com", "preferredColor": "blue" }</dd>
-  <dt>_id: doc3</dt>
-  <dd>{ "name": "Carol", "age": 28, "tags": ["user", "moderator"], "bio": "hi!" }</dd>
-  <dt>_id: doc4</dt>
-  <dd>{ "name": "Dave", "role": "moderator" }</dd>
-</dl>
+| _id   | Document                                                           |
+|-------|--------------------------------------------------------------------|
+| doc1  | `{ "name": "Alice", "email": "alice@example.com", "age": 30, "role": "admin" }` |
+| doc2  | `{ "name": "Bob", "email": "bob@example.com", "preferredColor": "blue" }`        |
+| doc3  | `{ "name": "Carol", "age": 28, "tags": ["user", "moderator"], "bio": "hi!" }`   |
+| doc4  | `{ "name": "Dave", "role": "moderator" }`                                 |
 
 (e.g. MongoDB, CouchDB)
 ???
@@ -258,36 +214,14 @@ This can be nice if you have complex shapes for your data or don't want to mess 
 
 ---
 
-#### Key Value Stores
+#### Key Value Stores 🗝️
 
 Diagram: Key value pairs with ids pointing to json documents
 
-<table>
-  <thead>
-    <tr>
-      <th>Key</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>"doc1"</code></td>
-      <td>{ "name": "Alice", "age": 30, "role": "admin" }</td>
-    </tr>
-    <tr>
-      <td><code>"doc2"</code></td>
-      <td>{ "name": "Bob", "preferredColor": "blue" }</td>
-    </tr>
-    <tr>
-      <td><code>"doc3"</code></td>
-      <td>{ "name": "Carol", "tags": ["user"] }</td>
-    </tr>
-    <tr>
-      <td><code>"doc4"</code></td>
-      <td>{ "name": "Dave", "role": "moderator" }</td>
-    </tr>
-  </tbody>
-</table>
+- `"doc1"` → `{ "name": "Alice", "age": 30, "role": "admin" }`
+- `"doc2"` → `{ "name": "Bob", "preferredColor": "blue" }`
+- `"doc3"` → `{ "name": "Carol", "tags": ["user"] }`
+- `"doc4"` → `{ "name": "Dave", "role": "moderator" }`
 
 ???
 
@@ -411,6 +345,29 @@ Just as you'd expect with any other data store you have some basic operations fo
 
 ---
 
+### Why not LocalStorage?
+
+```JavaScript
+const store = 'posts';
+// Create
+const id = Date.now();
+localStorage.setItem(`${store}:${id}`, JSON.stringify({ title: 'Hello', body: 'World' }));
+// Read
+const post = JSON.parse(localStorage.getItem(`${store}:${id}`));
+// Update
+localStorage.setItem(`${store}:${id}`, JSON.stringify({ ...post, body: 'Updated!' }));
+// Delete
+localStorage.removeItem(`${store}:${id}`);
+```
+
+???
+
+At this point you might be thinking, why not just use LocalStorage? Sometimes, localStorage is really enough if you just have a bit of data to save.
+Where it breaks is when you start reading and writing very frequently or need to deal with large numbers of data.
+I also just find the fact that you need to convert to and from JSON strings kind of annoying and prefer to use raw objects.
+
+---
+
 ### Iterating
 
 ```JavaScript
@@ -463,6 +420,25 @@ Job security!
 
 ---
 
+### What do they do, really?
+
+Diagram: table with 1949 (Mao era) 1976 (Hua & Deng era) 1989 (Jiang era) 2002 (Hu era) 2012 (Xi era) representing key value pairs for the index
+
+| Key  | Value         |
+|------|---------------|
+| 1949 | Mao era       |
+| 1976 | Hua & Deng era|
+| 1989 | Jiang era     |
+| 2002 | Hu era        |
+| 2012 | Xi era        |
+
+???
+
+Indexes build up an extra sorted list of key value pairs with the indexed value as the primary key, and the id of the document as a value.
+The B+ tree used for storage gives you a quick way to seek to a particular value and iterate from there.
+
+---
+
 ### Searching
 
 ```JavaScript
@@ -478,6 +454,7 @@ for await (const cursor of index.iterate(range)) {
 ???
 
 You can also use this for more advanced queries like values within a range or greater than a specific value.
+Here we're finding just the things that were around during the USSR, and the things that only came into being after Regan got in power.
 
 ---
 
@@ -498,7 +475,7 @@ while (cursor && posts.length < pageSize) {
 
 ???
 
-Paging can be done by using the cursor's advance and continue methods instead of for of loops on the iterator.
+Paging can be done by stepping outside of the iterator and  using the cursor API's advance and continue methods instead of for of loops. Advance lets you skip ahead a few entries and continue is how you manually progress to the next item.
 
 ---
 
@@ -535,7 +512,7 @@ Now, even though we don't need to modify documents when our application adds som
 
 ???
 
-Just like in relational databases, how you set up your data and index it will drastically affect your performance. Your app can either feel instandaneous or a slog based on hoh you approach this.
+Just like in relational databases, how you set up your data and index it will drastically affect your performance. Your app can either feel instantaneous or a slog based on how you approach this.
 In general you should focus on the queries that will have the biggest impact first.
 
 From here you should use your indexes to divide the data by fields that will have the biggest effect.
@@ -561,7 +538,7 @@ And when we view a post we'd want a quick way to load the replies.
 
 ## Performance: Iteration
 
-- Less is more (e.g. < 200)
+- Maybe load it all? (e.g. < 200)
 - Use raw Cursor (if necessary)
 - Benchmark your app!
 
@@ -580,6 +557,10 @@ Lastly, you can't know what's slow or fast, so you should be running benchmarks 
 
 ![reader.distributed.press logo](logo-distributedpress.svg)
 
+???
+
+So, now that we've got a grasp on IndexeDB let me talk about an example of using it in practice in The Distributed Press Reader app.
+
 ---
 
 ### What
@@ -587,6 +568,13 @@ Lastly, you can't know what's slow or fast, so you should be running benchmarks 
 - ActivityPub client
 - Offline first
 - Peer-to-Peer
+
+???
+
+This is a client for ActivityPub feeds which for those that weren't there for my decentralized social media talk is the protocol behind federated social media platforms like Mastodon or PeerTube.
+Basically, instead of signing up for a mastodon account and following others, this app would directly pull the accounts public posts and index them for offline viewing.
+Since everything is local, we didn't need to worry about sites going down or the user being offline for periods of time.
+For extra fun we also integrated some peer to peer protocols into the mix so that users could download social data directly from the swarm and each other instead of needing to connect to specific servers.
 
 ---
 
@@ -597,4 +585,53 @@ Lastly, you can't know what's slow or fast, so you should be running benchmarks 
 - 5 collections
 - 18 indexes (11 for notes)
 
+???
+
+We accomplished this in the most minimal way possible by using the browser's fetch API to load posts and author data and save to indexed DB.
+We ended up with 5 different collections for the app and 18 indexes. 11 of which are just for the published notes themselves.
+
 ---
+
+### Notes Indexes
+
+Indexes in "notes" store:
+ - (keyPath: "attributedTo", multiEntry: false)
+ - (keyPath: ["attributedTo","published"], multiEntry: false)
+ - (keyPath: ["conversation","published"], multiEntry: false)
+ - (keyPath: "inReplyTo", multiEntry: false)
+ - (keyPath: ["inReplyTo","published"], multiEntry: false)
+ - (keyPath: "published", multiEntry: false)
+ - (keyPath: "tag_names", multiEntry: true)
+ - (keyPath: "timeline", multiEntry: true)
+ - (keyPath: "to", multiEntry: false)
+ - (keyPath: ["to","published"], multiEntry: false)
+ - (keyPath: "url", multiEntry: false)
+
+???
+
+As we developed the app we built up various indexes to speed up searching through the notes so that as the data grew, our initial load times would still be speedy.
+Notic here how some indexes used combinations of keys. This helps to segment and sort data at the same time by having static prefixes like authors at the start, followed by timestamps so that all posts by a given author would get sorted.
+The multiEntry property is there for indexed fields that are arrays. For example this can split up all the different tags in a post and give you a quick way to search for posts just tagged by "cats" or "funny".
+
+---
+
+![Screnshot of the Social Reader with a post by Hypha.Coop](./reader.png)
+
+???
+
+We made this to pair with our other project called Distributed Press which could publish static websites that can be read by ActivityPub supported platforms like Mastodon.
+
+---
+
+## Now What?
+
+- [Read the MDN guide](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB)
+- [Check the code](https://github.com/hyphacoop/reader.distributed.press/blob/main/db.js)
+- Poke me: @mauve@mastodon.mauve.moe
+- Make something!
+
+???
+
+So! Hopefully you've learned something about indexedDB and have some ideas for how to use it in your own projects.
+Do check out the Mozilla Developer Network docs for IndexeDB for more details, and check out how we used it in the social reader.
+Most importantly I hope this has inspired you to go out and make something.
