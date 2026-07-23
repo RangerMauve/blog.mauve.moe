@@ -1,5 +1,13 @@
 # Cool Links to Neat Stuff
 
+## 2026/07/23
+
+- [Building a Prolog-Like Logic Engine in CommonLisp](https://medium.com/@batuhanayrba/building-a-prolog-like-logic-engine-in-common-lisp-1995d6168565).
+
+## 2026/07/21
+
+- [Allow background activity for iOS app](https://github.com/orgs/fosrl/discussions/2350). I'm planning on making an app for setting up tunnels (like a VPN) via hyperswarm and this seems to have the configs I'd need for it to work.
+
 ## 2026/07/14
 
 - [Defenders are embracing prompt injection attacks](https://arstechnica.com/security/2026/07/now-defenders-are-embracing-the-prompt-injection-too/). Seems that putting prompt injections that trigger refusal behavior beside any secrets will cause LLMs to be unable to exfiltrate your data.
