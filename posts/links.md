@@ -1,5 +1,13 @@
 # Cool Links to Neat Stuff
 
+## 2026/07/29
+
+- [scriptc Typescript to native compiler](https://github.com/vercel-labs/scriptc). Different from past attempts in that it can compile regular TS and embeds a JS engine for where it cant compile it down.
+
+## 2026/07/28
+
+- [Multi-Seat Wayland](https://blinry.org/multi-seat-wayland/). Cool blog post talking about how you can get multiple cursors on one wayland session and what the state of it between engines.
+
 ## 2026/07/23
 
 - [Building a Prolog-Like Logic Engine in CommonLisp](https://medium.com/@batuhanayrba/building-a-prolog-like-logic-engine-in-common-lisp-1995d6168565).
