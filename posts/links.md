@@ -1,5 +1,13 @@
 # Cool Links to Neat Stuff
 
+## 2026/08/24
+
+- [Your executable is a sqlite database](https://fzakaria.com/2026/08/23/your-executable-is-a-sqlite-database). Goes into how ELF files work and how they could be replaced with SQLit databases.
+
+## 2026/08/12
+
+- [OpenIDS2 2d printed DNA synthesizer](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0338478).
+
 ## 2026/07/29
 
 - [scriptc Typescript to native compiler](https://github.com/vercel-labs/scriptc). Different from past attempts in that it can compile regular TS and embeds a JS engine for where it cant compile it down.
